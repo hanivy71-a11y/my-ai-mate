@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My AI Mate</title>
+
+<!-- Tailwind (full JIT build, supports arbitrary values like text-[13px]) -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- React 18 + ReactDOM 18 (UMD builds) -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+
+<!-- Babel Standalone: lets the browser transpile JSX at runtime (no build step needed) -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+
+<style>
+  html, body { margin: 0; padding: 0; background: #F6F5F1; }
+  #root { min-height: 100vh; }
+</style>
+</head>
+<body>
+<div id="root">
+  <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:-apple-system,sans-serif;color:#6B675D;">
+    불러오는 중...
+  </div>
+</div>
+
+<script type="text/babel" data-presets="react">
+/* Lightweight stand-in icons for the standalone (no-bundler) deploy.
+   These replace lucide-react so the app can run from CDN <script> tags
+   without a build step. Same call signature (size, color, strokeWidth, className, fill). */
+
+function IconBase({ children, size = 16, color = "currentColor", strokeWidth = 2, className, fill = "none", stroke, ...rest }) {
+  return (
+    <svg
+      width={size} height={size} viewBox="0 0 24 24"
+      fill={fill} stroke={stroke ?? color} strokeWidth={strokeWidth}
+      strokeLinecap="round" strokeLinejoin="round" className={className} {...rest}
+    >
+      {children}
+    </svg>
+  );
+}
+
+const LayoutDashboard = (p) => <IconBase {...p}><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></IconBase>;
+const Users = (p) => <IconBase {...p}><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><path d="M17 11a4 4 0 0 0 0-8"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></IconBase>;
+const PhoneCall = (p) => <IconBase {...p}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.78.66 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.47-1.47a2 2 0 0 1 2.11-.45c.83.32 1.71.54 2.61.66A2 2 0 0 1 22 16.92z"/></IconBase>;
+const Calculator = (p) => <IconBase {...p}><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="18"/><line x1="8" y1="18" x2="12" y2="18"/></IconBase>;
+const UserCog = (p) => <IconBase {...p}><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h4"/><circle cx="19" cy="15" r="2.5"/><path d="M19 11v1.2M19 17.8V19M15.7 13l1 .6M21.3 16.4l1 .6M15.7 17l1-.6M21.3 13.6l1-.6"/></IconBase>;
+const Search = (p) => <IconBase {...p}><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></IconBase>;
+const ChevronRight = (p) => <IconBase {...p}><polyline points="9 18 15 12 9 6"/></IconBase>;
+const CheckCircle2 = (p) => <IconBase {...p}><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></IconBase>;
+const AlertCircle = (p) => <IconBase {...p}><circle cx="12" cy="12" r="10"/><line x1="12" y1="7.5" x2="12" y2="13"/><circle cx="12" cy="16.5" r="0.9" fill={p.color || "currentColor"} stroke="none"/></IconBase>;
+const Clock = (p) => <IconBase {...p}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></IconBase>;
+const ArrowLeft = (p) => <IconBase {...p}><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></IconBase>;
+const Sparkles = (p) => <IconBase {...p}><path d="M12 2l1.6 5.4L19 9l-5.4 1.6L12 16l-1.6-5.4L5 9l5.4-1.6L12 2z"/><path d="M19 14l.6 2 2 .6-2 .6-.6 2-.6-2-2-.6 2-.6z"/></IconBase>;
+const Save = (p) => <IconBase {...p}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></IconBase>;
+const Circle = (p) => <IconBase {...p}><circle cx="12" cy="12" r="10" fill={p.fill && p.fill !== "none" ? p.fill : "none"} stroke={p.stroke ?? p.color ?? "currentColor"}/></IconBase>;
+const TrendingUp = (p) => <IconBase {...p}><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></IconBase>;
+const FileText = (p) => <IconBase {...p}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></IconBase>;
+const Phone = (p) => <IconBase {...p}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.78.66 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.47-1.47a2 2 0 0 1 2.11-.45c.83.32 1.71.54 2.61.66A2 2 0 0 1 22 16.92z"/></IconBase>;
+const FileCheck2 = (p) => <IconBase {...p}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 15 11 17 15 13"/></IconBase>;
+const Info = (p) => <IconBase {...p}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11.5"/><circle cx="12" cy="8" r="0.9" fill={p.color || "currentColor"} stroke="none"/></IconBase>;
+
+
+
+/* ---------- design tokens ---------- */
+const C = {
+  bg: "#F6F5F1",
+  surface: "#FFFFFF",
+  surfaceAlt: "#F1EFE8",
+  ink: "#211F1B",
+  inkSoft: "#6B675D",
+  inkFaint: "#9C978A",
+  brand: "#20242E",
+  brandSoft: "#3A3F4C",
+  accent: "#A9834F",
+  accentSoft: "#C9A876",
+  border: "#E2DFD5",
+  confirmed: "#54705A",
+  confirmedBg: "#EAEEE7",
+  verify: "#9A7530",
+  verifyBg: "#F3EBDA",
+  urgent: "#95483F",
+  urgentBg: "#F2E7E4",
+  note: "#4C6478",
+  noteBg: "#E9EDF0",
+};
+
+const mono = { fontFamily: 'ui-monospace,SFMono-Regular,"SF Mono","Roboto Mono","IBM Plex Mono",monospace' };
+const sans = { fontFamily: '-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard Variable",Pretendard,"Noto Sans KR",Roboto,sans-serif' };
+
+/* ---------- verification badge — the signature element ---------- */
+function Badge({ kind, children }) {
+  const map = {
+    confirmed: { bg: C.confirmedBg, fg: C.confirmed, label: "확인됨" },
+    verify: { bg: C.verifyBg, fg: C.verify, label: "확인 필요" },
+    note: { bg: C.noteBg, fg: C.note, label: "통화 안내" },
+  };
+  const s = map[kind] || map.note;
+  return (
+    <span
+      className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium"
+      style={{ background: s.bg, color: s.fg }}
+    >
+      <Circle size={6} fill={s.fg} stroke="none" />
+      {children || s.label}
+    </span>
+  );
+}
+
+function ToggleBadge({ kind, onToggle }) {
+  const map = {
+    confirmed: { bg: C.confirmedBg, fg: C.confirmed, label: "확인됨" },
+    verify: { bg: C.verifyBg, fg: C.verify, label: "확인 필요" },
+  };
+  const s = map[kind] || map.verify;
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold shrink-0"
+      style={{ background: s.bg, color: s.fg }}
+      title="눌러서 확인됨/확인 필요 전환"
+    >
+      <Circle size={6} fill={s.fg} stroke="none" />
+      {s.label}
+    </button>
+  );
+}
+
+function EditableRow({ label, value, onChange, kind, onToggleKind, numeric, type = "text" }) {
+  const isDate = type === "date";
+  return (
+    <div className="grid items-center gap-3 py-2 border-b" style={{ gridTemplateColumns: "58px minmax(0,1fr) 80px", borderColor: C.border }}>
+      <span className="text-[11px] whitespace-nowrap" style={{ color: C.inkSoft }}>{label}</span>
+      <input
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        className={`text-[11px] font-medium px-2 py-1 rounded-md outline-none ${isDate ? "text-left" : "text-right"}`}
+        style={{ ...(numeric && !isDate ? mono : {}), border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.ink, width: "100%", minWidth: 0, boxSizing: "border-box" }}
+      />
+      <div className="flex justify-end">
+        <ToggleBadge kind={kind} onToggle={onToggleKind} />
+      </div>
+    </div>
+  );
+}
+
+function ToggleBadge3({ kind, onToggle }) {
+  const order = ["confirmed", "verify", "note"];
+  const map = {
+    confirmed: { bg: C.confirmedBg, fg: C.confirmed, label: "확인됨" },
+    verify: { bg: C.verifyBg, fg: C.verify, label: "확인 필요" },
+    note: { bg: C.noteBg, fg: C.note, label: "통화 안내" },
+  };
+  const s = map[kind] || map.verify;
+  const cycle = () => {
+    const i = order.indexOf(kind);
+    onToggle(order[(i + 1) % order.length]);
+  };
+  return (
+    <button
+      type="button"
+      onClick={cycle}
+      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold shrink-0"
+      style={{ background: s.bg, color: s.fg }}
+      title="눌러서 확인됨 → 확인 필요 → 통화 안내 순서로 전환"
+    >
+      <Circle size={6} fill={s.fg} stroke="none" />
+      {s.label}
+    </button>
+  );
+}
+
+function EditableResultRow({ label, value, onChange, kind, onToggleKind, numeric }) {
+  return (
+    <div className="flex items-center justify-between gap-3 py-2 border-b" style={{ borderColor: C.border }}>
+      <span className="text-[13px] shrink-0" style={{ color: C.inkSoft }}>{label}</span>
+      <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
+        <input
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          placeholder="확인 필요"
+          className="text-[13px] font-medium text-right px-2 py-1 rounded-md outline-none min-w-0 flex-1"
+          style={{ ...(numeric ? mono : {}), border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.ink }}
+        />
+        <ToggleBadge3 kind={kind} onToggle={onToggleKind} />
+      </div>
+    </div>
+  );
+}
+function Field({ label, value, kind = "confirmed", numeric }) {
+  if (value === undefined || value === null || value === "") return null;
+  return (
+    <div className="flex items-start justify-between gap-3 py-2 border-b" style={{ borderColor: C.border }}>
+      <span className="text-[11px]" style={{ color: C.inkSoft }}>{label}</span>
+      <span className="flex items-center gap-2 text-right">
+        <span className="text-[11px] font-medium" style={numeric ? mono : {}}>{value}</span>
+        <Badge kind={kind} />
+      </span>
+    </div>
+  );
+}
+
+/* ---------- sample data (from 프로젝트 마스터 문서) ---------- */
+const initialFCs = [
+  { id: "fc1", name: "김기원", phone: "010-2841-5573", branch: "대전SFP지점", lastContact: "2026-08-05", recentIntro: "김기윤", activeCustomers: 1, paidCustomers: 3, nextContact: "2026-08-20" },
+  { id: "fc2", name: "백선미", phone: "010-6620-9147", branch: "남대전지점", lastContact: "2026-06-08", recentIntro: "정환석", activeCustomers: 1, paidCustomers: 5, nextContact: "2026-08-15" },
+  { id: "fc3", name: "강인숙", phone: "010-3390-2286", branch: "세종지점", lastContact: "2026-08-01", recentIntro: "-", activeCustomers: 0, paidCustomers: 2, nextContact: "2026-10-01" },
+  { id: "fc4", name: "이미희", phone: "010-7715-4402", branch: "대전스타지점", lastContact: "2026-07-28", recentIntro: "(고객명 미확인)", activeCustomers: 1, paidCustomers: 4, nextContact: "2026-08-13" },
+  { id: "fc5", name: "김선옥", phone: "010-4453-8871", branch: "한밭지점", lastContact: "2026-08-10", recentIntro: "(고객명 미확인)", activeCustomers: 1, paidCustomers: 1, nextContact: "2026-08-19" },
+  { id: "fc6", name: "신소영", phone: "010-9928-6034", branch: "신관지점", lastContact: "2026-08-09", recentIntro: "(고객명 미확인)", activeCustomers: 1, paidCustomers: 6, nextContact: "2026-08-14" },
+];
+
+// FC 전화번호는 사내 직원 연락처이므로 고객 개인정보(뒤 4자리만 기록)와는 다른 기준으로 전체 번호를 보관합니다.
+function CallLink({ phone, children, className, style }) {
+  return (
+    <a
+      href={`tel:${phone.replace(/-/g, "")}`}
+      onClick={e => e.stopPropagation()}
+      className={className}
+      style={style}
+    >
+      {children}
+    </a>
+  );
+}
+
+const initialCustomers = [
+  {
+    id: "c1", name: "김기윤", phone4: "1520", fc: "김기원", branch: "대전SFP지점",
+    collateral: "유성구 아파트 (구입 예정)", consultDate: "2026-07-20", lastContact: "2026-08-05",
+    consultType: "단순 금리상담", status: "단순상담", docStatus: "미안내",
+    nextAction: "구입 결정 여부 확인", followUp: "2026-08-20 (15일 주기)",
+    notes: "관심은 있으나 결정 못한 상태. 종료는 고객이 직접 알려주기로 함.",
+    fields: {}, badges: {},
+  },
+  {
+    id: "c2", name: "정환석", phone4: "9753", fc: "백선미", branch: "남대전지점",
+    collateral: "세종시 나릿재 5단지 84.79㎡", consultDate: "2026-06-08", lastContact: "2026-06-08",
+    consultType: "구입자금 상담 / 한도 상담", status: "상담중", docStatus: "안내 전",
+    nextAction: "DSR 초과 여부 재확인", followUp: "확인 필요",
+    notes: "시세 880백만원 / 가능금액 250백만원 안내. 원금균등 약 250만원, 원리금균등 약 220만원 안내.",
+    fields: { 희망대출금액: "250백만원", 금리: "5.35%", 시세: "880백만원" },
+    badges: { 희망대출금액: "note", 금리: "note", 시세: "note" },
+  },
+  {
+    id: "c3", name: "김현아", phone4: "7858", fc: "-", branch: "-",
+    collateral: "월세 거주 담보물건 (보증금 150백만원 / 월세 3백만원)", consultDate: "2026-07-15", lastContact: "2026-08-02",
+    consultType: "대출 진행 상담", status: "상담중", docStatus: "배우자 동의 대기",
+    nextAction: "배우자 동의 및 소득 확인", followUp: "동의 완료 후 재연락",
+    notes: "부채 120백만원 이상, 연소득 부족. 추가 2억원 가능 안내되었으나 약정 진행이 어려울 수 있음.",
+    fields: { 부채: "120백만원 이상", 추가가능액상담: "약 2억원" },
+    badges: { 부채: "confirmed", 추가가능액상담: "note" },
+  },
+  {
+    id: "c4", name: "홍길동", phone4: "9369", fc: "이미희", branch: "대전스타지점",
+    collateral: "규제지역 담보물건", consultDate: "2026-08-10", lastContact: "2026-08-10",
+    consultType: "대출 진행 상담", status: "상담중", docStatus: "등본 제출 필요",
+    nextAction: "등본 사진/팩스 제출 확인", followUp: "2026-08-13 전입 예정일 기준",
+    notes: "3년 이내 연 10%까지 수수료 없이 상환 가능, 초과 시 0.6% 수수료 — 통화상 안내내용으로 별도 관리. 승인으로 임의 확정하지 않음.",
+    fields: { 대출금: "530백만원", 금리: "4.31% (5년 고정)", 대출기간: "30년", 법무사비용: "약 50~60만원" },
+    badges: { 대출금: "confirmed", 금리: "confirmed", 대출기간: "confirmed", 법무사비용: "note" },
+  },
+  {
+    id: "c5", name: "가상고객-2436", phone4: "2436", fc: "-", branch: "-",
+    collateral: "주택담보대출", consultDate: "2026-08-12", lastContact: "2026-08-12",
+    consultType: "담보대출 상담 / 조건 상담", status: "상담중", docStatus: "안내/준비 중",
+    nextAction: "8/13 방문 및 서류 확인", followUp: "2026-08-13 방문 결과 확인",
+    notes: "실제 고객명 미확인 → 가상고객으로 임시 관리. 중도상환 조건(3년 이후 0.6%)은 통화 안내내용이며 확정 상품조건 아님.",
+    fields: { 희망대출금액: "9,000만원", 금리: "4.83% (5년 고정)", 대출기간: "40년", 월상환액: "약 40.4만원 (원금 약 6.2만원 / 이자 약 36만원)" },
+    badges: { 희망대출금액: "confirmed", 금리: "confirmed", 대출기간: "confirmed", 월상환액: "confirmed" },
+  },
+  {
+    id: "c6", name: "고객-4551", phone4: "4551", fc: "-", branch: "-",
+    collateral: "매매금액 260백만원 (1순위)", consultDate: "2026-08-01", lastContact: "2026-08-01",
+    consultType: "대출 진행 상담", status: "상담중", docStatus: "접수 완료",
+    nextAction: "설정 후 10~15분 이내 재연락 (즉시 업무)", followUp: "대출 진행관리로 분리 (일반 Follow-up 제외)",
+    notes: "직접 전화 신청, 추천 FC 없음. 계좌번호 미저장.",
+    fields: { 대출금: "80백만원", 대출기간: "40년", 월납입액: "약 353,000원" },
+    badges: { 대출금: "confirmed", 대출기간: "confirmed", 월납입액: "confirmed" },
+  },
+  {
+    id: "c7", name: "이금자", phone4: "2391", fc: "-", branch: "-",
+    collateral: "강호동 아이파크 3단지 43평, 동구", consultDate: "2026-08-09", lastContact: "2026-08-09",
+    consultType: "구입자금 상담", status: "상담중", docStatus: "안내 전",
+    nextAction: "잔금일 연도 및 진행의사 확인", followUp: "잔금일 확인 후 결정",
+    notes: '잔금일이 "4월 30일"로만 제공되어 연도 확인 필요. 우수고객 아님, 생년월일 미저장.',
+    fields: { 희망대출금액: "80백만원", 안내금리: "4.4~4.5% (신용조건 양호 시 약 4.63%)" },
+    badges: { 희망대출금액: "confirmed", 안내금리: "note" },
+  },
+];
+
+const STATUS_STYLE = {
+  "단순상담": { bg: C.surfaceAlt, fg: C.inkSoft },
+  "상담중": { bg: C.noteBg, fg: C.note },
+  "종료": { bg: "#EDEDED", fg: C.inkFaint },
+};
+
+const BUCKET_MAP = {
+  "단순상담": "단순상담",
+  "상담중": "상담중",
+  "종료": "종료",
+  "대출의향": "상담중",
+  "대출의향(추정)": "상담중",
+  "서류안내": "상담중",
+  "서류접수": "상담중",
+  "대출접수": "상담중",
+  "심사진행": "상담중",
+  "실행 전 확인 필요": "상담중",
+  "확인 필요": "상담중",
+  "승인": "종료",
+  "지급완료": "종료",
+  "보류/종료": "종료",
+};
+const BUCKETS = ["단순상담", "상담중", "종료"];
+const BUCKET_STYLE = {
+  "단순상담": { fg: C.inkSoft, bg: C.surfaceAlt },
+  "상담중": { fg: C.note, bg: C.noteBg },
+  "종료": { fg: C.inkFaint, bg: "#EDEDED" },
+};
+function getBucket(status) {
+  return BUCKET_MAP[status] || "상담중";
+}
+function StatusPill({ status }) {
+  const s = STATUS_STYLE[status] || STATUS_STYLE["단순상담"];
+  return (
+    <span className="inline-block rounded-full px-2.5 py-1 text-[12px] font-semibold" style={{ background: s.bg, color: s.fg }}>
+      {status}
+    </span>
+  );
+}
+
+function StatusSelector({ value, onChange }) {
+  return (
+    <div className="inline-flex rounded-full p-1" style={{ background: C.surfaceAlt }}>
+      {BUCKETS.map(b => {
+        const active = value === b;
+        const s = BUCKET_STYLE[b];
+        return (
+          <button
+            key={b}
+            onClick={() => onChange(b)}
+            className="px-3 py-1.5 rounded-full text-[12px] font-semibold transition-colors"
+            style={{ background: active ? s.fg : "transparent", color: active ? "#FFFFFF" : s.fg }}
+          >
+            {b}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ---------- rate calculator config (2026.08 금리표 기준) ---------- */
+const RATE_PERIOD = "2026.08.01 ~ 2026.08.31";
+const MIN_RATE = 4.00;
+const MAX_DISCOUNT_CAP = 2.45;
+
+const PRODUCTS = [
+  { id: "cofix6", name: "COFIX(신잔액) 6개월 변동", type: "변동형", base: 2.54, spread: 3.76, bandLow: 4.00, bandHigh: 6.90 },
+  { id: "t1y", name: "국고3년 1년 변동", type: "변동형", base: 3.84, spread: 2.80, bandLow: 4.00, bandHigh: 7.24 },
+  { id: "t3y", name: "국고3년 3년 혼합", type: "변동형", base: 3.84, spread: 2.61, bandLow: 4.00, bandHigh: 7.05 },
+  { id: "t5y", name: "국고3년 5년 변동", type: "변동형", base: 3.84, spread: 2.62, bandLow: 4.00, bandHigh: 7.06 },
+  { id: "fixed", name: "국고3년 고정형", type: "고정형", base: 3.84, spread: 2.82, bandLow: 4.00, bandHigh: 7.26 },
+];
+
+const CHECK_ITEMS = [
+  { id: "proof", label: "증빙 / 비거치식", variable: true, options: [0.10, 0.20], value: 0.10 },
+  { id: "buy", label: "구입", value: 0.20 },
+  { id: "eco_car", label: "친환경 자동차 소유", value: 0.05 },
+  { id: "eco_col", label: "친환경 담보물 증빙", value: 0.10 },
+  { id: "multi", label: "다자녀 우대 (3자녀 이상)", value: 0.30 },
+  { id: "merit", label: "국가유공자 우대", value: 0.20 },
+  { id: "dsr", label: "원리금상환능력 우수 (DSR 40% 이내)", value: 0.20 },
+  { id: "mobile", label: "모바일 이용", value: 0.10 },
+];
+
+const CREDIT_OPTIONS = [
+  { id: "none", label: "선택 안 함", value: 0 },
+  { id: "grade", label: "신용평점 우량 (1~2구간)", value: 0.10 },
+  { id: "sa", label: "대출우수 SA", value: 0.30 },
+  { id: "a", label: "대출우수 A / C(우량고객대)", value: 0.20 },
+  { id: "b", label: "대출우수 B", value: 0.10 },
+];
+
+const INSURANCE_OPTIONS = [
+  { id: "none", label: "선택 안 함", value: 0 },
+  { id: "m10", label: "월보험료 10만원 이상", value: 0.10 },
+  { id: "m30", label: "월보험료 30만원 이상", value: 0.20 },
+  { id: "m50", label: "월보험료 50만원 이상", value: 0.30 },
+  { id: "vip_dream", label: "보험VIP · 드림", value: 0.40 },
+  { id: "vip_noble", label: "보험VIP · 노블/디어", value: 0.50 },
+];
+
+const fmt = (n) => n.toFixed(2);
+
+/* ---------- call-summary regex parser (rule-based demo) ---------- */
+function parseSummary(text) {
+  const out = { fields: {}, badges: {}, name: "", phone4: "", fc: "", branch: "", rrnDetected: false };
+
+  // 하단 마커 입력 지원: "**지점명" / "***FC명" — 지점·FC가 문맥상 누락될 때를 대비한 명시적 입력 방식 (최우선 인식)
+  const branchMarkerMatch = text.match(/\*\*(?!\*)\s*([^\s,*]+)/);
+  if (branchMarkerMatch) { out.branch = branchMarkerMatch[1]; out.badges.branch = "confirmed"; }
+  const fcMarkerMatch = text.match(/\*\*\*\s*([^\s,*]+)/);
+
+  // 이름 추출: "고객:이름" / "고객 이름" 라벨 형식을 우선 인식, 없으면 대화체("이름 고객하고 통화") fallback
+  const labeledNameMatch =
+    text.match(/고객\s*[:：]\s*([가-힣]{2,4})/) ||
+    text.match(/고객\s+([가-힣]{2,4})(?!\s*(?:하고|와|과|님|은|는|이|가))/);
+  const conversationalNameMatch =
+    text.match(/^([가-힣]{2,4})\s*(?:고객|님)?(?:하고|와|과)?\s*통화/) ||
+    text.match(/([가-힣]{2,4})\s*고객/);
+  const nameMatch = labeledNameMatch || conversationalNameMatch;
+  if (nameMatch) { out.name = nameMatch[1]; out.badges.name = "confirmed"; }
+
+  // 고객명 뒤 6자리 숫자 = 주민번호 앞자리로 인식. 단, 개인정보 최소화 원칙상 실제 숫자는 저장하지 않고 감지 여부만 표시
+  if (nameMatch) {
+    const windowStart = nameMatch.index + nameMatch[0].length;
+    const afterName = text.slice(windowStart, windowStart + 20);
+    const rrnMatch = afterName.match(/(\d{6})(?!\d)/);
+    if (rrnMatch) {
+      out.rrnDetected = true;
+      out.badges.rrn = "verify";
+    }
+  }
+
+  // 전화번호 뒤 4자리 - "전화"/"끝번호"/"뒤 4자리" 문맥이 있을 때만 인식 (다른 4자리 숫자와 혼동 방지)
+  const phoneMatch = text.match(/(?:전화|끝번호|뒤\s*4자리)[^\d]{0,10}(\d{4})(?!\d)/);
+  if (phoneMatch) { out.phone4 = phoneMatch[1]; out.badges.phone4 = "confirmed"; }
+
+  // 추천 FC: "***FC명" 마커를 최우선으로, 없으면 "추천:이름"/"추천 이름" 라벨, 없으면 대화체("이름 FC가...") fallback
+  const labeledFcMatch =
+    text.match(/추천\s*[:：]\s*([가-힣]{2,4})/) ||
+    text.match(/추천\s+([가-힣]{2,4})(?!\s*(?:이|가|은|는|으로|FC))/);
+  const conversationalFcMatch = text.match(/([가-힣]{2,4})\s*FC/);
+  const fcMatch = fcMarkerMatch || labeledFcMatch || conversationalFcMatch;
+  if (fcMatch) { out.fc = fcMatch[1]; out.badges.fc = fcMarkerMatch ? "confirmed" : "confirmed"; }
+
+  // 단위가 명시된 금액 (백만원/만원)
+  const explicitAmounts = [...text.matchAll(/(\d[\d,]*)\s*(백만원|만원)/g)];
+  if (explicitAmounts.length) {
+    out.fields["금액 언급"] = explicitAmounts.map(a => a[0]).join(", ");
+    out.badges["금액 언급"] = "note";
+  }
+
+  // 단위 없는 숫자는 기본 단위를 백만원으로 추정 (금액 관련 키워드 근접 시에만, 오탐 방지를 위해 verify로 표시)
+  const bareAmounts = [...text.matchAll(/(?:희망|대출|필요|정도|한도)[^\d]{0,4}(\d{1,4})(?!\s*(?:만원|백만원|%|월|일|시|분|년|개월))(?!\d)(?!\.\d)/g)];
+  if (bareAmounts.length) {
+    out.fields["금액 언급(단위 추정)"] = bareAmounts.map(a => `${a[1]}백만원`).join(", ");
+    out.badges["금액 언급(단위 추정)"] = "verify";
+  }
+
+  const rateMatch = text.match(/(\d\.\d{1,2})\s*%/);
+  if (rateMatch) { out.fields["금리"] = rateMatch[0]; out.badges["금리"] = "note"; }
+
+  const collateralMatch = text.match(/([가-힣]{2,}(?:구|시|동)\s?[가-힣0-9\s]{2,20}(?:아파트|평형|단지))/);
+  if (collateralMatch) { out.fields["담보"] = collateralMatch[0].trim(); out.badges["담보"] = "confirmed"; }
+
+  const followUpMatch = text.match(/(일주일|1주일|한\s?달|10분|15분|열흘)\s?(뒤|후|이내)/);
+  if (followUpMatch) { out.fields["Follow-up"] = followUpMatch[0]; out.badges["Follow-up"] = "confirmed"; }
+
+  return out;
+}
+
+const SAMPLE_TEXT = "김민준 고객하고 통화했어. 880521 주민번호 앞자리 확인했고, 전화 끝번호 1401이고 부산 동구 좌천동 동원아파트 34평형이야. 나영희 FC가 소개했고 대출 80 정도 희망하고 8월 구입자금 금리만 상담했어. 서류는 아직 안내 안 했고 일주일 뒤 다시 의사 확인하기로 했어.";
+const SAMPLE_TEXT_LABELED = "고객: 이서준 / 추천: 박선미 / 전화 끝번호 7742 / 대전 유성구 봉명동 한빛아파트 25평 / 대출 65 정도 필요하다고 함 / 금리 4.6% 안내 / 서류는 아직이고 열흘 뒤 다시 연락하기로 함.";
+const SAMPLE_TEXT_MARKER = "최윤아 고객하고 전화 끝번호 3320으로 통화함. 서울 강남구 대치동 은마아파트 구입자금 상담. 대출 120 정도 희망하고 금리는 4.2% 안내했음. 서류는 다음주에 준비하기로 함.\n\n**강남중앙지점, ***이하늘";
+
+/* ---------- nav ---------- */
+const NAV = [
+  { key: "dashboard", label: "대시보드", icon: LayoutDashboard },
+  { key: "customers", label: "고객관리", icon: Users },
+  { key: "callai", label: "통화요약 AI", icon: PhoneCall },
+  { key: "docs", label: "서류안내", icon: FileCheck2 },
+  { key: "rate", label: "금리계산기", icon: Calculator },
+  { key: "fc", label: "FC관리", icon: UserCog },
+];
+
+/* ================= APP ================= */
+function App() {
+  const [tab, setTab] = useState("dashboard");
+  const [customers, setCustomers] = useState(initialCustomers);
+  const [fcs] = useState(initialFCs);
+  const [selectedId, setSelectedId] = useState(null);
+  const [selectedFcId, setSelectedFcId] = useState(null);
+
+  const selected = customers.find(c => c.id === selectedId) || null;
+  const selectedFc = fcs.find(f => f.id === selectedFcId) || null;
+
+  return (
+    <div className="min-h-screen w-full flex" style={{ background: C.bg, color: C.ink, ...sans }}>
+      {/* sidebar */}
+      <aside className="w-[224px] shrink-0 hidden sm:flex flex-col py-7 px-4" style={{ background: C.brand }}>
+        <div className="mb-9 px-2">
+          <div className="text-white font-semibold text-[16px] tracking-tight">My AI <span style={{ color: C.accentSoft }}>Mate</span></div>
+          <div className="text-[10.5px] mt-1 uppercase" style={{ color: "#8B8F9C", letterSpacing: "0.08em" }}>대출 고객·FC 관리 Agent</div>
+        </div>
+        <nav className="flex flex-col gap-0.5">
+          {NAV.map(n => {
+            const Icon = n.icon;
+            const active = tab === n.key;
+            return (
+              <button
+                key={n.key}
+                onClick={() => { setTab(n.key); setSelectedId(null); setSelectedFcId(null); }}
+                className="flex items-center gap-2.5 px-3 py-2.5 text-[13px] font-medium text-left transition-colors"
+                style={{
+                  background: active ? "rgba(255,255,255,0.06)" : "transparent",
+                  color: active ? "#F2EEE6" : "#9497A3",
+                  borderLeft: active ? `2px solid ${C.accent}` : "2px solid transparent",
+                }}
+              >
+                <Icon size={15} strokeWidth={1.75} />
+                {n.label}
+              </button>
+            );
+          })}
+        </nav>
+        <div className="mt-auto px-2 pt-6 text-[10.5px]" style={{ color: "#5C5F6B" }}>
+          시연용 Prototype · 2026.08
+        </div>
+      </aside>
+
+      {/* mobile top nav */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-20 flex justify-around py-2 border-t" style={{ background: C.brand, borderColor: "rgba(255,255,255,0.08)" }}>
+        {NAV.map(n => {
+          const Icon = n.icon;
+          const active = tab === n.key;
+          return (
+            <button key={n.key} onClick={() => { setTab(n.key); setSelectedId(null); setSelectedFcId(null); }} className="flex flex-col items-center gap-0.5 px-2 py-1">
+              <Icon size={17} strokeWidth={1.75} color={active ? C.accentSoft : "#7C7F8B"} />
+              <span className="text-[10px]" style={{ color: active ? "#F2EEE6" : "#7C7F8B" }}>{n.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* main */}
+      <main className="flex-1 min-w-0 p-5 sm:p-8 pb-20 sm:pb-8">
+        {tab === "dashboard" && <Dashboard customers={customers} setCustomers={setCustomers} fcs={fcs} goCustomer={(id) => { setTab("customers"); setSelectedId(id); }} goFc={(id) => { setTab("fc"); setSelectedFcId(id); }} />}
+        {tab === "customers" && (
+          selected
+            ? <CustomerDetail key={selected.id} customer={selected} onBack={() => setSelectedId(null)} onUpdate={(id, updates) => setCustomers(customers.map(cu => cu.id === id ? { ...cu, ...updates } : cu))} />
+            : <CustomerList customers={customers} onSelect={setSelectedId} />
+        )}
+        {tab === "callai" && <CallSummaryAI customers={customers} setCustomers={setCustomers} />}
+        {tab === "docs" && <DocumentAssistant />}
+        {tab === "rate" && <RateCalculator />}
+        {tab === "fc" && (
+          selectedFc
+            ? <FCDetail fc={selectedFc} customers={customers} onBack={() => setSelectedFcId(null)} goCustomer={(id) => { setTab("customers"); setSelectedId(id); setSelectedFcId(null); }} />
+            : <FCManagement fcs={fcs} customers={customers} onSelect={setSelectedFcId} />
+        )}
+      </main>
+    </div>
+  );
+}
+
+/* ================= DASHBOARD ================= */
+function Dashboard({ customers, setCustomers, fcs, goCustomer, goFc }) {
+  const immediate = customers.filter(c => /즉시|10~15분|10분|15분/.test(c.nextAction) && !c.handled?.immediate);
+  const hasVerifyFlag = (c) => {
+    const b = c.consultBadges || { consultType: "confirmed", collateral: "confirmed", consultDate: "confirmed", lastContact: "confirmed", docStatus: "verify" };
+    return Object.values(b).some(v => v === "verify");
+  };
+  const needsVerify = customers.filter(c => hasVerifyFlag(c) && !c.handled?.needsVerify);
+  const followUpToday = customers.filter(c => c.followUp?.includes("2026-08-1") && !c.handled?.followUp);
+  const docPending = customers.filter(c => c.docStatus && c.docStatus !== "접수 완료" && !c.handled?.docPending);
+
+  const markHandled = (id, key) => setCustomers(customers.map(c => c.id === id ? { ...c, handled: { ...c.handled, [key]: true } } : c));
+
+  const immediateRef = React.useRef(null);
+  const followUpRef = React.useRef(null);
+  const docPendingRef = React.useRef(null);
+  const needsVerifyRef = React.useRef(null);
+  const scrollTo = (ref) => ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  const today = new Date();
+  const todayLabel = today.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" });
+
+  return (
+    <div>
+      <Header title="대시보드" subtitle={`오늘 처리해야 할 업무를 한눈에 확인하세요. · ${todayLabel}`} />
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+        <StatCard icon={AlertCircle} color={C.urgent} bg={C.urgentBg} label="즉시 처리" value={immediate.length} onClick={() => scrollTo(immediateRef)} />
+        <StatCard icon={Clock} color={C.note} bg={C.noteBg} label="Follow-up 예정" value={followUpToday.length} onClick={() => scrollTo(followUpRef)} />
+        <StatCard icon={FileText} color={C.verify} bg={C.verifyBg} label="서류 확인 필요" value={docPending.length} onClick={() => scrollTo(docPendingRef)} />
+        <StatCard icon={TrendingUp} color={C.confirmed} bg={C.confirmedBg} label="확인 필요 상태" value={needsVerify.length} onClick={() => scrollTo(needsVerifyRef)} />
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-5">
+        <div ref={immediateRef}>
+        <Panel title="즉시 처리 업무" hint='다음 행동에 "즉시" · "10분" · "15분" · "10~15분" 이 포함된 경우 (예: "설정 후 10~15분 이내 재연락")'>
+          {immediate.length === 0 && <Empty text='즉시 처리할 업무가 없습니다. (예: "설정 후 10~15분 이내 재연락"처럼 급한 다음 행동이 있으면 여기 표시돼요)' />}
+          {immediate.map(c => (
+            <TaskRow key={c.id} title={c.name} sub={c.nextAction} tag="즉시" onClick={() => goCustomer(c.id)} onToggleHandled={() => markHandled(c.id, "immediate")} toggleMode="replace" />
+          ))}
+        </Panel>
+        </div>
+
+        <div ref={followUpRef}>
+        <Panel title="오늘 Follow-up" hint='Follow-up 예정일이 오늘 날짜인 경우 (예: "2026-08-13 방문 결과 확인")'>
+          {followUpToday.length === 0 && <Empty text='오늘 예정된 Follow-up이 없습니다. (예: "8/13 방문 결과 확인"처럼 오늘 날짜가 적힌 Follow-up이 있으면 여기 표시돼요)' />}
+          {followUpToday.map(c => (
+            <TaskRow key={c.id} title={c.name} sub={c.followUp} tag={c.status} tagColor={STATUS_STYLE[c.status]?.fg} tagBg={STATUS_STYLE[c.status]?.bg} onClick={() => goCustomer(c.id)} onToggleHandled={() => markHandled(c.id, "followUp")} />
+          ))}
+        </Panel>
+        </div>
+
+        <div ref={docPendingRef}>
+        <Panel title="서류 확인 필요" hint='서류상태가 "접수 완료"가 아닌 모든 경우 (예: "안내 전", "배우자 동의 대기", "등본 제출 필요")'>
+          {docPending.length === 0 && <Empty text='서류 확인이 필요한 고객이 없습니다. (예: 서류상태가 "안내 전"이나 "동의 대기"처럼 아직 완료되지 않았으면 여기 표시돼요)' />}
+          {docPending.map(c => (
+            <TaskRow key={c.id} title={c.name} sub={`서류상태: ${c.docStatus}`} tag={c.docStatus} tagColor={C.verify} tagBg={C.verifyBg} onClick={() => goCustomer(c.id)} onToggleHandled={() => markHandled(c.id, "docPending")} />
+          ))}
+        </Panel>
+        </div>
+
+        <Panel title="FC 연락 예정">
+          {fcs.slice(0, 4).map(f => (
+            <FcCallRow key={f.id} fc={f} onOpen={() => goFc(f.id)} />
+          ))}
+        </Panel>
+
+        <div ref={needsVerifyRef}>
+        <Panel title="확인 필요 상태" hint='고객상세의 상담정보 항목(상담유형·담보·상담일·최근연락일·서류상태) 중 하나라도 "확인 필요"로 표시된 경우'>
+          {needsVerify.length === 0 && <Empty text='확인이 필요한 항목이 있는 고객이 없습니다. (고객상세에서 상담정보 배지를 "확인 필요"로 켜두면 여기 표시돼요)' />}
+          {needsVerify.map(c => (
+            <TaskRow key={c.id} title={c.name} sub={c.nextAction} tag={c.status} tagColor={STATUS_STYLE[c.status]?.fg} tagBg={STATUS_STYLE[c.status]?.bg} onClick={() => goCustomer(c.id)} onToggleHandled={() => markHandled(c.id, "needsVerify")} />
+          ))}
+        </Panel>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StatCard({ icon: Icon, color, bg, label, value, onClick }) {
+  const Tag = onClick ? "button" : "div";
+  return (
+    <Tag
+      onClick={onClick}
+      className="rounded-lg p-4 text-left w-full transition-colors"
+      style={{ background: C.surface, border: `1px solid ${C.border}`, cursor: onClick ? "pointer" : "default" }}
+      onMouseEnter={e => onClick && (e.currentTarget.style.background = C.surfaceAlt)}
+      onMouseLeave={e => onClick && (e.currentTarget.style.background = C.surface)}
+    >
+      <div className="w-8 h-8 rounded-md flex items-center justify-center mb-3" style={{ background: bg }}>
+        <Icon size={15} strokeWidth={1.75} color={color} />
+      </div>
+      <div className="text-[23px] font-semibold leading-none" style={mono}>{value}</div>
+      <div className="text-[12px] mt-1.5 flex items-center gap-1" style={{ color: C.inkSoft }}>
+        {label}
+        {onClick && <ChevronRight size={12} color={C.inkFaint} />}
+      </div>
+    </Tag>
+  );
+}
+
+function Panel({ title, children, noPad, hint }) {
+  return (
+    <div className="rounded-lg overflow-hidden" style={{ background: C.surface, border: `1px solid ${C.border}` }}>
+      <div className={noPad ? "" : "p-5"}>
+        {title && (
+          <div className={noPad ? "px-4 pt-4" : "mb-4"}>
+            <div className="text-[11px] font-semibold uppercase" style={{ color: C.inkSoft, letterSpacing: "0.07em" }}>{title}</div>
+            {hint && <div className="text-[11px] mt-1 leading-relaxed" style={{ color: C.inkFaint }}>{hint}</div>}
+          </div>
+        )}
+        <div className={noPad ? "" : "flex flex-col gap-1"}>{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function TaskRow({ title, sub, tag, tagColor, tagBg, onClick, onToggleHandled, toggleMode = "beside" }) {
+  return (
+    <div
+      className="flex items-center justify-between gap-3 py-2.5 px-2 rounded-lg transition-colors"
+      onMouseEnter={e => onClick && (e.currentTarget.style.background = C.surfaceAlt)}
+      onMouseLeave={e => onClick && (e.currentTarget.style.background = "transparent")}
+    >
+      <button onClick={onClick} disabled={!onClick} className="min-w-0 text-left flex-1" style={{ cursor: onClick ? "pointer" : "default" }}>
+        <div className="text-[13.5px] font-medium truncate">{title}</div>
+        <div className="text-[12px] truncate" style={{ color: C.inkSoft }}>{sub}</div>
+      </button>
+      <div className="flex items-center gap-2 shrink-0">
+        {onToggleHandled && toggleMode === "replace" ? (
+          <MiniToggle label={tag} onClick={onToggleHandled} />
+        ) : (
+          <>
+            {tag && <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ color: tagColor, background: tagBg }}>{tag}</span>}
+            {onToggleHandled && <MiniToggle onClick={onToggleHandled} />}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MiniToggle({ label, onClick }) {
+  const [on, setOn] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); setOn(true); setTimeout(() => onClick(), 180); }}
+      className="flex items-center gap-1.5"
+      title="처리 완료로 표시하면 목록에서 사라져요"
+    >
+      {label && <span className="text-[11px] font-semibold" style={{ color: on ? C.confirmed : C.urgent }}>{label}</span>}
+      <span
+        className="inline-flex items-center rounded-full transition-colors"
+        style={{ width: 30, height: 17, background: on ? C.confirmed : C.border, padding: 2 }}
+      >
+        <span
+          className="rounded-full bg-white transition-transform"
+          style={{ width: 13, height: 13, transform: on ? "translateX(13px)" : "translateX(0px)", boxShadow: "0 1px 2px rgba(0,0,0,0.25)" }}
+        />
+      </span>
+    </button>
+  );
+}
+
+function Empty({ text }) {
+  return <div className="text-[13px] py-4 text-center" style={{ color: C.inkFaint }}>{text}</div>;
+}
+
+function FcCallRow({ fc, onOpen }) {
+  return (
+    <div
+      className="flex items-center justify-between gap-3 py-2.5 px-2 rounded-lg transition-colors"
+      onMouseEnter={e => (e.currentTarget.style.background = C.surfaceAlt)}
+      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+    >
+      <button onClick={onOpen} className="min-w-0 text-left flex-1">
+        <div className="text-[13.5px] font-medium truncate">{fc.name} <span className="font-normal" style={{ color: C.inkFaint }}>FC</span></div>
+        <div className="text-[12px] truncate" style={{ color: C.inkSoft }}>{fc.branch} · 다음 연락 {fc.nextContact}</div>
+      </button>
+      <CallLink
+        phone={fc.phone}
+        className="shrink-0 flex items-center gap-1 text-[11.5px] font-semibold px-2.5 py-1.5 rounded-full"
+        style={{ color: "#FFFFFF", background: C.accent }}
+      >
+        <Phone size={11} /> 전화
+      </CallLink>
+    </div>
+  );
+}
+
+function Header({ title, subtitle }) {
+  return (
+    <div className="mb-7">
+      <h1 className="text-[21px] font-semibold tracking-tight" style={{ color: C.ink }}>{title}</h1>
+      {subtitle && <p className="text-[13px] mt-1.5" style={{ color: C.inkSoft }}>{subtitle}</p>}
+      <div className="mt-3 w-8 h-[2px]" style={{ background: C.accent }} />
+    </div>
+  );
+}
+
+/* ================= CUSTOMER LIST ================= */
+const YEARS = [2026, 2027, 2028];
+const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+
+function CustomerList({ customers, onSelect }) {
+  const [q, setQ] = useState("");
+  const [openYear, setOpenYear] = useState(2026);
+  const [selectedMonth, setSelectedMonth] = useState("전체"); // "전체" or "YYYY-MM"
+  const [bucket, setBucket] = useState("전체");
+
+  const countFor = (ym) => customers.filter(c => c.consultDate.slice(0, 7) === ym).length;
+  const countForYear = (y) => customers.filter(c => c.consultDate.slice(0, 4) === String(y)).length;
+  const countForBucket = (b) => customers.filter(c => getBucket(c.status) === b).length;
+
+  const filtered = customers
+    .filter(c => c.name.includes(q) || c.phone4.includes(q) || c.fc.includes(q) || c.status.includes(q))
+    .filter(c => selectedMonth === "전체" || c.consultDate.slice(0, 7) === selectedMonth)
+    .filter(c => bucket === "전체" || getBucket(c.status) === bucket)
+    .slice()
+    .sort((a, b) => new Date(b.consultDate) - new Date(a.consultDate));
+
+  return (
+    <div>
+      <Header title="고객관리" subtitle={`총 ${customers.length}명의 고객이 등록되어 있습니다. · 상담일 최신순`} />
+
+      <div className="flex flex-wrap gap-2 mb-4">
+        <button
+          onClick={() => setBucket("전체")}
+          className="px-4 py-2.5 rounded-lg text-[13px] font-semibold"
+          style={{ background: bucket === "전체" ? C.brand : C.surfaceAlt, color: bucket === "전체" ? "#FFFFFF" : C.ink }}
+        >
+          전체 <span className="text-[11px]" style={{ opacity: 0.8 }}>{customers.length}</span>
+        </button>
+        {BUCKETS.map(b => {
+          const active = bucket === b;
+          const s = BUCKET_STYLE[b];
+          return (
+            <button
+              key={b}
+              onClick={() => setBucket(active ? "전체" : b)}
+              className="px-4 py-2.5 rounded-lg text-[13px] font-semibold flex items-center gap-1.5"
+              style={{ background: active ? s.fg : s.bg, color: active ? "#FFFFFF" : s.fg }}
+            >
+              {b} <span className="text-[11px]" style={{ opacity: 0.8 }}>{countForBucket(b)}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="relative mb-4 max-w-sm">
+        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" color={C.inkFaint} />
+        <input
+          value={q}
+          onChange={e => setQ(e.target.value)}
+          placeholder="이름, 전화번호, FC, 상태로 검색"
+          className="w-full pl-9 pr-3 py-2.5 rounded-lg text-[13.5px] outline-none"
+          style={{ background: C.surface, border: `1px solid ${C.border}` }}
+        />
+      </div>
+
+      {/* Year / Month box navigator */}
+      <div className="rounded-lg mb-4" style={{ background: C.surface, border: `1px solid ${C.border}` }}>
+        <div className="flex flex-wrap gap-2 p-3">
+          <button
+            onClick={() => { setSelectedMonth("전체"); }}
+            className="px-3.5 py-2 rounded-md text-[13px] font-semibold"
+            style={{ background: selectedMonth === "전체" ? C.brand : C.surfaceAlt, color: selectedMonth === "전체" ? "#FFFFFF" : C.ink }}
+          >
+            전체 기간
+          </button>
+          {YEARS.map(y => {
+            const active = openYear === y;
+            const n = countForYear(y);
+            return (
+              <button
+                key={y}
+                onClick={() => setOpenYear(active ? null : y)}
+                className="px-3.5 py-2 rounded-md text-[13px] font-semibold flex items-center gap-1.5"
+                style={{ background: active ? C.brand : C.surfaceAlt, color: active ? "#FFFFFF" : C.ink }}
+              >
+                {y}년
+                <span className="text-[11px]" style={{ color: active ? "#C9A876" : C.inkFaint }}>{n}건</span>
+                <ChevronRight size={13} style={{ transform: active ? "rotate(90deg)" : "none", transition: "transform 0.15s" }} />
+              </button>
+            );
+          })}
+        </div>
+
+        {openYear && (
+          <div className="px-3 pb-3 pt-1 grid grid-cols-4 sm:grid-cols-6 gap-2" style={{ borderTop: `1px solid ${C.border}` }}>
+            {MONTHS.map(m => {
+              const ym = `${openYear}-${String(m).padStart(2, "0")}`;
+              const n = countFor(ym);
+              const active = selectedMonth === ym;
+              return (
+                <button
+                  key={m}
+                  onClick={() => setSelectedMonth(active ? "전체" : ym)}
+                  disabled={n === 0}
+                  className="rounded-md py-2.5 text-center mt-2"
+                  style={{
+                    background: active ? C.accent : (n === 0 ? C.bg : C.confirmedBg),
+                    color: active ? "#FFFFFF" : (n === 0 ? C.inkFaint : C.confirmed),
+                    cursor: n === 0 ? "default" : "pointer",
+                  }}
+                >
+                  <div className="text-[13px] font-semibold">{m}월</div>
+                  <div className="text-[10.5px] mt-0.5" style={{ opacity: 0.85 }}>{n}건</div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <div className="rounded-lg overflow-hidden" style={{ border: `1px solid ${C.border}`, background: C.surface }}>
+        {filtered.map((c, i) => (
+          <button
+            key={c.id}
+            onClick={() => onSelect(c.id)}
+            className="w-full flex items-center gap-4 px-4 py-3.5 text-left transition-colors"
+            style={{ borderTop: i > 0 ? `1px solid ${C.border}` : "none" }}
+            onMouseEnter={e => e.currentTarget.style.background = C.surfaceAlt}
+            onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+          >
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-[11.5px] shrink-0" style={{ ...mono, color: C.inkFaint }}>{c.consultDate}</span>
+                <span className="text-[14px] font-semibold">{c.name}</span>
+                <span className="text-[12px]" style={{ ...mono, color: C.inkFaint }}>****-{c.phone4}</span>
+              </div>
+              <div className="text-[12.5px] mt-0.5 truncate" style={{ color: C.inkSoft }}>
+                {c.fc !== "-" ? `${c.fc} FC · ` : ""}{c.consultType}
+              </div>
+            </div>
+            <StatusPill status={c.status} />
+            <ChevronRight size={16} color={C.inkFaint} />
+          </button>
+        ))}
+        {filtered.length === 0 && <Empty text="검색 결과가 없습니다." />}
+      </div>
+    </div>
+  );
+}
+
+/* ================= CUSTOMER DETAIL ================= */
+function CustomerDetail({ customer: c, onBack, onUpdate }) {
+  const [status, setStatus] = useState(c.status);
+  const [consultType, setConsultType] = useState(c.consultType);
+  const [collateral, setCollateral] = useState(c.collateral);
+  const [consultDate, setConsultDate] = useState(c.consultDate);
+  const [lastContact, setLastContact] = useState(c.lastContact);
+  const [docStatus, setDocStatus] = useState(c.docStatus);
+  const [badges, setBadges] = useState(c.consultBadges || {
+    consultType: "confirmed", collateral: "confirmed", consultDate: "confirmed", lastContact: "confirmed", docStatus: "verify",
+  });
+  const [notes, setNotes] = useState(c.notes);
+  const [nextAction, setNextAction] = useState(c.nextAction);
+  const [followUp, setFollowUp] = useState(c.followUp);
+  const [saved, setSaved] = useState(false);
+
+  const toggleBadge = (key) => setBadges(b => ({ ...b, [key]: b[key] === "confirmed" ? "verify" : "confirmed" }));
+
+  const dirty =
+    status !== c.status ||
+    consultType !== c.consultType || collateral !== c.collateral || consultDate !== c.consultDate ||
+    lastContact !== c.lastContact || docStatus !== c.docStatus || notes !== c.notes ||
+    nextAction !== c.nextAction || followUp !== c.followUp ||
+    JSON.stringify(badges) !== JSON.stringify(c.consultBadges || { consultType: "confirmed", collateral: "confirmed", consultDate: "confirmed", lastContact: "confirmed", docStatus: "verify" });
+
+  function save() {
+    onUpdate(c.id, { status, consultType, collateral, consultDate, lastContact, docStatus, consultBadges: badges, notes, nextAction, followUp });
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1600);
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-5 flex-wrap gap-2">
+        <button onClick={onBack} className="flex items-center gap-1.5 text-[13px]" style={{ color: C.inkSoft }}>
+          <ArrowLeft size={15} /> 고객목록으로
+        </button>
+        {dirty && (
+          <button onClick={save} className="flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[13px] font-semibold text-white" style={{ background: saved ? C.confirmed : C.accent }}>
+            <Save size={13} /> {saved ? "저장됨" : "변경사항 저장"}
+          </button>
+        )}
+      </div>
+
+      <div className="flex items-start justify-between mb-6 flex-wrap gap-3">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-[21px] font-bold">{c.name}</h1>
+            <span className="text-[13px]" style={{ ...mono, color: C.inkFaint }}>****-{c.phone4}</span>
+          </div>
+          <div className="text-[13px] mt-1" style={{ color: C.inkSoft }}>
+            {c.fc !== "-" ? `추천 FC: ${c.fc} · ${c.branch}` : "직접 신청 (추천 FC 없음)"}
+          </div>
+        </div>
+        <StatusSelector value={status} onChange={setStatus} />
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2 flex flex-col gap-5">
+          <Panel title="상담 정보">
+            <EditableRow label="상담유형" value={consultType} onChange={setConsultType} kind={badges.consultType} onToggleKind={() => toggleBadge("consultType")} />
+            <EditableRow label="담보" value={collateral} onChange={setCollateral} kind={badges.collateral} onToggleKind={() => toggleBadge("collateral")} />
+            <EditableRow label="상담일" value={consultDate} onChange={setConsultDate} kind={badges.consultDate} onToggleKind={() => toggleBadge("consultDate")} numeric type="date" />
+            <EditableRow label="최근 연락일" value={lastContact} onChange={setLastContact} kind={badges.lastContact} onToggleKind={() => toggleBadge("lastContact")} numeric type="date" />
+            <EditableRow label="서류상태" value={docStatus} onChange={setDocStatus} kind={badges.docStatus} onToggleKind={() => toggleBadge("docStatus")} />
+            <div className="text-[11.5px] mt-2.5" style={{ color: C.inkFaint }}>
+              배지를 눌러 확인됨 · 확인 필요 상태를 전환할 수 있어요.
+            </div>
+          </Panel>
+
+          {Object.keys(c.fields).length > 0 && (
+            <Panel title="대출 조건">
+              {Object.entries(c.fields).map(([k, v]) => (
+                <Field key={k} label={k} value={v} kind={c.badges[k] || "note"} numeric />
+              ))}
+              <div className="text-[11.5px] mt-2 flex items-start gap-1.5" style={{ color: C.inkFaint }}>
+                <span>· <Badge kind="note" label="통화 안내" />는 통화 중 안내된 내용으로, 확정 상품조건과 구분해 관리합니다.</span>
+              </div>
+            </Panel>
+          )}
+
+          <Panel title="메모">
+            <textarea
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+              rows={4}
+              className="w-full text-[13.5px] leading-relaxed p-2.5 rounded-md outline-none resize-none"
+              style={{ color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }}
+            />
+          </Panel>
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <Panel title="다음 행동">
+            <div className="flex items-start gap-2 py-1">
+              <CheckCircle2 size={16} color={C.brandSoft} className="mt-0.5 shrink-0" />
+              <input
+                value={nextAction}
+                onChange={e => setNextAction(e.target.value)}
+                className="w-full text-[13.5px] px-2 py-1.5 rounded-md outline-none"
+                style={{ color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }}
+              />
+            </div>
+          </Panel>
+          <Panel title="Follow-up">
+            <div className="flex items-start gap-2 py-1">
+              <Clock size={16} color={C.note} className="mt-0.5 shrink-0" />
+              <input
+                value={followUp}
+                onChange={e => setFollowUp(e.target.value)}
+                className="w-full text-[13.5px] px-2 py-1.5 rounded-md outline-none"
+                style={{ color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }}
+              />
+            </div>
+          </Panel>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ================= CALL SUMMARY AI ================= */
+function CallSummaryAI({ customers, setCustomers }) {
+  const [text, setText] = useState("");
+  const [result, setResult] = useState(null);
+  const [saved, setSaved] = useState(false);
+  const [justUpdated, setJustUpdated] = useState(false);
+
+  function analyze() {
+    if (!text.trim()) return;
+    const wasResult = result !== null;
+    setResult(parseSummary(text));
+    setSaved(false);
+    if (wasResult) {
+      setJustUpdated(true);
+      setTimeout(() => setJustUpdated(false), 1600);
+    }
+  }
+
+  function saveAsCustomer() {
+    if (!result) return;
+    const newC = {
+      id: `c${Date.now()}`,
+      name: result.name || `가상고객-${result.phone4 || Date.now().toString().slice(-4)}`,
+      phone4: result.phone4 || "----",
+      fc: result.fc || "-",
+      branch: result.branch || "-",
+      collateral: result.fields["담보"] || "확인 필요",
+      consultDate: new Date().toISOString().slice(0, 10),
+      lastContact: new Date().toISOString().slice(0, 10),
+      consultType: "자연어 입력 (통화요약 AI)",
+      status: "단순상담",
+      docStatus: "미안내",
+      nextAction: "구조화된 정보 검토 및 보완",
+      followUp: result.fields["Follow-up"] || "확인 필요",
+      notes: text,
+      fields: result.fields,
+      badges: result.badges,
+    };
+    setCustomers([newC, ...customers]);
+    setSaved(true);
+  }
+
+  const REQUIRED = ["name", "phone4", "fc"];
+
+  return (
+    <div>
+      <Header title="통화요약 AI" subtitle="통화요약이나 상담 메모를 붙여넣으면 구조화된 고객 기록을 만들어 드립니다." />
+
+      <div className="grid lg:grid-cols-2 gap-5">
+        <div>
+          <div className="rounded-lg p-4" style={{ background: C.surface, border: `1px solid ${C.border}` }}>
+            <textarea
+              value={text}
+              onChange={e => setText(e.target.value)}
+              placeholder="예: 김경희 고객하고 통화했어. 끝번호 1401이고...&#10;&#10;지점·FC가 헷갈리면 맨 아래에 이렇게 추가로 적어주세요:&#10;**대전SFP지점, ***김기원"
+              rows={9}
+              className="w-full resize-none outline-none text-[13.5px] leading-relaxed"
+              style={{ color: C.ink }}
+            />
+            <div className="text-[11.5px] mt-2" style={{ color: C.inkFaint }}>
+              지점·FC가 문맥상 누락될 수 있으면 맨 아래 줄에 <b>**지점명</b>, <b>***FC명</b> 형식으로 추가 입력하면 확실하게 인식돼요. (예: **대전SFP지점, ***김기원)
+            </div>
+            <div className="flex items-center justify-between mt-3">
+              <div className="flex items-center gap-3">
+                <button onClick={() => setText(SAMPLE_TEXT)} className="text-[12px]" style={{ color: C.note }}>
+                  대화체 예시
+                </button>
+                <button onClick={() => setText(SAMPLE_TEXT_LABELED)} className="text-[12px]" style={{ color: C.note }}>
+                  라벨형식 예시 (고객: / 추천:)
+                </button>
+                <button onClick={() => setText(SAMPLE_TEXT_MARKER)} className="text-[12px]" style={{ color: C.note }}>
+                  지점·FC 마커 예시 (**지점 / ***FC)
+                </button>
+              </div>
+              <button
+                onClick={analyze}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-md text-[13px] font-semibold text-white"
+                style={{ background: C.accent }}
+              >
+                <Sparkles size={14} /> 구조화하기
+              </button>
+            </div>
+          </div>
+          <div className="mt-3 text-[11.5px] leading-relaxed" style={{ color: C.inkFaint }}>
+            현재 통화요약 AI는 실제 LLM이 아닌 규칙 기반 시연용 Prototype입니다. 실제 서비스에서는 LLM 분석 → 기존 고객 검색 → 저장 전 사용자 확인 구조로 발전합니다.
+          </div>
+        </div>
+
+        <div>
+          {!result && (
+            <div className="rounded-lg p-8 h-full flex items-center justify-center text-center" style={{ background: C.surfaceAlt, border: `1px dashed ${C.border}` }}>
+              <span className="text-[13px]" style={{ color: C.inkFaint }}>왼쪽에 통화 내용을 입력하고 구조화하기를 눌러주세요.</span>
+            </div>
+          )}
+          {result && (
+            <div className="rounded-lg p-4" style={{ background: C.surface, border: `1px solid ${C.border}` }}>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="text-[14px] font-semibold">추출 결과</div>
+                {justUpdated && (
+                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ background: C.confirmedBg, color: C.confirmed }}>
+                    방금 다시 구조화됨
+                  </span>
+                )}
+              </div>
+              <EditableResultRow
+                label="고객명" value={result.name}
+                onChange={v => setResult(r => ({ ...r, name: v }))}
+                kind={result.badges.name || "verify"}
+                onToggleKind={k => setResult(r => ({ ...r, badges: { ...r.badges, name: k } }))}
+              />
+              <EditableResultRow
+                label="전화번호 뒤 4자리" value={result.phone4} numeric
+                onChange={v => setResult(r => ({ ...r, phone4: v }))}
+                kind={result.badges.phone4 || "verify"}
+                onToggleKind={k => setResult(r => ({ ...r, badges: { ...r.badges, phone4: k } }))}
+              />
+              {result.rrnDetected && (
+                <Field label="주민번호 앞자리" value="감지됨 · 개인정보 보호정책상 미저장" kind="verify" />
+              )}
+              <EditableResultRow
+                label="추천 FC" value={result.fc}
+                onChange={v => setResult(r => ({ ...r, fc: v }))}
+                kind={result.badges.fc || "verify"}
+                onToggleKind={k => setResult(r => ({ ...r, badges: { ...r.badges, fc: k } }))}
+              />
+              <EditableResultRow
+                label="지점" value={result.branch}
+                onChange={v => setResult(r => ({ ...r, branch: v }))}
+                kind={result.badges.branch || "verify"}
+                onToggleKind={k => setResult(r => ({ ...r, badges: { ...r.badges, branch: k } }))}
+              />
+              {Object.entries(result.fields).map(([k, v]) => (
+                <EditableResultRow
+                  key={k} label={k} value={v}
+                  onChange={nv => setResult(r => ({ ...r, fields: { ...r.fields, [k]: nv } }))}
+                  kind={result.badges[k] || "note"}
+                  onToggleKind={nk => setResult(r => ({ ...r, badges: { ...r.badges, [k]: nk } }))}
+                />
+              ))}
+              <div className="text-[11.5px] mt-3 mb-3" style={{ color: C.inkFaint }}>
+                모든 항목은 직접 수정할 수 있어요. 배지를 누르면 확인됨 · 확인 필요 · 통화 안내 순서로 바뀌어요. 주민등록번호는 인식하더라도 저장하지 않습니다.
+              </div>
+              <button
+                onClick={saveAsCustomer}
+                className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-md text-[13.5px] font-semibold text-white"
+                style={{ background: saved ? C.confirmed : C.accent }}
+              >
+                <Save size={14} /> {saved ? "고객관리에 저장됨" : "확인 후 고객으로 저장"}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ================= RATE CALCULATOR ================= */
+/* ================= DOCUMENT ASSISTANT ================= */
+const INCOME_TYPES = ["근로소득자", "사업소득자", "연금소득자"];
+
+function buildEmployeeDocs(cond) {
+  const docs = [];
+
+  // 항상 필요한 기본 서류
+  docs.push({ label: "건강보험자격득실확인서", detail: "1개월 이내 발급분", kind: "confirmed", group: "재직 확인" });
+  docs.push({ label: "재직증명서", detail: "1개월 이내 발급분", kind: "confirmed", group: "재직 확인" });
+  docs.push({
+    label: "소득 증빙서류 (택1)",
+    detail: "근로소득원천징수영수증 · 소득금액증명원 · 소득확인증명서(SA용) · 소득세원천징수확인서(세무사발행) · 급여명세표/임금대장(직인 필수) 중 1종",
+    kind: "confirmed", group: "소득 확인",
+  });
+  docs.push({
+    label: "급여입금 통장 사본",
+    detail: "소득발생기간 1개월 이상이나 실질수령액이 1개월 미만인 경우에만 추가",
+    kind: "note", group: "소득 확인",
+  });
+
+  // 재직기간별
+  if (cond.tenure === "3개월이하") {
+    docs.push({ label: "재직 여부 유선확인 + 서명날인", detail: "재직 3개월 이하자는 필수 확인 절차", kind: "verify", group: "재직기간 조건" });
+  }
+  if (cond.tenure === "1개월~1년미만") {
+    docs.push({
+      label: "연환산 소득 적용",
+      detail: cond.steadyIncome ? "상시소득으로 인정되어 100% 인정" : "상시소득 미인정 시 연환산 90%만 인정 (계약직·임시직은 상시소득 아님)",
+      kind: "note", group: "재직기간 조건",
+    });
+    if (cond.highIncome && !cond.exemptGroup) {
+      docs.push({ label: "최근 6개월 급여입금내역", detail: "연소득 5천만원 이상 & 재직 1년 미만은 증빙 강화 대상", kind: "verify", group: "재직기간 조건" });
+    }
+    if (cond.exemptGroup) {
+      docs.push({ label: "증빙 강화 예외 적용", detail: "우량직장인·상장업체 근무자·전직장 소득자 20% 이내 등은 예외 가능 (세부 기준 확인 필요)", kind: "note", group: "재직기간 조건" });
+    }
+  }
+
+  if (cond.onLeave) {
+    docs.push({ label: "휴직 확인 서류", detail: "휴직 전 최근년도 소득으로 연소득 산정. 신청일 기준 최근 36개월 내 1개월 이상 연속 소득 없으면 추정소득 적용", kind: "note", group: "휴직/복직" });
+  }
+  if (cond.returned) {
+    docs.push({ label: "복직 확인 서류", detail: "복직 후 최근년도 소득 기준 산정 (복직 3개월 미만이면 휴직자로 간주 선택 가능)", kind: "note", group: "휴직/복직" });
+  }
+  if (cond.combinePrevJob) {
+    docs.push({ label: "전직장 소득 서류", detail: "전직장 퇴직월과 현직장 입사월이 1개월 이내인 경우 심사자 판단으로 합산 가능 (공무원·교사·계열사 전배 등)", kind: "verify", group: "전직장 소득" });
+  }
+  if (cond.overseas) {
+    docs.push({ label: "해외소득 증빙 (최근 2개년)", detail: "해외공관 영사확인 또는 아포스티유 인증 필요", kind: "verify", group: "해외소득" });
+  }
+
+  return docs;
+}
+
+/* ---------- 고객 발송용 서류 체크리스트 ---------- */
+const SEND_INCOME_OPTIONS = ["근로소득자", "사업소득자", "연금소득자", "기타"];
+
+function buildSendChecklist(isPurchase, incomeCategory) {
+  const items = [
+    isPurchase ? "매매계약서" : "등기필증",
+    "주민등록등본 1통",
+    "초본 1통",
+    "전입세대확인서",
+    "외국인체류확인서 (주민센터 · 담보지 기준)",
+    "인감증명서 1통",
+    "인감도장",
+    "신분증",
+    "가족관계확인서",
+  ];
+  if (incomeCategory !== "기타") {
+    items.push(`재직증명서 (${incomeCategory})`);
+    items.push(`소득증명서 (${incomeCategory})`);
+  }
+  return items;
+}
+
+function SendChecklist() {
+  const [isPurchase, setIsPurchase] = useState(false);
+  const [incomeCategory, setIncomeCategory] = useState("근로소득자");
+  const [copied, setCopied] = useState(false);
+
+  const items = buildSendChecklist(isPurchase, incomeCategory);
+  const plainText = `다음서류 준비 부탁드립니다.\n${items.join(", ")}`;
+
+  function copy() {
+    navigator.clipboard?.writeText(plainText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }).catch(() => {});
+  }
+
+  return (
+    <Panel title="고객 발송용 서류 체크리스트">
+      <div className="flex flex-col sm:flex-row gap-4 py-1 mb-1">
+        <div className="flex-1">
+          <div className="text-[12px] mb-2" style={{ color: C.inkSoft }}>대출용도</div>
+          <div className="flex gap-1.5">
+            <RadioRow label="구입" checked={isPurchase} onClick={() => setIsPurchase(true)} />
+            <RadioRow label="그 외 (대환·생활자금 등)" checked={!isPurchase} onClick={() => setIsPurchase(false)} />
+          </div>
+        </div>
+        <div className="flex-1">
+          <div className="text-[12px] mb-2" style={{ color: C.inkSoft }}>소득유형</div>
+          <div className="flex flex-wrap gap-1.5">
+            {SEND_INCOME_OPTIONS.map(t => (
+              <RadioRow key={t} label={t} checked={incomeCategory === t} onClick={() => setIncomeCategory(t)} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${C.border}` }}>
+        <div className="flex flex-col gap-1.5 mb-3">
+          {items.map((item, i) => {
+            const changed = i === 0 && isPurchase;
+            const isIncomeDoc = item.includes("재직증명서") || item.includes("소득증명서");
+            return (
+              <div key={i} className="flex items-center gap-2 text-[13.5px]">
+                <span className="w-5 shrink-0" style={{ ...mono, color: C.inkFaint }}>{i + 1}.</span>
+                <span style={{ color: C.ink }}>{item}</span>
+                {changed && <Badge kind="note" label="구입 조건 반영" />}
+                {isIncomeDoc && <Badge kind="note" label="소득유형 반영" />}
+              </div>
+            );
+          })}
+          {incomeCategory === "기타" && (
+            <div className="text-[12px] mt-1 flex items-start gap-1.5" style={{ color: C.inkFaint }}>
+              <Info size={13} className="mt-0.5 shrink-0" />
+              <span>소득유형을 "기타"로 선택하여 재직증명서 · 소득증명서 항목이 제외되었습니다.</span>
+            </div>
+          )}
+        </div>
+
+        <textarea
+          readOnly
+          value={plainText}
+          rows={3}
+          className="w-full resize-none outline-none text-[13px] leading-relaxed p-3 rounded-md"
+          style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, color: C.ink }}
+        />
+        <button
+          onClick={copy}
+          className="mt-2 flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[12.5px] font-semibold text-white"
+          style={{ background: copied ? C.confirmed : C.accent }}
+        >
+          <FileCheck2 size={13} /> {copied ? "복사됨" : "텍스트 복사하기"}
+        </button>
+      </div>
+    </Panel>
+  );
+}
+
+function DocumentAssistant() {
+  const [incomeType, setIncomeType] = useState("근로소득자");
+  const [cond, setCond] = useState({
+    tenure: "1년이상",
+    steadyIncome: false,
+    highIncome: false,
+    exemptGroup: false,
+    onLeave: false,
+    returned: false,
+    combinePrevJob: false,
+    overseas: false,
+  });
+
+  const set = (k, v) => setCond({ ...cond, [k]: v });
+  const docs = incomeType === "근로소득자" ? buildEmployeeDocs(cond) : null;
+  const groups = docs ? [...new Set(docs.map(d => d.group))] : [];
+
+  const STATIC = {
+    "사업소득자": [
+      { label: "건강보험자격득실확인서(필수)", detail: "사업자등록증 사본 + 사업자실명확인 필요", kind: "confirmed" },
+      { label: "사업자등록증명원 · 고용/산재보험 자격이력내역서 등", detail: "무등록 사업자, 보험모집인, 다단계판매원 등은 별도 확인 서류", kind: "confirmed" },
+      { label: "소득금액증명원, 연말정산 사업소득 원천징수영수증", detail: "종빙: 소득금액증명원 100% 인정. 신고소득은 유형에 따라 인정비율 상이", kind: "note" },
+      { label: "개업 1년 미만 / 2년 이상 조건부 인정비율", detail: "개업 1년 미만은 소득 90% 인정, 2년 이상은 27개월 소득증빙 시 최근년도 소득 100% 인정 등 세부기준 상이", kind: "verify" },
+    ],
+    "연금소득자": [
+      { label: "연금수급자확인서 등", detail: "연금수급을 확인할 수 있는 지급기관 증명서, 최근 발생분 우선 인정", kind: "confirmed" },
+      { label: "연금수령 통장사본", detail: "증명서에 수령금액이 표시되지 않는 경우 추가 제출", kind: "verify" },
+      { label: "연금 수령기간 확인", detail: "국민연금·공무원연금·군인연금·사학연금 등 종류별 인정 범위 상이, 기초생활수급·국가유공자 보상금 등은 제외", kind: "note" },
+    ],
+  };
+
+  return (
+    <div>
+      <Header title="서류안내" subtitle="고객에게 보낼 서류 체크리스트를 만들고, 소득유형별 필요서류를 확인합니다." />
+
+      <SendChecklist />
+
+      <div className="flex items-center gap-2 mt-9 mb-5">
+        <div className="text-[11px] font-semibold uppercase" style={{ color: C.inkSoft, letterSpacing: "0.07em" }}>심사용 · 소득유형별 필요서류 확인</div>
+        <div className="flex-1 h-px" style={{ background: C.border }} />
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-1 flex flex-col gap-5">
+          <Panel title="소득유형 선택">
+            <div className="flex flex-col gap-1.5 py-1">
+              {INCOME_TYPES.map(t => (
+                <button
+                  key={t}
+                  onClick={() => setIncomeType(t)}
+                  className="flex items-center justify-between px-3 py-2.5 rounded-md text-[13.5px] font-medium text-left"
+                  style={{
+                    background: incomeType === t ? C.brand : C.surfaceAlt,
+                    color: incomeType === t ? "#FFFFFF" : C.ink,
+                  }}
+                >
+                  {t}
+                  {incomeType === t && <ChevronRight size={14} />}
+                </button>
+              ))}
+            </div>
+          </Panel>
+
+          {incomeType === "근로소득자" && (
+            <Panel title="고객 상황 입력">
+              <div className="flex flex-col gap-4 py-1">
+                <div>
+                  <div className="text-[12px] mb-2" style={{ color: C.inkSoft }}>재직기간</div>
+                  <div className="flex flex-col gap-1.5">
+                    {["1년이상", "1개월~1년미만", "3개월이하"].map(v => (
+                      <RadioRow key={v} label={v} checked={cond.tenure === v} onClick={() => set("tenure", v)} />
+                    ))}
+                  </div>
+                </div>
+
+                {cond.tenure === "1개월~1년미만" && (
+                  <div>
+                    <div className="text-[12px] mb-2" style={{ color: C.inkSoft }}>재직 1년 미만 추가 조건</div>
+                    <CheckRow label="상시소득으로 인정 가능" checked={cond.steadyIncome} onClick={() => set("steadyIncome", !cond.steadyIncome)} />
+                    <CheckRow label="연소득 5천만원 이상" checked={cond.highIncome} onClick={() => set("highIncome", !cond.highIncome)} />
+                    <CheckRow label="우량직장인 / 상장업체 근무자 등 예외 대상" checked={cond.exemptGroup} onClick={() => set("exemptGroup", !cond.exemptGroup)} />
+                  </div>
+                )}
+
+                <div>
+                  <div className="text-[12px] mb-2" style={{ color: C.inkSoft }}>기타 상황</div>
+                  <CheckRow label="현재 휴직 중" checked={cond.onLeave} onClick={() => set("onLeave", !cond.onLeave)} />
+                  <CheckRow label="최근 복직함" checked={cond.returned} onClick={() => set("returned", !cond.returned)} />
+                  <CheckRow label="전직장 소득 합산 필요" checked={cond.combinePrevJob} onClick={() => set("combinePrevJob", !cond.combinePrevJob)} />
+                  <CheckRow label="해외소득 포함" checked={cond.overseas} onClick={() => set("overseas", !cond.overseas)} />
+                </div>
+              </div>
+            </Panel>
+          )}
+        </div>
+
+        <div className="lg:col-span-2 flex flex-col gap-5">
+          {incomeType === "근로소득자" && groups.map(g => (
+            <Panel key={g} title={g}>
+              {docs.filter(d => d.group === g).map((d, i) => (
+                <div key={i} className="py-2.5" style={{ borderBottom: `1px solid ${C.border}` }}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[13.5px] font-medium">{d.label}</span>
+                    <Badge kind={d.kind} />
+                  </div>
+                  <div className="text-[12.5px] leading-relaxed" style={{ color: C.inkSoft }}>{d.detail}</div>
+                </div>
+              ))}
+            </Panel>
+          ))}
+
+          {incomeType !== "근로소득자" && (
+            <Panel title={`${incomeType} 필요서류`}>
+              {STATIC[incomeType].map((d, i) => (
+                <div key={i} className="py-2.5" style={{ borderBottom: `1px solid ${C.border}` }}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[13.5px] font-medium">{d.label}</span>
+                    <Badge kind={d.kind} />
+                  </div>
+                  <div className="text-[12.5px] leading-relaxed" style={{ color: C.inkSoft }}>{d.detail}</div>
+                </div>
+              ))}
+              <div className="text-[11.5px] mt-3 flex items-start gap-1.5" style={{ color: C.inkFaint }}>
+                <Info size={13} className="mt-0.5 shrink-0" />
+                <span>{incomeType}는 아직 조건부 세부 로직이 반영되지 않았습니다. 현재는 참고자료의 고정 항목만 표시합니다.</span>
+              </div>
+            </Panel>
+          )}
+
+          <div className="text-[11.5px] leading-relaxed px-1 flex items-start gap-1.5" style={{ color: C.inkFaint }}>
+            <Info size={13} className="mt-0.5 shrink-0" />
+            <span>이 안내는 2021.04 기준 참고자료를 근거로 하며, 실제 적용 전 최신 사내 심사기준으로 반드시 재확인해야 합니다. 재직 확인과 소득 확인은 서로 다른 서류로 구분됩니다.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RadioRow({ label, checked, onClick }) {
+  return (
+    <button onClick={onClick} className="flex items-center gap-2.5 px-3 py-2 rounded-md text-left" style={{ background: checked ? C.confirmedBg : C.surfaceAlt }}>
+      <span className="w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0" style={{ border: `1.5px solid ${checked ? C.confirmed : C.inkFaint}` }}>
+        {checked && <span className="w-1.5 h-1.5 rounded-full" style={{ background: C.confirmed }} />}
+      </span>
+      <span className="text-[13px]" style={{ color: checked ? C.confirmed : C.ink, fontWeight: checked ? 600 : 400 }}>{label}</span>
+    </button>
+  );
+}
+
+function CheckRow({ label, checked, onClick }) {
+  return (
+    <button onClick={onClick} className="flex items-center gap-2.5 px-3 py-2 rounded-md text-left w-full" style={{ background: checked ? C.confirmedBg : "transparent" }}>
+      <span className="w-3.5 h-3.5 rounded flex items-center justify-center shrink-0" style={{ border: `1.5px solid ${checked ? C.confirmed : C.inkFaint}`, background: checked ? C.confirmed : "transparent" }}>
+        {checked && <CheckCircle2 size={11} color="#FFFFFF" strokeWidth={3} />}
+      </span>
+      <span className="text-[13px]" style={{ color: checked ? C.confirmed : C.ink, fontWeight: checked ? 600 : 400 }}>{label}</span>
+    </button>
+  );
+}
+
+function RateCalculator() {
+  const [productId, setProductId] = useState(PRODUCTS[0].id);
+  const [baseRate, setBaseRate] = useState(PRODUCTS[0].base);
+  const [checks, setChecks] = useState({}); // { [id]: true/false }
+  const [checkVals, setCheckVals] = useState({}); // { [id]: number } for variable items
+  const [creditId, setCreditId] = useState("none");
+  const [insuranceId, setInsuranceId] = useState("none");
+  const [jeongyeolBp, setJeongyeolBp] = useState(0); // 0~30
+
+  const product = PRODUCTS.find(p => p.id === productId);
+
+  function changeProduct(id) {
+    const p = PRODUCTS.find(x => x.id === id);
+    setProductId(id);
+    setBaseRate(p.base); // 상품 변경 시 표 기준금리로 초기화 (직접 수정 가능)
+  }
+
+  const basicRate = product.spread + (parseFloat(baseRate) || 0); // 기준금리(입력) + 가산금리(고정) = 기본금리
+
+  const generalTotal = CHECK_ITEMS.reduce((sum, item) => {
+    if (!checks[item.id]) return sum;
+    const v = item.variable ? (checkVals[item.id] ?? item.value) : item.value;
+    return sum + v;
+  }, 0);
+  const creditVal = CREDIT_OPTIONS.find(o => o.id === creditId).value;
+  const insuranceVal = INSURANCE_OPTIONS.find(o => o.id === insuranceId).value;
+  const jeongyeolVal = jeongyeolBp / 100;
+
+  const rawTotal = generalTotal + creditVal + insuranceVal + jeongyeolVal;
+  const maxAllowed = Math.min(MAX_DISCOUNT_CAP, product.spread, basicRate - MIN_RATE);
+  const appliedTotal = Math.min(rawTotal, Math.max(maxAllowed, 0));
+  const finalRate = Math.max(basicRate - appliedTotal, MIN_RATE);
+  const capped = rawTotal > maxAllowed + 0.0001;
+
+  return (
+    <div>
+      <Header title="금리계산기" subtitle={`대외비 · FC 전용 · ${RATE_PERIOD} 금리운용 기준`} />
+
+      <div className="grid lg:grid-cols-3 gap-5 items-start">
+        <div className="lg:col-span-2 flex flex-col gap-5">
+          <StepTitle n={1} title="상품 선택" />
+          <Panel>
+            <select
+              value={productId}
+              onChange={e => changeProduct(e.target.value)}
+              className="w-full px-3 py-2.5 rounded-md text-[14px] font-semibold outline-none mb-4"
+              style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, color: C.ink }}
+            >
+              {PRODUCTS.map(p => <option key={p.id} value={p.id}>{p.name} ({p.type})</option>)}
+            </select>
+
+            <RateBuildRow
+              label="기준금리"
+              tag="직접입력" tagKind="accent"
+              right={
+                <div className="flex items-center gap-1.5">
+                  <input
+                    type="number" step="0.01" min="0" max="20"
+                    value={baseRate}
+                    onChange={e => setBaseRate(e.target.value === "" ? "" : parseFloat(e.target.value))}
+                    className="w-[92px] text-right px-2 py-1.5 rounded-md outline-none text-[16px] font-bold"
+                    style={{ ...mono, border: `1.5px solid ${C.border}`, color: C.brand, background: C.surface }}
+                  />
+                  <span className="text-[14px]" style={{ ...mono, color: C.inkSoft }}>%</span>
+                </div>
+              }
+            />
+            <div className="text-center text-[13px] py-1" style={{ color: "#B7C0CB", ...mono }}>+</div>
+            <RateBuildRow
+              label="가산금리"
+              tag="표 고정" tagKind="muted"
+              right={<span className="text-[16px] font-bold" style={{ color: C.inkSoft }}>{fmt(product.spread)}%</span>}
+            />
+            <div className="text-center text-[13px] py-1" style={{ color: "#B7C0CB", ...mono }}>=</div>
+            <div className="flex items-center justify-between pt-2.5 mt-1" style={{ borderTop: `1.5px solid ${C.border}` }}>
+              <span className="text-[14px]">기본금리</span>
+              <span className="text-[22px] font-extrabold" style={{ ...mono, color: C.brand }}>{fmt(basicRate)}%</span>
+            </div>
+            <div className="text-right text-[11px] mt-2.5" style={{ ...mono, color: C.urgent }}>
+              참고 · 표 기준 금리Band {fmt(product.bandLow)}~{fmt(product.bandHigh)}%
+            </div>
+          </Panel>
+
+          <StepTitle n={2} title="일반할인 · 우대항목" />
+          <Panel noPad>
+            <div className="px-4 pt-3 pb-1 text-[10.5px] uppercase" style={{ ...mono, color: C.inkSoft, letterSpacing: "0.08em" }}>체크하여 적용</div>
+            {CHECK_ITEMS.map(item => {
+              const checked = !!checks[item.id];
+              const val = checkVals[item.id] ?? item.value;
+              return (
+                <div key={item.id} className="flex items-center justify-between gap-2.5 px-4 py-2.5" style={{ borderBottom: `1px solid ${C.border}` }}>
+                  <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                    <input
+                      type="checkbox" checked={checked}
+                      onChange={e => setChecks({ ...checks, [item.id]: e.target.checked })}
+                      style={{ width: 18, height: 18, accentColor: C.brand }}
+                    />
+                    <label className="text-[13.5px] cursor-pointer" onClick={() => setChecks({ ...checks, [item.id]: !checked })}>{item.label}</label>
+                    {item.variable && (
+                      <select
+                        disabled={!checked}
+                        value={val}
+                        onChange={e => setCheckVals({ ...checkVals, [item.id]: parseFloat(e.target.value) })}
+                        className="text-[12px] rounded-md px-1.5 py-1 outline-none"
+                        style={{ border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.ink }}
+                      >
+                        {item.options.map(o => <option key={o} value={o}>△{fmt(o)}</option>)}
+                      </select>
+                    )}
+                  </div>
+                  <div className="text-[13px] font-bold shrink-0" style={{ ...mono, color: checked ? C.confirmed : "#B7C0CB" }}>
+                    △{fmt(checked ? val : item.value)}
+                  </div>
+                </div>
+              );
+            })}
+          </Panel>
+
+          <Panel noPad>
+            <div className="px-4 pt-3 pb-1 text-[10.5px] uppercase" style={{ ...mono, color: C.inkSoft, letterSpacing: "0.08em" }}>신용평점 우량 / 대출우수 (중복 불가)</div>
+            <TierRadioGroup options={CREDIT_OPTIONS} groupName="credit" value={creditId} onChange={setCreditId} />
+          </Panel>
+
+          <Panel noPad>
+            <div className="px-4 pt-3 pb-1 text-[10.5px] uppercase" style={{ ...mono, color: C.inkSoft, letterSpacing: "0.08em" }}>보험할인 — 월보험료 또는 보험VIP (① or ②)</div>
+            <TierRadioGroup options={INSURANCE_OPTIONS} groupName="insurance" value={insuranceId} onChange={setInsuranceId} />
+          </Panel>
+
+          <StepTitle n={3} title="전결할인 (가이드라인 조정)" />
+          <Panel>
+            <div className="flex items-baseline justify-between mb-1.5">
+              <span className="text-[14px] font-bold">전결할인</span>
+              <span className="text-[22px] font-extrabold" style={{ ...mono, color: C.accent }}>△{fmt(jeongyeolVal)}</span>
+            </div>
+            <div className="text-[11.5px] mb-3.5 leading-relaxed" style={{ color: C.inkSoft }}>최대전결 30bp · 적용 시 커버페이지(특이사항)에 사유 명기 필요</div>
+            <input
+              type="range" min={0} max={30} step={1} value={jeongyeolBp}
+              onChange={e => setJeongyeolBp(parseInt(e.target.value, 10))}
+              className="w-full" style={{ accentColor: C.accent, height: 6, cursor: "pointer" }}
+            />
+            <div className="flex justify-between text-[10.5px] mt-1" style={{ ...mono, color: "#B0BAC7" }}>
+              <span>0.00</span><span>0.15</span><span>0.30</span>
+            </div>
+            {jeongyeolBp > 0 && (
+              <div className="mt-3 text-[11.5px] rounded-md px-2.5 py-2" style={{ color: C.urgent, background: C.urgentBg }}>
+                전결할인 적용배제 대상(신용평점 7구간 이하 / 신규·추가 2,000만원 미만·재대출 / 고위험군 / 프리론)은 적용 전 확인이 필요합니다.
+              </div>
+            )}
+          </Panel>
+        </div>
+
+        {/* result column */}
+        <div className="lg:sticky lg:top-6 flex flex-col gap-4">
+          <div className="rounded-lg p-5 text-white" style={{ background: `linear-gradient(155deg, ${C.brand} 0%, #14171E 100%)` }}>
+            <div className="text-[10.5px] uppercase mb-1" style={{ ...mono, letterSpacing: "0.1em", color: "#9FA6B4" }}>적용금리 (기본금리 − 총할인)</div>
+            <div className="text-[32px] font-extrabold leading-none mb-4" style={{ ...mono, color: C.accentSoft }}>
+              {fmt(finalRate)}<span className="text-[16px] ml-0.5">%</span>
+            </div>
+            <div className="flex items-center justify-between text-[12px] mb-3 pb-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
+              <span style={{ color: "#9FA6B4" }}>기본금리</span>
+              <span className="font-bold text-[14px]" style={mono}>{fmt(basicRate)}%</span>
+            </div>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-[11px]" style={{ ...mono, color: "#B7C4D3" }}>
+              <div>일반할인 <b style={{ color: "#EAF0F7" }}>{fmt(generalTotal)}</b></div>
+              <div>신용/대출우수 <b style={{ color: "#EAF0F7" }}>{fmt(creditVal)}</b></div>
+              <div>보험할인 <b style={{ color: "#EAF0F7" }}>{fmt(insuranceVal)}</b></div>
+              <div>전결할인 <b style={{ color: "#EAF0F7" }}>{fmt(jeongyeolVal)}</b></div>
+              <div className="col-span-2 pt-1.5 mt-0.5" style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
+                총할인 <b style={{ color: C.accentSoft }}>{fmt(appliedTotal)}</b>
+              </div>
+            </div>
+            {capped && (
+              <div className="text-[10.5px] mt-3" style={{ color: "#E7B4A0" }}>
+                ⚠ 최대 할인한도(가산금리·최저금리 기준)를 초과하여 한도까지만 적용되었습니다.
+              </div>
+            )}
+          </div>
+
+          <div className="text-[11.5px] leading-relaxed px-1 flex items-start gap-1.5" style={{ color: C.inkFaint }}>
+            <Info size={13} className="mt-0.5 shrink-0" />
+            <span>이 결과는 계산기 산출 예상금리이며, 통화상 안내금리·실제 심사 적용금리와 구분해 관리합니다. FC 내부 참고용이며 실제 적용 시 개별 조건 재확인이 필요합니다.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StepTitle({ n, title }) {
+  return (
+    <div className="flex items-center gap-2 -mb-1">
+      <span className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0" style={{ ...mono, background: C.brand }}>{n}</span>
+      <h2 className="text-[14.5px] font-bold">{title}</h2>
+    </div>
+  );
+}
+
+function RateBuildRow({ label, tag, tagKind, right }) {
+  return (
+    <div className="flex items-center justify-between py-1">
+      <div className="text-[13px] font-semibold flex items-center gap-2">
+        {label}
+        <span
+          className="text-[9px] px-1.5 py-0.5 rounded-full"
+          style={{ ...mono, letterSpacing: "0.04em", color: tagKind === "accent" ? C.brand : C.inkSoft, background: tagKind === "accent" ? "#EFE0BE" : "#EEF1F5" }}
+        >
+          {tag}
+        </span>
+      </div>
+      {right}
+    </div>
+  );
+}
+
+function TierRadioGroup({ options, groupName, value, onChange }) {
+  return (
+    <div>
+      {options.map(o => (
+        <div key={o.id} className="flex items-center justify-between gap-2.5 px-4 py-2.5" style={{ borderBottom: `1px solid ${C.border}` }}>
+          <div className="flex items-center gap-2.5">
+            <input
+              type="radio" name={groupName} checked={value === o.id}
+              onChange={() => onChange(o.id)}
+              style={{ width: 18, height: 18, accentColor: C.brand, cursor: "pointer" }}
+            />
+            <label className="text-[13.5px] cursor-pointer" onClick={() => onChange(o.id)}>{o.label}</label>
+          </div>
+          <div className="text-[13px] font-bold" style={{ ...mono, color: o.value === 0 ? "#B7C0CB" : C.confirmed }}>
+            {o.value === 0 ? "—" : `△${fmt(o.value)}`}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ================= FC MANAGEMENT ================= */
+function FCManagement({ fcs, customers, onSelect }) {
+  return (
+    <div>
+      <Header title="FC관리" subtitle="FC별 소개 이력과 연락 예정을 관리합니다. 고객 통화와 분리해서 관리합니다. 카드를 누르면 상세 내용을 볼 수 있습니다." />
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        {fcs.map(f => {
+          const related = customers.filter(c => c.fc === f.name);
+          return (
+            <button
+              key={f.id}
+              onClick={() => onSelect(f.id)}
+              className="text-left rounded-lg p-4 transition-colors"
+              style={{ background: C.surface, border: `1px solid ${C.border}` }}
+              onMouseEnter={e => e.currentTarget.style.background = C.surfaceAlt}
+              onMouseLeave={e => e.currentTarget.style.background = C.surface}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <div className="text-[15px] font-semibold">{f.name} <span className="text-[12px] font-normal" style={{ color: C.inkSoft }}>FC</span></div>
+                  <div className="text-[12.5px]" style={{ color: C.inkSoft }}>{f.branch}</div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CallLink
+                    phone={f.phone}
+                    className="flex items-center gap-1 text-[11px] px-2 py-1 rounded-full"
+                    style={{ background: C.noteBg, color: C.note }}
+                  >
+                    <Phone size={11} /> 전화
+                  </CallLink>
+                  <ChevronRight size={15} color={C.inkFaint} />
+                </div>
+              </div>
+              <Field label="최근 소개 고객" value={f.recentIntro} kind="confirmed" />
+              <Field label="현재 진행 고객" value={`${f.activeCustomers}명`} kind="confirmed" numeric />
+              <Field label="지급 완료 고객" value={`${f.paidCustomers}명`} kind="confirmed" numeric />
+              <Field label="다음 연락 예정일" value={f.nextContact} kind="verify" numeric />
+              {related.length > 0 && (
+                <div className="mt-2 pt-2" style={{ borderTop: `1px solid ${C.border}` }}>
+                  <div className="text-[11.5px] mb-1.5" style={{ color: C.inkFaint }}>연결된 고객</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {related.map(r => <StatusPill key={r.id} status={r.name} />)}
+                  </div>
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ================= FC DETAIL ================= */
+function FCDetail({ fc, customers, onBack, goCustomer }) {
+  const related = customers.filter(c => c.fc === fc.name);
+
+  return (
+    <div>
+      <button onClick={onBack} className="flex items-center gap-1.5 text-[13px] mb-5" style={{ color: C.inkSoft }}>
+        <ArrowLeft size={15} /> FC목록으로
+      </button>
+
+      <div className="flex items-start justify-between mb-6 flex-wrap gap-3">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-[21px] font-semibold tracking-tight">{fc.name}</h1>
+            <span className="text-[12.5px] px-2 py-0.5 rounded-full" style={{ background: C.surfaceAlt, color: C.inkSoft }}>FC</span>
+          </div>
+          <div className="text-[13px] mt-1" style={{ color: C.inkSoft }}>{fc.branch}</div>
+        </div>
+        <CallLink
+          phone={fc.phone}
+          className="flex items-center gap-1.5 text-[12.5px] font-semibold px-3 py-1.5 rounded-full"
+          style={{ color: "#FFFFFF", background: C.accent }}
+        >
+          <Phone size={12} /> {fc.name} FC에게 전화
+        </CallLink>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2 flex flex-col gap-5">
+          <Panel title="소개 현황">
+            <Field label="최근 소개 고객" value={fc.recentIntro} kind="confirmed" />
+            <Field label="현재 진행 고객" value={`${fc.activeCustomers}명`} kind="confirmed" numeric />
+            <Field label="지급 완료 고객" value={`${fc.paidCustomers}명`} kind="confirmed" numeric />
+            <Field label="최근 연락일" value={fc.lastContact} kind="confirmed" numeric />
+            <Field label="다음 연락 예정일" value={fc.nextContact} kind="verify" numeric />
+          </Panel>
+
+          <Panel title={`연결된 고객 (${related.length}명)`}>
+            {related.length === 0 && <Empty text="이 FC를 통해 연결된 고객이 아직 없습니다." />}
+            {related.map(c => (
+              <TaskRow
+                key={c.id}
+                title={c.name}
+                sub={`${c.consultType} · ${c.nextAction}`}
+                tag={c.status}
+                tagColor={STATUS_STYLE[c.status]?.fg}
+                tagBg={STATUS_STYLE[c.status]?.bg}
+                onClick={() => goCustomer(c.id)}
+              />
+            ))}
+          </Panel>
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <Panel title="다음 행동">
+            <div className="flex items-start gap-2 py-1">
+              <Clock size={16} color={C.note} className="mt-0.5 shrink-0" />
+              <span className="text-[13.5px]">{fc.nextContact}에 연락 예정</span>
+            </div>
+          </Panel>
+          <div className="text-[11.5px] leading-relaxed px-1" style={{ color: C.inkFaint }}>
+            FC 통화는 고객 통화와 분리해서 관리합니다. 연결된 고객 목록은 현재 이 FC의 추천으로 등록된 기록을 기준으로 합니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+const { useState, useMemo } = React;
+const container = document.getElementById('root');
+const root = ReactDOM.createRoot(container);
+root.render(<App />);
+
+</script>
+</body>
+</html>
