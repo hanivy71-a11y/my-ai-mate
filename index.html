@@ -1,28 +1,3 @@
-
-/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Index · HTML
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -32,1821 +7,1265 @@ Index · HTML
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
 <title>My AI Mate</title>
- 
+
 <!-- Tailwind (full JIT build, supports arbitrary values like text-[13px]) -->
 <script src="https://cdn.tailwindcss.com"></script>
- 
+
 <!-- React 18 + ReactDOM 18 (UMD builds) -->
 <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
- 
-<!-- Babel Standalone: lets the browser transpile JSX at runtime (no build step needed) -->
-<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
- 
+
 <style>
   html, body { margin: 0; padding: 0; background: #F6F5F1; }
   #root { min-height: 100vh; }
+  #load-status { display:flex; align-items:center; justify-content:center; height:100vh; font-family:-apple-system,sans-serif; color:#6B675D; font-size:14px; text-align:center; padding:24px; box-sizing:border-box; }
 </style>
 </head>
 <body>
 <div id="root">
-  <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:-apple-system,sans-serif;color:#6B675D;">
-    불러오는 중...
-  </div>
+  <div id="load-status">불러오는 중...</div>
 </div>
- 
-<script type="text/babel" data-presets="react">
-/* Lightweight stand-in icons for the standalone (no-bundler) deploy.
-   These replace lucide-react so the app can run from CDN <script> tags
-   without a build step. Same call signature (size, color, strokeWidth, className, fill). */
- 
-function IconBase({ children, size = 16, color = "currentColor", strokeWidth = 2, className, fill = "none", stroke, ...rest }) {
-  return (
-    <svg
-      width={size} height={size} viewBox="0 0 24 24"
-      fill={fill} stroke={stroke ?? color} strokeWidth={strokeWidth}
-      strokeLinecap="round" strokeLinejoin="round" className={className} {...rest}
-    >
-      {children}
-    </svg>
-  );
-}
- 
-const LayoutDashboard = (p) => <IconBase {...p}><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></IconBase>;
-const Users = (p) => <IconBase {...p}><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><path d="M17 11a4 4 0 0 0 0-8"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></IconBase>;
-const PhoneCall = (p) => <IconBase {...p}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.78.66 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.47-1.47a2 2 0 0 1 2.11-.45c.83.32 1.71.54 2.61.66A2 2 0 0 1 22 16.92z"/></IconBase>;
-const Calculator = (p) => <IconBase {...p}><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="18"/><line x1="8" y1="18" x2="12" y2="18"/></IconBase>;
-const UserCog = (p) => <IconBase {...p}><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h4"/><circle cx="19" cy="15" r="2.5"/><path d="M19 11v1.2M19 17.8V19M15.7 13l1 .6M21.3 16.4l1 .6M15.7 17l1-.6M21.3 13.6l1-.6"/></IconBase>;
-const Search = (p) => <IconBase {...p}><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></IconBase>;
-const ChevronRight = (p) => <IconBase {...p}><polyline points="9 18 15 12 9 6"/></IconBase>;
-const CheckCircle2 = (p) => <IconBase {...p}><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></IconBase>;
-const AlertCircle = (p) => <IconBase {...p}><circle cx="12" cy="12" r="10"/><line x1="12" y1="7.5" x2="12" y2="13"/><circle cx="12" cy="16.5" r="0.9" fill={p.color || "currentColor"} stroke="none"/></IconBase>;
-const Clock = (p) => <IconBase {...p}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></IconBase>;
-const ArrowLeft = (p) => <IconBase {...p}><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></IconBase>;
-const Sparkles = (p) => <IconBase {...p}><path d="M12 2l1.6 5.4L19 9l-5.4 1.6L12 16l-1.6-5.4L5 9l5.4-1.6L12 2z"/><path d="M19 14l.6 2 2 .6-2 .6-.6 2-.6-2-2-.6 2-.6z"/></IconBase>;
-const Save = (p) => <IconBase {...p}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></IconBase>;
-const Circle = (p) => <IconBase {...p}><circle cx="12" cy="12" r="10" fill={p.fill && p.fill !== "none" ? p.fill : "none"} stroke={p.stroke ?? p.color ?? "currentColor"}/></IconBase>;
-const TrendingUp = (p) => <IconBase {...p}><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></IconBase>;
-const FileText = (p) => <IconBase {...p}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></IconBase>;
-const Phone = (p) => <IconBase {...p}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.78.66 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.47-1.47a2 2 0 0 1 2.11-.45c.83.32 1.71.54 2.61.66A2 2 0 0 1 22 16.92z"/></IconBase>;
-const FileCheck2 = (p) => <IconBase {...p}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 15 11 17 15 13"/></IconBase>;
-const Info = (p) => <IconBase {...p}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="11.5"/><circle cx="12" cy="8" r="0.9" fill={p.color || "currentColor"} stroke="none"/></IconBase>;
- 
- 
- 
-/* ---------- design tokens ---------- */
-const C = {
-  bg: "#F6F5F1",
-  surface: "#FFFFFF",
-  surfaceAlt: "#F1EFE8",
-  ink: "#211F1B",
-  inkSoft: "#6B675D",
-  inkFaint: "#9C978A",
-  brand: "#20242E",
-  brandSoft: "#3A3F4C",
-  accent: "#A9834F",
-  accentSoft: "#C9A876",
-  border: "#E2DFD5",
-  confirmed: "#54705A",
-  confirmedBg: "#EAEEE7",
-  verify: "#9A7530",
-  verifyBg: "#F3EBDA",
-  urgent: "#95483F",
-  urgentBg: "#F2E7E4",
-  note: "#4C6478",
-  noteBg: "#E9EDF0",
-};
- 
-const mono = { fontFamily: 'ui-monospace,SFMono-Regular,"SF Mono","Roboto Mono","IBM Plex Mono",monospace' };
-const sans = { fontFamily: '-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard Variable",Pretendard,"Noto Sans KR",Roboto,sans-serif' };
- 
-/* ---------- verification badge — the signature element ---------- */
-function Badge({ kind, children }) {
-  const map = {
-    confirmed: { bg: C.confirmedBg, fg: C.confirmed, label: "확인됨" },
-    verify: { bg: C.verifyBg, fg: C.verify, label: "확인 필요" },
-    note: { bg: C.noteBg, fg: C.note, label: "통화 안내" },
-  };
-  const s = map[kind] || map.note;
-  return (
-    <span
-      className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium"
-      style={{ background: s.bg, color: s.fg }}
-    >
-      <Circle size={6} fill={s.fg} stroke="none" />
-      {children || s.label}
-    </span>
-  );
-}
- 
-function ToggleBadge({ kind, onToggle }) {
-  const map = {
-    confirmed: { bg: C.confirmedBg, fg: C.confirmed, label: "확인됨" },
-    verify: { bg: C.verifyBg, fg: C.verify, label: "확인 필요" },
-  };
-  const s = map[kind] || map.verify;
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold shrink-0"
-      style={{ background: s.bg, color: s.fg }}
-      title="눌러서 확인됨/확인 필요 전환"
-    >
-      <Circle size={6} fill={s.fg} stroke="none" />
-      {s.label}
-    </button>
-  );
-}
- 
-function EditableRow({ label, value, onChange, kind, onToggleKind, numeric, type = "text" }) {
-  const isDate = type === "date";
-  return (
-    <div className="grid items-center gap-3 py-2 border-b" style={{ gridTemplateColumns: "58px minmax(0,1fr) 80px", borderColor: C.border }}>
-      <span className="text-[11px] whitespace-nowrap" style={{ color: C.inkSoft }}>{label}</span>
-      <input
-        type={type}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        className={`text-[11px] font-medium px-2 py-1 rounded-md outline-none ${isDate ? "text-left" : "text-right"}`}
-        style={{ ...(numeric && !isDate ? mono : {}), border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.ink, width: "100%", minWidth: 0, boxSizing: "border-box" }}
-      />
-      <div className="flex justify-end">
-        <ToggleBadge kind={kind} onToggle={onToggleKind} />
-      </div>
-    </div>
-  );
-}
- 
-function ToggleBadge3({ kind, onToggle }) {
-  const order = ["confirmed", "verify", "note"];
-  const map = {
-    confirmed: { bg: C.confirmedBg, fg: C.confirmed, label: "확인됨" },
-    verify: { bg: C.verifyBg, fg: C.verify, label: "확인 필요" },
-    note: { bg: C.noteBg, fg: C.note, label: "통화 안내" },
-  };
-  const s = map[kind] || map.verify;
-  const cycle = () => {
-    const i = order.indexOf(kind);
-    onToggle(order[(i + 1) % order.length]);
-  };
-  return (
-    <button
-      type="button"
-      onClick={cycle}
-      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold shrink-0"
-      style={{ background: s.bg, color: s.fg }}
-      title="눌러서 확인됨 → 확인 필요 → 통화 안내 순서로 전환"
-    >
-      <Circle size={6} fill={s.fg} stroke="none" />
-      {s.label}
-    </button>
-  );
-}
- 
-function EditableResultRow({ label, value, onChange, kind, onToggleKind, numeric }) {
-  return (
-    <div className="flex items-center justify-between gap-3 py-2 border-b" style={{ borderColor: C.border }}>
-      <span className="text-[13px] shrink-0" style={{ color: C.inkSoft }}>{label}</span>
-      <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
-        <input
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          placeholder="확인 필요"
-          className="text-[13px] font-medium text-right px-2 py-1 rounded-md outline-none min-w-0 flex-1"
-          style={{ ...(numeric ? mono : {}), border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.ink }}
-        />
-        <ToggleBadge3 kind={kind} onToggle={onToggleKind} />
-      </div>
-    </div>
-  );
-}
-function Field({ label, value, kind = "confirmed", numeric }) {
-  if (value === undefined || value === null || value === "") return null;
-  return (
-    <div className="flex items-start justify-between gap-3 py-2 border-b" style={{ borderColor: C.border }}>
-      <span className="text-[11px]" style={{ color: C.inkSoft }}>{label}</span>
-      <span className="flex items-center gap-2 text-right">
-        <span className="text-[11px] font-medium" style={numeric ? mono : {}}>{value}</span>
-        <Badge kind={kind} />
-      </span>
-    </div>
-  );
-}
- 
-/* ---------- sample data (from 프로젝트 마스터 문서) ---------- */
-const initialFCs = [
-  { id: "fc1", name: "김기원", phone: "010-2841-5573", branch: "대전SFP지점", lastContact: "2026-08-05", recentIntro: "김기윤", activeCustomers: 1, paidCustomers: 3, nextContact: "2026-08-20" },
-  { id: "fc2", name: "백선미", phone: "010-6620-9147", branch: "남대전지점", lastContact: "2026-06-08", recentIntro: "정환석", activeCustomers: 1, paidCustomers: 5, nextContact: "2026-08-15" },
-  { id: "fc3", name: "강인숙", phone: "010-3390-2286", branch: "세종지점", lastContact: "2026-08-01", recentIntro: "-", activeCustomers: 0, paidCustomers: 2, nextContact: "2026-10-01" },
-  { id: "fc4", name: "이미희", phone: "010-7715-4402", branch: "대전스타지점", lastContact: "2026-07-28", recentIntro: "(고객명 미확인)", activeCustomers: 1, paidCustomers: 4, nextContact: "2026-08-13" },
-  { id: "fc5", name: "김선옥", phone: "010-4453-8871", branch: "한밭지점", lastContact: "2026-08-10", recentIntro: "(고객명 미확인)", activeCustomers: 1, paidCustomers: 1, nextContact: "2026-08-19" },
-  { id: "fc6", name: "신소영", phone: "010-9928-6034", branch: "신관지점", lastContact: "2026-08-09", recentIntro: "(고객명 미확인)", activeCustomers: 1, paidCustomers: 6, nextContact: "2026-08-14" },
-];
- 
-// FC 전화번호는 사내 직원 연락처이므로 고객 개인정보(뒤 4자리만 기록)와는 다른 기준으로 전체 번호를 보관합니다.
-function CallLink({ phone, children, className, style }) {
-  return (
-    <a
-      href={`tel:${phone.replace(/-/g, "")}`}
-      onClick={e => e.stopPropagation()}
-      className={className}
-      style={style}
-    >
-      {children}
-    </a>
-  );
-}
- 
-const initialCustomers = [
-  {
-    id: "c1", name: "김기윤", phone4: "1520", fc: "김기원", branch: "대전SFP지점",
-    collateral: "유성구 아파트 (구입 예정)", consultDate: "2026-07-20", lastContact: "2026-08-20",
-    consultType: "단순 금리상담", status: "단순상담", docStatus: "미안내",
-    nextAction: "구입 결정 여부 확인", followUp: "15일 주기로 재확인",
-    notes: "관심은 있으나 결정 못한 상태. 종료는 고객이 직접 알려주기로 함.",
-    fields: {}, badges: {},
-  },
-  {
-    id: "c2", name: "정환석", phone4: "9753", fc: "백선미", branch: "남대전지점",
-    collateral: "세종시 나릿재 5단지 84.79㎡", consultDate: "2026-06-08", lastContact: "2026-06-08",
-    consultType: "구입자금 상담 / 한도 상담", status: "상담중", docStatus: "안내 전",
-    nextAction: "DSR 초과 여부 재확인", followUp: "확인 필요",
-    notes: "시세 880백만원 / 가능금액 250백만원 안내. 원금균등 약 250만원, 원리금균등 약 220만원 안내.",
-    fields: { 희망대출금액: "250백만원", 금리: "5.35%", 시세: "880백만원" },
-    badges: { 희망대출금액: "note", 금리: "note", 시세: "note" },
-  },
-  {
-    id: "c3", name: "김현아", phone4: "7858", fc: "-", branch: "-",
-    collateral: "월세 거주 담보물건 (보증금 150백만원 / 월세 3백만원)", consultDate: "2026-07-15", lastContact: "2026-08-02",
-    consultType: "대출 진행 상담", status: "상담중", docStatus: "배우자 동의 대기",
-    nextAction: "배우자 동의 및 소득 확인", followUp: "동의 완료 후 재연락",
-    notes: "부채 120백만원 이상, 연소득 부족. 추가 2억원 가능 안내되었으나 약정 진행이 어려울 수 있음.",
-    fields: { 부채: "120백만원 이상", 추가가능액상담: "약 2억원" },
-    badges: { 부채: "confirmed", 추가가능액상담: "note" },
-  },
-  {
-    id: "c4", name: "홍길동", phone4: "9369", fc: "이미희", branch: "대전스타지점",
-    collateral: "규제지역 담보물건", consultDate: "2026-08-10", lastContact: "2026-08-13",
-    consultType: "대출 진행 상담", status: "상담중", docStatus: "등본 제출 필요",
-    nextAction: "등본 사진/팩스 제출 확인", followUp: "전입 예정일 기준 확인",
-    notes: "3년 이내 연 10%까지 수수료 없이 상환 가능, 초과 시 0.6% 수수료 — 통화상 안내내용으로 별도 관리. 승인으로 임의 확정하지 않음.",
-    fields: { 대출금: "530백만원", 금리: "4.31% (5년 고정)", 대출기간: "30년", 법무사비용: "약 50~60만원" },
-    badges: { 대출금: "confirmed", 금리: "confirmed", 대출기간: "confirmed", 법무사비용: "note" },
-  },
-  {
-    id: "c5", name: "가상고객-2436", phone4: "2436", fc: "-", branch: "-",
-    collateral: "주택담보대출", consultDate: "2026-08-12", lastContact: "2026-08-13",
-    consultType: "담보대출 상담 / 조건 상담", status: "상담중", docStatus: "안내/준비 중",
-    nextAction: "8/13 방문 및 서류 확인", followUp: "방문 결과 확인",
-    notes: "실제 고객명 미확인 → 가상고객으로 임시 관리. 중도상환 조건(3년 이후 0.6%)은 통화 안내내용이며 확정 상품조건 아님.",
-    fields: { 희망대출금액: "9,000만원", 금리: "4.83% (5년 고정)", 대출기간: "40년", 월상환액: "약 40.4만원 (원금 약 6.2만원 / 이자 약 36만원)" },
-    badges: { 희망대출금액: "confirmed", 금리: "confirmed", 대출기간: "confirmed", 월상환액: "confirmed" },
-  },
-  {
-    id: "c6", name: "고객-4551", phone4: "4551", fc: "-", branch: "-",
-    collateral: "매매금액 260백만원 (1순위)", consultDate: "2026-08-01", lastContact: "2026-08-01",
-    consultType: "대출 진행 상담", status: "상담중", docStatus: "접수 완료",
-    nextAction: "설정 후 10~15분 이내 재연락 (즉시 업무)", followUp: "대출 진행관리로 분리 (일반 Follow-up 제외)",
-    notes: "직접 전화 신청, 추천 FC 없음. 계좌번호 미저장.",
-    fields: { 대출금: "80백만원", 대출기간: "40년", 월납입액: "약 353,000원" },
-    badges: { 대출금: "confirmed", 대출기간: "confirmed", 월납입액: "confirmed" },
-  },
-  {
-    id: "c7", name: "이금자", phone4: "2391", fc: "-", branch: "-",
-    collateral: "강호동 아이파크 3단지 43평, 동구", consultDate: "2026-08-09", lastContact: "2026-08-09",
-    consultType: "구입자금 상담", status: "상담중", docStatus: "안내 전",
-    nextAction: "잔금일 연도 및 진행의사 확인", followUp: "잔금일 확인 후 결정",
-    notes: '잔금일이 "4월 30일"로만 제공되어 연도 확인 필요. 우수고객 아님, 생년월일 미저장.',
-    fields: { 희망대출금액: "80백만원", 안내금리: "4.4~4.5% (신용조건 양호 시 약 4.63%)" },
-    badges: { 희망대출금액: "confirmed", 안내금리: "note" },
-  },
-];
- 
-const STATUS_STYLE = {
-  "단순상담": { bg: C.surfaceAlt, fg: C.inkSoft },
-  "상담중": { bg: C.noteBg, fg: C.note },
-  "종료": { bg: "#EDEDED", fg: C.inkFaint },
-};
- 
-const BUCKET_MAP = {
-  "단순상담": "단순상담",
-  "상담중": "상담중",
-  "종료": "종료",
-  "대출의향": "상담중",
-  "대출의향(추정)": "상담중",
-  "서류안내": "상담중",
-  "서류접수": "상담중",
-  "대출접수": "상담중",
-  "심사진행": "상담중",
-  "실행 전 확인 필요": "상담중",
-  "확인 필요": "상담중",
-  "승인": "종료",
-  "지급완료": "종료",
-  "보류/종료": "종료",
-};
-const BUCKETS = ["단순상담", "상담중", "종료"];
-const BUCKET_STYLE = {
-  "단순상담": { fg: C.inkSoft, bg: C.surfaceAlt },
-  "상담중": { fg: C.note, bg: C.noteBg },
-  "종료": { fg: C.inkFaint, bg: "#EDEDED" },
-};
-function getBucket(status) {
-  return BUCKET_MAP[status] || "상담중";
-}
-function StatusPill({ status }) {
-  const s = STATUS_STYLE[status] || STATUS_STYLE["단순상담"];
-  return (
-    <span className="inline-block shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold" style={{ background: s.bg, color: s.fg }}>
-      {status}
-    </span>
-  );
-}
- 
-function StatusSelector({ value, onChange }) {
-  return (
-    <div className="inline-flex rounded-full p-1" style={{ background: C.surfaceAlt }}>
-      {BUCKETS.map(b => {
-        const active = value === b;
-        const s = BUCKET_STYLE[b];
-        return (
-          <button
-            key={b}
-            onClick={() => onChange(b)}
-            className="px-3 py-1.5 rounded-full text-[12px] font-semibold transition-colors"
-            style={{ background: active ? s.fg : "transparent", color: active ? "#FFFFFF" : s.fg }}
-          >
-            {b}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
- 
-/* ---------- rate calculator config (2026.08 금리표 기준) ---------- */
-const RATE_PERIOD = "2026.08.01 ~ 2026.08.31";
-const MIN_RATE = 4.00;
-const MAX_DISCOUNT_CAP = 2.45;
- 
-const PRODUCTS = [
-  { id: "cofix6", name: "COFIX(신잔액) 6개월 변동", type: "변동형", base: 2.54, spread: 3.76, bandLow: 4.00, bandHigh: 6.90 },
-  { id: "t1y", name: "국고3년 1년 변동", type: "변동형", base: 3.84, spread: 2.80, bandLow: 4.00, bandHigh: 7.24 },
-  { id: "t3y", name: "국고3년 3년 혼합", type: "변동형", base: 3.84, spread: 2.61, bandLow: 4.00, bandHigh: 7.05 },
-  { id: "t5y", name: "국고3년 5년 변동", type: "변동형", base: 3.84, spread: 2.62, bandLow: 4.00, bandHigh: 7.06 },
-  { id: "fixed", name: "국고3년 고정형", type: "고정형", base: 3.84, spread: 2.82, bandLow: 4.00, bandHigh: 7.26 },
-];
- 
-const CHECK_ITEMS = [
-  { id: "proof", label: "증빙 / 비거치식", variable: true, options: [0.10, 0.20], value: 0.10 },
-  { id: "buy", label: "구입", value: 0.20 },
-  { id: "eco_car", label: "친환경 자동차 소유", value: 0.05 },
-  { id: "eco_col", label: "친환경 담보물 증빙", value: 0.10 },
-  { id: "multi", label: "다자녀 우대 (3자녀 이상)", value: 0.30 },
-  { id: "merit", label: "국가유공자 우대", value: 0.20 },
-  { id: "dsr", label: "원리금상환능력 우수 (DSR 40% 이내)", value: 0.20 },
-  { id: "mobile", label: "모바일 이용", value: 0.10 },
-];
- 
-const CREDIT_OPTIONS = [
-  { id: "none", label: "선택 안 함", value: 0 },
-  { id: "grade", label: "신용평점 우량 (1~2구간)", value: 0.10 },
-  { id: "sa", label: "대출우수 SA", value: 0.30 },
-  { id: "a", label: "대출우수 A / C(우량고객대)", value: 0.20 },
-  { id: "b", label: "대출우수 B", value: 0.10 },
-];
- 
-const INSURANCE_OPTIONS = [
-  { id: "none", label: "선택 안 함", value: 0 },
-  { id: "m10", label: "월보험료 10만원 이상", value: 0.10 },
-  { id: "m30", label: "월보험료 30만원 이상", value: 0.20 },
-  { id: "m50", label: "월보험료 50만원 이상", value: 0.30 },
-  { id: "vip_dream", label: "보험VIP · 드림", value: 0.40 },
-  { id: "vip_noble", label: "보험VIP · 노블/디어", value: 0.50 },
-];
- 
-const fmt = (n) => n.toFixed(2);
- 
-/* ---------- call-summary regex parser (rule-based demo) ---------- */
-function parseSummary(text) {
-  const out = { fields: {}, badges: {}, name: "", phone4: "", fc: "", branch: "", rrnDetected: false };
- 
-  // 하단 마커 입력 지원: "**지점명" / "***FC명" — 지점·FC가 문맥상 누락될 때를 대비한 명시적 입력 방식 (최우선 인식)
-  const branchMarkerMatch = text.match(/\*\*(?!\*)\s*([^\s,*]+)/);
-  if (branchMarkerMatch) { out.branch = branchMarkerMatch[1]; out.badges.branch = "confirmed"; }
-  const fcMarkerMatch = text.match(/\*\*\*\s*([^\s,*]+)/);
- 
-  // 이름 추출: "고객:이름" / "고객 이름" 라벨 형식을 우선 인식, 없으면 대화체("이름 고객하고 통화") fallback
-  const labeledNameMatch =
-    text.match(/고객\s*[:：]\s*([가-힣]{2,4})/) ||
-    text.match(/고객\s+([가-힣]{2,4})(?!\s*(?:하고|와|과|님|은|는|이|가))/);
-  const conversationalNameMatch =
-    text.match(/^([가-힣]{2,4})\s*(?:고객|님)?(?:하고|와|과)?\s*통화/) ||
-    text.match(/([가-힣]{2,4})\s*고객/);
-  const nameMatch = labeledNameMatch || conversationalNameMatch;
-  if (nameMatch) { out.name = nameMatch[1]; out.badges.name = "confirmed"; }
- 
-  // 고객명 뒤 6자리 숫자 = 주민번호 앞자리로 인식. 단, 개인정보 최소화 원칙상 실제 숫자는 저장하지 않고 감지 여부만 표시
-  if (nameMatch) {
-    const windowStart = nameMatch.index + nameMatch[0].length;
-    const afterName = text.slice(windowStart, windowStart + 20);
-    const rrnMatch = afterName.match(/(\d{6})(?!\d)/);
-    if (rrnMatch) {
-      out.rrnDetected = true;
-      out.badges.rrn = "verify";
+
+<script>
+  // 안전장치: 8초 안에 앱이 뜨지 않으면 안내 메시지로 교체 (무한 로딩 방지)
+  var __bootTimeout = setTimeout(function () {
+    var el = document.getElementById('load-status');
+    if (el) {
+      el.innerHTML = '앱을 불러오지 못했어요.<br/>인터넷 연결을 확인하거나<br/>Wi-Fi로 전환 후 새로고침 해주세요.';
     }
+  }, 8000);
+</script>
+
+<!-- 미리 컴파일된 앱 코드 (브라우저에서 실시간 변환 없이 바로 실행) -->
+<script>
+(() => {
+  // combined.jsx
+  function IconBase({ children, size = 16, color = "currentColor", strokeWidth = 2, className, fill = "none", stroke, ...rest }) {
+    return /* @__PURE__ */ React.createElement(
+      "svg",
+      {
+        width: size,
+        height: size,
+        viewBox: "0 0 24 24",
+        fill,
+        stroke: stroke != null ? stroke : color,
+        strokeWidth,
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        className,
+        ...rest
+      },
+      children
+    );
   }
- 
-  // 전화번호 뒤 4자리 - "전화"/"끝번호"/"뒤 4자리" 문맥이 있을 때만 인식 (다른 4자리 숫자와 혼동 방지)
-  const phoneMatch = text.match(/(?:전화|끝번호|뒤\s*4자리)[^\d]{0,10}(\d{4})(?!\d)/);
-  if (phoneMatch) { out.phone4 = phoneMatch[1]; out.badges.phone4 = "confirmed"; }
- 
-  // 추천 FC: "***FC명" 마커를 최우선으로, 없으면 "추천:이름"/"추천 이름" 라벨, 없으면 대화체("이름 FC가...") fallback
-  const labeledFcMatch =
-    text.match(/추천\s*[:：]\s*([가-힣]{2,4})/) ||
-    text.match(/추천\s+([가-힣]{2,4})(?!\s*(?:이|가|은|는|으로|FC))/);
-  const conversationalFcMatch = text.match(/([가-힣]{2,4})\s*FC/);
-  const fcMatch = fcMarkerMatch || labeledFcMatch || conversationalFcMatch;
-  if (fcMatch) { out.fc = fcMatch[1]; out.badges.fc = fcMarkerMatch ? "confirmed" : "confirmed"; }
- 
-  // 단위가 명시된 금액 (백만원/만원)
-  const explicitAmounts = [...text.matchAll(/(\d[\d,]*)\s*(백만원|만원)/g)];
-  if (explicitAmounts.length) {
-    out.fields["금액 언급"] = explicitAmounts.map(a => a[0]).join(", ");
-    out.badges["금액 언급"] = "note";
-  }
- 
-  // 단위 없는 숫자는 기본 단위를 백만원으로 추정 (금액 관련 키워드 근접 시에만, 오탐 방지를 위해 verify로 표시)
-  const bareAmounts = [...text.matchAll(/(?:희망|대출|필요|정도|한도)[^\d]{0,4}(\d{1,4})(?!\s*(?:만원|백만원|%|월|일|시|분|년|개월))(?!\d)(?!\.\d)/g)];
-  if (bareAmounts.length) {
-    out.fields["금액 언급(단위 추정)"] = bareAmounts.map(a => `${a[1]}백만원`).join(", ");
-    out.badges["금액 언급(단위 추정)"] = "verify";
-  }
- 
-  const rateMatch = text.match(/(\d\.\d{1,2})\s*%/);
-  if (rateMatch) { out.fields["금리"] = rateMatch[0]; out.badges["금리"] = "note"; }
- 
-  const collateralMatch = text.match(/([가-힣]{2,}(?:구|시|동)\s?[가-힣0-9\s]{2,20}(?:아파트|평형|단지))/);
-  if (collateralMatch) { out.fields["담보"] = collateralMatch[0].trim(); out.badges["담보"] = "confirmed"; }
- 
-  const followUpMatch = text.match(/(일주일|1주일|한\s?달|10분|15분|열흘)\s?(뒤|후|이내)/);
-  if (followUpMatch) { out.fields["Follow-up"] = followUpMatch[0]; out.badges["Follow-up"] = "confirmed"; }
- 
-  return out;
-}
- 
-const SAMPLE_TEXT = "김민준 고객하고 통화했어. 880521 주민번호 앞자리 확인했고, 전화 끝번호 1401이고 부산 동구 좌천동 동원아파트 34평형이야. 나영희 FC가 소개했고 대출 80 정도 희망하고 8월 구입자금 금리만 상담했어. 서류는 아직 안내 안 했고 일주일 뒤 다시 의사 확인하기로 했어.";
-const SAMPLE_TEXT_LABELED = "고객: 이서준 / 추천: 박선미 / 전화 끝번호 7742 / 대전 유성구 봉명동 한빛아파트 25평 / 대출 65 정도 필요하다고 함 / 금리 4.6% 안내 / 서류는 아직이고 열흘 뒤 다시 연락하기로 함.";
-const SAMPLE_TEXT_MARKER = "최윤아 고객하고 전화 끝번호 3320으로 통화함. 서울 강남구 대치동 은마아파트 구입자금 상담. 대출 120 정도 희망하고 금리는 4.2% 안내했음. 서류는 다음주에 준비하기로 함.\n\n**강남중앙지점, ***이하늘";
- 
-/* ---------- nav ---------- */
-const NAV = [
-  { key: "todos", label: "오늘의 할일", icon: CheckCircle2 },
-  { key: "customers", label: "고객관리", icon: Users },
-  { key: "callai", label: "통화요약 AI", icon: PhoneCall },
-  { key: "docs", label: "서류안내", icon: FileCheck2 },
-  { key: "rate", label: "금리계산기", icon: Calculator },
-  { key: "fc", label: "FC관리", icon: UserCog },
-];
- 
-/* ================= APP ================= */
-function App() {
-  const [tab, setTab] = useState("todos");
-  const [customers, setCustomers] = useState(initialCustomers);
-  const [todayMemo, setTodayMemo] = useState("");
-  const [fcs] = useState(initialFCs);
-  const [selectedId, setSelectedId] = useState(null);
-  const [selectedFcId, setSelectedFcId] = useState(null);
- 
-  const selected = customers.find(c => c.id === selectedId) || null;
-  const selectedFc = fcs.find(f => f.id === selectedFcId) || null;
- 
-  return (
-    <div className="min-h-screen w-full flex flex-col" style={{ background: C.bg, color: C.ink, ...sans }}>
-      {/* top brand bar */}
-      <div className="flex items-center justify-between px-5 py-3.5" style={{ background: C.brand }}>
-        <div>
-          <div className="text-white font-semibold text-[16px] tracking-tight">My AI <span style={{ color: C.accentSoft }}>Mate</span></div>
-          <div className="text-[9.5px] mt-0.5 uppercase" style={{ color: "#8B8F9C", letterSpacing: "0.08em" }}>대출 고객·FC 관리 Agent</div>
-        </div>
-        <div className="text-[10px]" style={{ color: "#5C5F6B" }}>시연용 · 2026.08</div>
-      </div>
- 
-      {/* bottom nav (always visible) */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 flex justify-around py-2 border-t" style={{ background: C.brand, borderColor: "rgba(255,255,255,0.08)" }}>
-        {NAV.map(n => {
-          const Icon = n.icon;
-          const active = tab === n.key;
-          return (
-            <button key={n.key} onClick={() => { setTab(n.key); setSelectedId(null); setSelectedFcId(null); }} className="flex flex-col items-center gap-0.5 px-2 py-1">
-              <Icon size={17} strokeWidth={1.75} color={active ? C.accentSoft : "#7C7F8B"} />
-              <span className="text-[10px] text-center" style={{ color: active ? "#F2EEE6" : "#7C7F8B", wordBreak: "keep-all" }}>{n.label}</span>
-            </button>
-          );
-        })}
-      </div>
- 
-      {/* main */}
-      <main className="flex-1 min-w-0 p-5 sm:p-8 pb-20">
-        {tab === "todos" && <TodayTasks customers={customers} goCustomer={(id) => { setTab("customers"); setSelectedId(id); }} memo={todayMemo} setMemo={setTodayMemo} />}
-        {tab === "customers" && (
-          selected
-            ? <CustomerDetail key={selected.id} customer={selected} onBack={() => setSelectedId(null)} onUpdate={(id, updates) => setCustomers(customers.map(cu => cu.id === id ? { ...cu, ...updates } : cu))} />
-            : <CustomerList customers={customers} onSelect={setSelectedId} />
-        )}
-        {tab === "callai" && <CallSummaryAI customers={customers} setCustomers={setCustomers} />}
-        {tab === "docs" && <DocumentAssistant />}
-        {tab === "rate" && <RateCalculator />}
-        {tab === "fc" && (
-          selectedFc
-            ? <FCDetail fc={selectedFc} customers={customers} onBack={() => setSelectedFcId(null)} goCustomer={(id) => { setTab("customers"); setSelectedId(id); setSelectedFcId(null); }} />
-            : <FCManagement fcs={fcs} customers={customers} onSelect={setSelectedFcId} />
-        )}
-      </main>
-    </div>
-  );
-}
- 
-/* ================= DASHBOARD ================= */
-function Panel({ title, children, noPad, hint }) {
-  return (
-    <div className="rounded-lg overflow-hidden" style={{ background: C.surface, border: `1px solid ${C.border}` }}>
-      <div className={noPad ? "" : "p-5"}>
-        {title && (
-          <div className={noPad ? "px-4 pt-4" : "mb-4"}>
-            <div className="text-[11px] font-semibold uppercase" style={{ color: C.inkSoft, letterSpacing: "0.07em" }}>{title}</div>
-            {hint && <div className="text-[11px] mt-1 leading-relaxed" style={{ color: C.inkFaint }}>{hint}</div>}
-          </div>
-        )}
-        <div className={noPad ? "" : "flex flex-col gap-1"}>{children}</div>
-      </div>
-    </div>
-  );
-}
- 
-function TaskRow({ title, sub, tag, tagColor, tagBg, onClick, onToggleHandled, toggleMode = "beside" }) {
-  return (
-    <div
-      className="flex items-center justify-between gap-3 py-2.5 px-2 rounded-lg transition-colors"
-      onMouseEnter={e => onClick && (e.currentTarget.style.background = C.surfaceAlt)}
-      onMouseLeave={e => onClick && (e.currentTarget.style.background = "transparent")}
-    >
-      <button onClick={onClick} disabled={!onClick} className="min-w-0 text-left flex-1" style={{ cursor: onClick ? "pointer" : "default" }}>
-        <div className="text-[13.5px] font-medium truncate">{title}</div>
-        <div className="text-[12px] truncate" style={{ color: C.inkSoft }}>{sub}</div>
-      </button>
-      <div className="flex items-center gap-2 shrink-0">
-        {onToggleHandled && toggleMode === "replace" ? (
-          <MiniToggle label={tag} onClick={onToggleHandled} />
-        ) : (
-          <>
-            {tag && <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ color: tagColor, background: tagBg }}>{tag}</span>}
-            {onToggleHandled && <MiniToggle onClick={onToggleHandled} />}
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
- 
-function MiniToggle({ label, onClick }) {
-  const [on, setOn] = useState(false);
-  return (
-    <button
-      type="button"
-      onClick={(e) => { e.stopPropagation(); setOn(true); setTimeout(() => onClick(), 180); }}
-      className="flex items-center gap-1.5"
-      title="처리 완료로 표시하면 목록에서 사라져요"
-    >
-      {label && <span className="text-[11px] font-semibold" style={{ color: on ? C.confirmed : C.urgent }}>{label}</span>}
-      <span
-        className="inline-flex items-center rounded-full transition-colors"
-        style={{ width: 30, height: 17, background: on ? C.confirmed : C.border, padding: 2 }}
-      >
-        <span
-          className="rounded-full bg-white transition-transform"
-          style={{ width: 13, height: 13, transform: on ? "translateX(13px)" : "translateX(0px)", boxShadow: "0 1px 2px rgba(0,0,0,0.25)" }}
-        />
-      </span>
-    </button>
-  );
-}
- 
-function Empty({ text }) {
-  return <div className="text-[13px] py-4 text-center" style={{ color: C.inkFaint }}>{text}</div>;
-}
- 
-function FcCallRow({ fc, onOpen }) {
-  return (
-    <div
-      className="flex items-center justify-between gap-3 py-2.5 px-2 rounded-lg transition-colors"
-      onMouseEnter={e => (e.currentTarget.style.background = C.surfaceAlt)}
-      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-    >
-      <button onClick={onOpen} className="min-w-0 text-left flex-1">
-        <div className="text-[13.5px] font-medium truncate">{fc.name} <span className="font-normal" style={{ color: C.inkFaint }}>FC</span></div>
-        <div className="text-[12px] truncate" style={{ color: C.inkSoft }}>{fc.branch} · 다음 연락 {fc.nextContact}</div>
-      </button>
-      <CallLink
-        phone={fc.phone}
-        className="shrink-0 flex items-center gap-1 text-[11.5px] font-semibold px-2.5 py-1.5 rounded-full"
-        style={{ color: "#FFFFFF", background: C.accent }}
-      >
-        <Phone size={11} /> 전화
-      </CallLink>
-    </div>
-  );
-}
- 
-function Header({ title, subtitle }) {
-  return (
-    <div className="mb-7">
-      <h1 className="text-[21px] font-semibold tracking-tight" style={{ color: C.ink }}>{title}</h1>
-      {subtitle && <p className="text-[13px] mt-1.5" style={{ color: C.inkSoft }}>{subtitle}</p>}
-      <div className="mt-3 w-8 h-[2px]" style={{ background: C.accent }} />
-    </div>
-  );
-}
- 
-/* ================= CUSTOMER LIST ================= */
-const YEARS = [2026, 2027, 2028];
-const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
- 
-/* ================= TODAY'S TASKS ================= */
-const BIZ_CARD_TEXT = `📇 삼성생명 서부융자부
-한규호 프로
- 
-📞 010-8525-1501
-📍 대전광역시 서구 한밭대로 755
-    (둔산동, 삼성생명) 3층 서부융자부`;
- 
-function TodayTasks({ customers, goCustomer, memo, setMemo }) {
-  const today = new Date();
-  const todayLabel = today.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" });
-  const todayISO = today.toISOString().slice(0, 10); // YYYY-MM-DD
- 
-  const todayList = customers.filter(c => c.lastContact === todayISO);
-  const [copied, setCopied] = useState(false);
- 
-  function copyCard() {
-    navigator.clipboard?.writeText(BIZ_CARD_TEXT).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    }).catch(() => {});
-  }
- 
-  return (
-    <div>
-      <Header title="오늘의 할일" subtitle={todayLabel} />
- 
-      <Panel title="오늘 연락할 고객" hint="연락예정일이 오늘 날짜인 고객이에요.">
-        {todayList.length === 0 && <Empty text="오늘 연락할 고객이 없습니다. 연락예정일이 오늘로 등록된 고객이 있으면 여기 표시돼요." />}
-        {todayList.map(c => (
-          <TaskRow
-            key={c.id}
-            title={c.name}
-            sub={c.followUp}
-            tag={c.status}
-            tagColor={STATUS_STYLE[c.status]?.fg}
-            tagBg={STATUS_STYLE[c.status]?.bg}
-            onClick={() => goCustomer(c.id)}
-          />
-        ))}
-      </Panel>
- 
-      <div className="mt-5">
-        <Panel title="메모">
-          <textarea
-            value={memo}
-            onChange={e => setMemo(e.target.value)}
-            placeholder="오늘 메모를 자유롭게 적어보세요..."
-            rows={5}
-            className="w-full text-[13.5px] leading-relaxed p-2.5 rounded-md outline-none resize-none"
-            style={{ color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }}
-          />
-        </Panel>
-      </div>
- 
-      <div className="mt-5">
-        <Panel title="명함">
-          <pre
-            className="whitespace-pre-wrap text-[13px] leading-relaxed p-3 rounded-md"
-            style={{ fontFamily: "inherit", background: C.surfaceAlt, border: `1px solid ${C.border}`, color: C.ink }}
-          >
-            {BIZ_CARD_TEXT}
-          </pre>
-          <button
-            onClick={copyCard}
-            className="mt-2.5 flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[12.5px] font-semibold text-white"
-            style={{ background: copied ? C.confirmed : C.accent }}
-          >
-            <FileCheck2 size={13} /> {copied ? "복사됨" : "명함 텍스트 복사하기"}
-          </button>
-        </Panel>
-      </div>
-    </div>
-  );
-}
- 
-function CustomerList({ customers, onSelect }) {
-  const [q, setQ] = useState("");
-  const [openYear, setOpenYear] = useState(2026);
-  const [selectedMonth, setSelectedMonth] = useState("전체"); // "전체" or "YYYY-MM"
-  const [bucket, setBucket] = useState("전체");
- 
-  const countFor = (ym) => customers.filter(c => c.consultDate.slice(0, 7) === ym).length;
-  const countForYear = (y) => customers.filter(c => c.consultDate.slice(0, 4) === String(y)).length;
-  const countForBucket = (b) => customers.filter(c => getBucket(c.status) === b).length;
- 
-  const filtered = customers
-    .filter(c => c.name.includes(q) || c.phone4.includes(q) || c.fc.includes(q) || c.status.includes(q))
-    .filter(c => selectedMonth === "전체" || c.consultDate.slice(0, 7) === selectedMonth)
-    .filter(c => bucket === "전체" || getBucket(c.status) === bucket)
-    .slice()
-    .sort((a, b) => new Date(b.consultDate) - new Date(a.consultDate));
- 
-  return (
-    <div>
-      <Header title="고객관리" subtitle={`총 ${customers.length}명의 고객이 등록되어 있습니다. · 상담일 최신순`} />
- 
-      <div className="flex flex-wrap gap-2 mb-4">
-        <button
-          onClick={() => setBucket("전체")}
-          className="px-4 py-2.5 rounded-lg text-[12px] font-semibold"
-          style={{ background: bucket === "전체" ? C.brand : C.surfaceAlt, color: bucket === "전체" ? "#FFFFFF" : C.ink }}
-        >
-          전체 <span className="text-[11px]" style={{ opacity: 0.8 }}>{customers.length}</span>
-        </button>
-        {BUCKETS.map(b => {
-          const active = bucket === b;
-          const s = BUCKET_STYLE[b];
-          return (
-            <button
-              key={b}
-              onClick={() => setBucket(active ? "전체" : b)}
-              className="px-4 py-2.5 rounded-lg text-[12px] font-semibold flex items-center gap-1.5"
-              style={{ background: active ? s.fg : s.bg, color: active ? "#FFFFFF" : s.fg }}
-            >
-              {b} <span className="text-[11px]" style={{ opacity: 0.8 }}>{countForBucket(b)}</span>
-            </button>
-          );
-        })}
-      </div>
- 
-      <div className="relative mb-4 max-w-sm">
-        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" color={C.inkFaint} />
-        <input
-          value={q}
-          onChange={e => setQ(e.target.value)}
-          placeholder="이름, 전화번호, FC, 상태로 검색"
-          className="w-full pl-9 pr-3 py-2.5 rounded-lg text-[12.5px] outline-none"
-          style={{ background: C.surface, border: `1px solid ${C.border}` }}
-        />
-      </div>
- 
-      {/* Year / Month box navigator */}
-      <div className="rounded-lg mb-4" style={{ background: C.surface, border: `1px solid ${C.border}` }}>
-        <div className="flex flex-wrap gap-2 p-3">
-          <button
-            onClick={() => { setSelectedMonth("전체"); }}
-            className="px-3.5 py-2 rounded-md text-[12px] font-semibold"
-            style={{ background: selectedMonth === "전체" ? C.brand : C.surfaceAlt, color: selectedMonth === "전체" ? "#FFFFFF" : C.ink }}
-          >
-            전체 기간
-          </button>
-          {YEARS.map(y => {
-            const active = openYear === y;
-            const n = countForYear(y);
-            return (
-              <button
-                key={y}
-                onClick={() => setOpenYear(active ? null : y)}
-                className="px-3.5 py-2 rounded-md text-[12px] font-semibold flex items-center gap-1.5"
-                style={{ background: active ? C.brand : C.surfaceAlt, color: active ? "#FFFFFF" : C.ink }}
-              >
-                {y}년
-                <span className="text-[11px]" style={{ color: active ? "#C9A876" : C.inkFaint }}>{n}건</span>
-                <ChevronRight size={13} style={{ transform: active ? "rotate(90deg)" : "none", transition: "transform 0.15s" }} />
-              </button>
-            );
-          })}
-        </div>
- 
-        {openYear && (
-          <div className="px-3 pb-3 pt-1 grid grid-cols-4 sm:grid-cols-6 gap-2" style={{ borderTop: `1px solid ${C.border}` }}>
-            {MONTHS.map(m => {
-              const ym = `${openYear}-${String(m).padStart(2, "0")}`;
-              const n = countFor(ym);
-              const active = selectedMonth === ym;
-              return (
-                <button
-                  key={m}
-                  onClick={() => setSelectedMonth(active ? "전체" : ym)}
-                  disabled={n === 0}
-                  className="rounded-md py-2.5 text-center mt-2"
-                  style={{
-                    background: active ? C.accent : (n === 0 ? C.bg : C.confirmedBg),
-                    color: active ? "#FFFFFF" : (n === 0 ? C.inkFaint : C.confirmed),
-                    cursor: n === 0 ? "default" : "pointer",
-                  }}
-                >
-                  <div className="text-[12px] font-semibold">{m}월</div>
-                  <div className="text-[10.5px] mt-0.5" style={{ opacity: 0.85 }}>{n}건</div>
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
- 
-      <div className="rounded-lg overflow-hidden" style={{ border: `1px solid ${C.border}`, background: C.surface }}>
-        {filtered.map((c, i) => (
-          <button
-            key={c.id}
-            onClick={() => onSelect(c.id)}
-            className="w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors"
-            style={{ borderTop: i > 0 ? `1px solid ${C.border}` : "none" }}
-            onMouseEnter={e => e.currentTarget.style.background = C.surfaceAlt}
-            onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-          >
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="text-[11.5px] font-semibold truncate">{c.name}</span>
-                <span className="text-[10px] shrink-0" style={{ ...mono, color: C.inkFaint }}>****-{c.phone4}</span>
-              </div>
-              <div className="text-[10.5px] mt-0.5 truncate" style={{ color: C.inkSoft }}>
-                <span style={mono}>{c.consultDate}</span>
-                {c.fc !== "-" ? ` · ${c.fc} FC` : ""} · {c.consultType}
-              </div>
-            </div>
-            <StatusPill status={c.status} />
-            <ChevronRight size={16} color={C.inkFaint} className="shrink-0" />
-          </button>
-        ))}
-        {filtered.length === 0 && <Empty text="검색 결과가 없습니다." />}
-      </div>
-    </div>
-  );
-}
- 
-/* ================= CUSTOMER DETAIL ================= */
-function CustomerDetail({ customer: c, onBack, onUpdate }) {
-  const [status, setStatus] = useState(c.status);
-  const [consultType, setConsultType] = useState(c.consultType);
-  const [collateral, setCollateral] = useState(c.collateral);
-  const [consultDate, setConsultDate] = useState(c.consultDate);
-  const [lastContact, setLastContact] = useState(c.lastContact);
-  const [docStatus, setDocStatus] = useState(c.docStatus);
-  const [badges, setBadges] = useState(c.consultBadges || {
-    consultType: "confirmed", collateral: "confirmed", consultDate: "confirmed", lastContact: "confirmed", docStatus: "verify",
-  });
-  const [notes, setNotes] = useState(c.notes);
-  const [nextAction, setNextAction] = useState(c.nextAction);
-  const [followUp, setFollowUp] = useState(c.followUp);
-  const [saved, setSaved] = useState(false);
- 
-  const toggleBadge = (key) => setBadges(b => ({ ...b, [key]: b[key] === "confirmed" ? "verify" : "confirmed" }));
- 
-  const dirty =
-    status !== c.status ||
-    consultType !== c.consultType || collateral !== c.collateral || consultDate !== c.consultDate ||
-    lastContact !== c.lastContact || docStatus !== c.docStatus || notes !== c.notes ||
-    nextAction !== c.nextAction || followUp !== c.followUp ||
-    JSON.stringify(badges) !== JSON.stringify(c.consultBadges || { consultType: "confirmed", collateral: "confirmed", consultDate: "confirmed", lastContact: "confirmed", docStatus: "verify" });
- 
-  function save() {
-    onUpdate(c.id, { status, consultType, collateral, consultDate, lastContact, docStatus, consultBadges: badges, notes, nextAction, followUp });
-    setSaved(true);
-    setTimeout(() => setSaved(false), 1600);
-  }
- 
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-5 flex-wrap gap-2">
-        <button onClick={onBack} className="flex items-center gap-1.5 text-[12px]" style={{ color: C.inkSoft }}>
-          <ArrowLeft size={15} /> 고객목록으로
-        </button>
-        {dirty && (
-          <button onClick={save} className="flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[12px] font-semibold text-white" style={{ background: saved ? C.confirmed : C.accent }}>
-            <Save size={13} /> {saved ? "저장됨" : "변경사항 저장"}
-          </button>
-        )}
-      </div>
- 
-      <div className="flex items-start justify-between mb-6 flex-wrap gap-3">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-[19px] font-bold">{c.name}</h1>
-            <span className="text-[12px]" style={{ ...mono, color: C.inkFaint }}>****-{c.phone4}</span>
-          </div>
-          <div className="text-[12px] mt-1" style={{ color: C.inkSoft }}>
-            {c.fc !== "-" ? `추천 FC: ${c.fc} · ${c.branch}` : "직접 신청 (추천 FC 없음)"}
-          </div>
-        </div>
-        <StatusSelector value={status} onChange={setStatus} />
-      </div>
- 
-      <div className="grid lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-2 flex flex-col gap-5">
-          <Panel title="상담 정보">
-            <EditableRow label="상담유형" value={consultType} onChange={setConsultType} kind={badges.consultType} onToggleKind={() => toggleBadge("consultType")} />
-            <EditableRow label="담보" value={collateral} onChange={setCollateral} kind={badges.collateral} onToggleKind={() => toggleBadge("collateral")} />
-            <EditableRow label="상담일" value={consultDate} onChange={setConsultDate} kind={badges.consultDate} onToggleKind={() => toggleBadge("consultDate")} numeric type="date" />
-            <EditableRow label="연락예정일" value={lastContact} onChange={setLastContact} kind={badges.lastContact} onToggleKind={() => toggleBadge("lastContact")} numeric type="date" />
-            <EditableRow label="서류상태" value={docStatus} onChange={setDocStatus} kind={badges.docStatus} onToggleKind={() => toggleBadge("docStatus")} />
-            <div className="text-[11.5px] mt-2.5" style={{ color: C.inkFaint }}>
-              배지를 눌러 확인됨 · 확인 필요 상태를 전환할 수 있어요.
-            </div>
-          </Panel>
- 
-          {Object.keys(c.fields).length > 0 && (
-            <Panel title="대출 조건">
-              {Object.entries(c.fields).map(([k, v]) => (
-                <Field key={k} label={k} value={v} kind={c.badges[k] || "note"} numeric />
-              ))}
-              <div className="text-[11.5px] mt-2 flex items-start gap-1.5" style={{ color: C.inkFaint }}>
-                <span>· <Badge kind="note" label="통화 안내" />는 통화 중 안내된 내용으로, 확정 상품조건과 구분해 관리합니다.</span>
-              </div>
-            </Panel>
-          )}
- 
-          <Panel title="메모">
-            <textarea
-              value={notes}
-              onChange={e => setNotes(e.target.value)}
-              rows={4}
-              className="w-full text-[12.5px] leading-relaxed p-2.5 rounded-md outline-none resize-none"
-              style={{ color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }}
-            />
-          </Panel>
-        </div>
- 
-        <div className="flex flex-col gap-5">
-          <Panel title="다음 행동">
-            <div className="flex items-start gap-2 py-1">
-              <CheckCircle2 size={16} color={C.brandSoft} className="mt-0.5 shrink-0" />
-              <input
-                value={nextAction}
-                onChange={e => setNextAction(e.target.value)}
-                className="w-full text-[12.5px] px-2 py-1.5 rounded-md outline-none"
-                style={{ color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }}
-              />
-            </div>
-          </Panel>
-          <Panel title="Follow-up">
-            <div className="flex items-start gap-2 py-1">
-              <Clock size={16} color={C.note} className="mt-0.5 shrink-0" />
-              <input
-                value={followUp}
-                onChange={e => setFollowUp(e.target.value)}
-                className="w-full text-[12.5px] px-2 py-1.5 rounded-md outline-none"
-                style={{ color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }}
-              />
-            </div>
-          </Panel>
-        </div>
-      </div>
-    </div>
-  );
-}
- 
-/* ================= CALL SUMMARY AI ================= */
-function CallSummaryAI({ customers, setCustomers }) {
-  const [text, setText] = useState("");
-  const [result, setResult] = useState(null);
-  const [saved, setSaved] = useState(false);
-  const [justUpdated, setJustUpdated] = useState(false);
- 
-  function analyze() {
-    if (!text.trim()) return;
-    const wasResult = result !== null;
-    setResult(parseSummary(text));
-    setSaved(false);
-    if (wasResult) {
-      setJustUpdated(true);
-      setTimeout(() => setJustUpdated(false), 1600);
-    }
-  }
- 
-  function saveAsCustomer() {
-    if (!result) return;
-    const newC = {
-      id: `c${Date.now()}`,
-      name: result.name || `가상고객-${result.phone4 || Date.now().toString().slice(-4)}`,
-      phone4: result.phone4 || "----",
-      fc: result.fc || "-",
-      branch: result.branch || "-",
-      collateral: result.fields["담보"] || "확인 필요",
-      consultDate: new Date().toISOString().slice(0, 10),
-      lastContact: new Date().toISOString().slice(0, 10),
-      consultType: "자연어 입력 (통화요약 AI)",
-      status: "단순상담",
-      docStatus: "미안내",
-      nextAction: "구조화된 정보 검토 및 보완",
-      followUp: result.fields["Follow-up"] || "확인 필요",
-      notes: text,
-      fields: result.fields,
-      badges: result.badges,
+  var Users = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "9", cy: "7", r: "4" }), /* @__PURE__ */ React.createElement("path", { d: "M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2" }), /* @__PURE__ */ React.createElement("path", { d: "M17 11a4 4 0 0 0 0-8" }), /* @__PURE__ */ React.createElement("path", { d: "M23 21v-2a4 4 0 0 0-3-3.87" }));
+  var PhoneCall = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.78.66 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.47-1.47a2 2 0 0 1 2.11-.45c.83.32 1.71.54 2.61.66A2 2 0 0 1 22 16.92z" }));
+  var Calculator = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("rect", { x: "4", y: "2", width: "16", height: "20", rx: "2" }), /* @__PURE__ */ React.createElement("line", { x1: "8", y1: "6", x2: "16", y2: "6" }), /* @__PURE__ */ React.createElement("line", { x1: "8", y1: "10", x2: "8", y2: "10" }), /* @__PURE__ */ React.createElement("line", { x1: "12", y1: "10", x2: "12", y2: "10" }), /* @__PURE__ */ React.createElement("line", { x1: "16", y1: "10", x2: "16", y2: "10" }), /* @__PURE__ */ React.createElement("line", { x1: "8", y1: "14", x2: "8", y2: "14" }), /* @__PURE__ */ React.createElement("line", { x1: "12", y1: "14", x2: "12", y2: "14" }), /* @__PURE__ */ React.createElement("line", { x1: "16", y1: "14", x2: "16", y2: "18" }), /* @__PURE__ */ React.createElement("line", { x1: "8", y1: "18", x2: "12", y2: "18" }));
+  var UserCog = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "9", cy: "7", r: "4" }), /* @__PURE__ */ React.createElement("path", { d: "M2 21v-2a4 4 0 0 1 4-4h4" }), /* @__PURE__ */ React.createElement("circle", { cx: "19", cy: "15", r: "2.5" }), /* @__PURE__ */ React.createElement("path", { d: "M19 11v1.2M19 17.8V19M15.7 13l1 .6M21.3 16.4l1 .6M15.7 17l1-.6M21.3 13.6l1-.6" }));
+  var Search = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "11", cy: "11", r: "7" }), /* @__PURE__ */ React.createElement("line", { x1: "21", y1: "21", x2: "16.65", y2: "16.65" }));
+  var ChevronRight = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("polyline", { points: "9 18 15 12 9 6" }));
+  var CheckCircle2 = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "12", cy: "12", r: "10" }), /* @__PURE__ */ React.createElement("polyline", { points: "8 12 11 15 16 9" }));
+  var Clock = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "12", cy: "12", r: "10" }), /* @__PURE__ */ React.createElement("polyline", { points: "12 6 12 12 16 14" }));
+  var ArrowLeft = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("line", { x1: "19", y1: "12", x2: "5", y2: "12" }), /* @__PURE__ */ React.createElement("polyline", { points: "12 19 5 12 12 5" }));
+  var Sparkles = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M12 2l1.6 5.4L19 9l-5.4 1.6L12 16l-1.6-5.4L5 9l5.4-1.6L12 2z" }), /* @__PURE__ */ React.createElement("path", { d: "M19 14l.6 2 2 .6-2 .6-.6 2-.6-2-2-.6 2-.6z" }));
+  var Save = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" }), /* @__PURE__ */ React.createElement("polyline", { points: "17 21 17 13 7 13 7 21" }), /* @__PURE__ */ React.createElement("polyline", { points: "7 3 7 8 15 8" }));
+  var Circle = (p) => {
+    var _a, _b;
+    return /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "12", cy: "12", r: "10", fill: p.fill && p.fill !== "none" ? p.fill : "none", stroke: (_b = (_a = p.stroke) != null ? _a : p.color) != null ? _b : "currentColor" }));
+  };
+  var Phone = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.78.66 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.47-1.47a2 2 0 0 1 2.11-.45c.83.32 1.71.54 2.61.66A2 2 0 0 1 22 16.92z" }));
+  var FileCheck2 = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" }), /* @__PURE__ */ React.createElement("polyline", { points: "14 2 14 8 20 8" }), /* @__PURE__ */ React.createElement("polyline", { points: "9 15 11 17 15 13" }));
+  var Info = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "12", cy: "12", r: "10" }), /* @__PURE__ */ React.createElement("line", { x1: "12", y1: "16", x2: "12", y2: "11.5" }), /* @__PURE__ */ React.createElement("circle", { cx: "12", cy: "8", r: "0.9", fill: p.color || "currentColor", stroke: "none" }));
+  var C = {
+    bg: "#F6F5F1",
+    surface: "#FFFFFF",
+    surfaceAlt: "#F1EFE8",
+    ink: "#211F1B",
+    inkSoft: "#6B675D",
+    inkFaint: "#9C978A",
+    brand: "#20242E",
+    brandSoft: "#3A3F4C",
+    accent: "#A9834F",
+    accentSoft: "#C9A876",
+    border: "#E2DFD5",
+    confirmed: "#54705A",
+    confirmedBg: "#EAEEE7",
+    verify: "#9A7530",
+    verifyBg: "#F3EBDA",
+    urgent: "#95483F",
+    urgentBg: "#F2E7E4",
+    note: "#4C6478",
+    noteBg: "#E9EDF0"
+  };
+  var mono = { fontFamily: 'ui-monospace,SFMono-Regular,"SF Mono","Roboto Mono","IBM Plex Mono",monospace' };
+  var sans = { fontFamily: '-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard Variable",Pretendard,"Noto Sans KR",Roboto,sans-serif' };
+  function Badge({ kind, children }) {
+    const map = {
+      confirmed: { bg: C.confirmedBg, fg: C.confirmed, label: "\uD655\uC778\uB428" },
+      verify: { bg: C.verifyBg, fg: C.verify, label: "\uD655\uC778 \uD544\uC694" },
+      note: { bg: C.noteBg, fg: C.note, label: "\uD1B5\uD654 \uC548\uB0B4" }
     };
-    setCustomers([newC, ...customers]);
-    setSaved(true);
+    const s = map[kind] || map.note;
+    return /* @__PURE__ */ React.createElement(
+      "span",
+      {
+        className: "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium",
+        style: { background: s.bg, color: s.fg }
+      },
+      /* @__PURE__ */ React.createElement(Circle, { size: 6, fill: s.fg, stroke: "none" }),
+      children || s.label
+    );
   }
- 
-  const REQUIRED = ["name", "phone4", "fc"];
- 
-  return (
-    <div>
-      <Header title="통화요약 AI" subtitle="통화요약이나 상담 메모를 붙여넣으면 구조화된 고객 기록을 만들어 드립니다." />
- 
-      <div className="grid lg:grid-cols-2 gap-5">
-        <div>
-          <div className="rounded-lg p-4" style={{ background: C.surface, border: `1px solid ${C.border}` }}>
-            <textarea
-              value={text}
-              onChange={e => setText(e.target.value)}
-              placeholder="예: 김경희 고객하고 통화했어. 끝번호 1401이고...&#10;&#10;지점·FC가 헷갈리면 맨 아래에 이렇게 추가로 적어주세요:&#10;**대전SFP지점, ***김기원"
-              rows={9}
-              className="w-full resize-none outline-none text-[12.5px] leading-relaxed"
-              style={{ color: C.ink }}
-            />
-            <div className="text-[11.5px] mt-2" style={{ color: C.inkFaint }}>
-              지점·FC가 문맥상 누락될 수 있으면 맨 아래 줄에 <b>**지점명</b>, <b>***FC명</b> 형식으로 추가 입력하면 확실하게 인식돼요. (예: **대전SFP지점, ***김기원)
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3">
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <button onClick={() => setText(SAMPLE_TEXT)} className="text-[11px] text-left" style={{ color: C.note, wordBreak: "keep-all" }}>
-                  대화체 예시
-                </button>
-                <button onClick={() => setText(SAMPLE_TEXT_LABELED)} className="text-[11px] text-left" style={{ color: C.note, wordBreak: "keep-all" }}>
-                  라벨형식 예시 (고객: / 추천:)
-                </button>
-                <button onClick={() => setText(SAMPLE_TEXT_MARKER)} className="text-[11px] text-left" style={{ color: C.note, wordBreak: "keep-all" }}>
-                  지점·FC 마커 예시 (**지점 / ***FC)
-                </button>
-              </div>
-              <button
-                onClick={analyze}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-md text-[12px] font-semibold text-white"
-                style={{ background: C.accent }}
-              >
-                <Sparkles size={14} /> 구조화하기
-              </button>
-            </div>
-          </div>
-          <div className="mt-3 text-[10px] leading-relaxed" style={{ color: C.inkFaint }}>
-            현재 통화요약 AI는 실제 LLM이 아닌 규칙 기반 시연용 Prototype입니다. 실제 서비스에서는 LLM 분석 → 기존 고객 검색 → 저장 전 사용자 확인 구조로 발전합니다.
-          </div>
-        </div>
- 
-        <div>
-          {!result && (
-            <div className="rounded-lg p-8 h-full flex items-center justify-center text-center" style={{ background: C.surfaceAlt, border: `1px dashed ${C.border}` }}>
-              <span className="text-[11px]" style={{ color: C.inkFaint }}>왼쪽에 통화 내용을 입력하고 구조화하기를 눌러주세요.</span>
-            </div>
-          )}
-          {result && (
-            <div className="rounded-lg p-4" style={{ background: C.surface, border: `1px solid ${C.border}` }}>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="text-[12.5px] font-semibold">추출 결과</div>
-                {justUpdated && (
-                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ background: C.confirmedBg, color: C.confirmed }}>
-                    방금 다시 구조화됨
-                  </span>
-                )}
-              </div>
-              <EditableResultRow
-                label="고객명" value={result.name}
-                onChange={v => setResult(r => ({ ...r, name: v }))}
-                kind={result.badges.name || "verify"}
-                onToggleKind={k => setResult(r => ({ ...r, badges: { ...r.badges, name: k } }))}
-              />
-              <EditableResultRow
-                label="전화번호 뒤 4자리" value={result.phone4} numeric
-                onChange={v => setResult(r => ({ ...r, phone4: v }))}
-                kind={result.badges.phone4 || "verify"}
-                onToggleKind={k => setResult(r => ({ ...r, badges: { ...r.badges, phone4: k } }))}
-              />
-              {result.rrnDetected && (
-                <Field label="주민번호 앞자리" value="감지됨 · 개인정보 보호정책상 미저장" kind="verify" />
-              )}
-              <EditableResultRow
-                label="추천 FC" value={result.fc}
-                onChange={v => setResult(r => ({ ...r, fc: v }))}
-                kind={result.badges.fc || "verify"}
-                onToggleKind={k => setResult(r => ({ ...r, badges: { ...r.badges, fc: k } }))}
-              />
-              <EditableResultRow
-                label="지점" value={result.branch}
-                onChange={v => setResult(r => ({ ...r, branch: v }))}
-                kind={result.badges.branch || "verify"}
-                onToggleKind={k => setResult(r => ({ ...r, badges: { ...r.badges, branch: k } }))}
-              />
-              {Object.entries(result.fields).map(([k, v]) => (
-                <EditableResultRow
-                  key={k} label={k} value={v}
-                  onChange={nv => setResult(r => ({ ...r, fields: { ...r.fields, [k]: nv } }))}
-                  kind={result.badges[k] || "note"}
-                  onToggleKind={nk => setResult(r => ({ ...r, badges: { ...r.badges, [k]: nk } }))}
-                />
-              ))}
-              <div className="text-[11.5px] mt-3 mb-3" style={{ color: C.inkFaint }}>
-                모든 항목은 직접 수정할 수 있어요. 배지를 누르면 확인됨 · 확인 필요 · 통화 안내 순서로 바뀌어요. 주민등록번호는 인식하더라도 저장하지 않습니다.
-              </div>
-              <button
-                onClick={saveAsCustomer}
-                className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-md text-[12.5px] font-semibold text-white"
-                style={{ background: saved ? C.confirmed : C.accent }}
-              >
-                <Save size={14} /> {saved ? "고객관리에 저장됨" : "확인 후 고객으로 저장"}
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
- 
-/* ================= RATE CALCULATOR ================= */
-/* ================= DOCUMENT ASSISTANT ================= */
-const INCOME_TYPES = ["근로소득자", "사업소득자", "연금소득자"];
- 
-function buildEmployeeDocs(cond) {
-  const docs = [];
- 
-  // 항상 필요한 기본 서류
-  docs.push({ label: "건강보험자격득실확인서", detail: "1개월 이내 발급분", kind: "confirmed", group: "재직 확인" });
-  docs.push({ label: "재직증명서", detail: "1개월 이내 발급분", kind: "confirmed", group: "재직 확인" });
-  docs.push({
-    label: "소득 증빙서류 (택1)",
-    detail: "근로소득원천징수영수증 · 소득금액증명원 · 소득확인증명서(SA용) · 소득세원천징수확인서(세무사발행) · 급여명세표/임금대장(직인 필수) 중 1종",
-    kind: "confirmed", group: "소득 확인",
-  });
-  docs.push({
-    label: "급여입금 통장 사본",
-    detail: "소득발생기간 1개월 이상이나 실질수령액이 1개월 미만인 경우에만 추가",
-    kind: "note", group: "소득 확인",
-  });
- 
-  // 재직기간별
-  if (cond.tenure === "3개월이하") {
-    docs.push({ label: "재직 여부 유선확인 + 서명날인", detail: "재직 3개월 이하자는 필수 확인 절차", kind: "verify", group: "재직기간 조건" });
+  function ToggleBadge({ kind, onToggle }) {
+    const map = {
+      confirmed: { bg: C.confirmedBg, fg: C.confirmed, label: "\uD655\uC778\uB428" },
+      verify: { bg: C.verifyBg, fg: C.verify, label: "\uD655\uC778 \uD544\uC694" }
+    };
+    const s = map[kind] || map.verify;
+    return /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        type: "button",
+        onClick: onToggle,
+        className: "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold shrink-0",
+        style: { background: s.bg, color: s.fg },
+        title: "\uB20C\uB7EC\uC11C \uD655\uC778\uB428/\uD655\uC778 \uD544\uC694 \uC804\uD658"
+      },
+      /* @__PURE__ */ React.createElement(Circle, { size: 6, fill: s.fg, stroke: "none" }),
+      s.label
+    );
   }
-  if (cond.tenure === "1개월~1년미만") {
-    docs.push({
-      label: "연환산 소득 적용",
-      detail: cond.steadyIncome ? "상시소득으로 인정되어 100% 인정" : "상시소득 미인정 시 연환산 90%만 인정 (계약직·임시직은 상시소득 아님)",
-      kind: "note", group: "재직기간 조건",
-    });
-    if (cond.highIncome && !cond.exemptGroup) {
-      docs.push({ label: "최근 6개월 급여입금내역", detail: "연소득 5천만원 이상 & 재직 1년 미만은 증빙 강화 대상", kind: "verify", group: "재직기간 조건" });
-    }
-    if (cond.exemptGroup) {
-      docs.push({ label: "증빙 강화 예외 적용", detail: "우량직장인·상장업체 근무자·전직장 소득자 20% 이내 등은 예외 가능 (세부 기준 확인 필요)", kind: "note", group: "재직기간 조건" });
-    }
+  function EditableRow({ label, value, onChange, kind, onToggleKind, numeric, type = "text" }) {
+    const isDate = type === "date";
+    return /* @__PURE__ */ React.createElement("div", { className: "grid items-center gap-3 py-2 border-b", style: { gridTemplateColumns: "58px minmax(0,1fr) 80px", borderColor: C.border } }, /* @__PURE__ */ React.createElement("span", { className: "text-[11px] whitespace-nowrap", style: { color: C.inkSoft } }, label), /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type,
+        value,
+        onChange: (e) => onChange(e.target.value),
+        className: `text-[11px] font-medium px-2 py-1 rounded-md outline-none ${isDate ? "text-left" : "text-right"}`,
+        style: { ...numeric && !isDate ? mono : {}, border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.ink, width: "100%", minWidth: 0, boxSizing: "border-box" }
+      }
+    ), /* @__PURE__ */ React.createElement("div", { className: "flex justify-end" }, /* @__PURE__ */ React.createElement(ToggleBadge, { kind, onToggle: onToggleKind })));
   }
- 
-  if (cond.onLeave) {
-    docs.push({ label: "휴직 확인 서류", detail: "휴직 전 최근년도 소득으로 연소득 산정. 신청일 기준 최근 36개월 내 1개월 이상 연속 소득 없으면 추정소득 적용", kind: "note", group: "휴직/복직" });
+  function ToggleBadge3({ kind, onToggle }) {
+    const order = ["confirmed", "verify", "note"];
+    const map = {
+      confirmed: { bg: C.confirmedBg, fg: C.confirmed, label: "\uD655\uC778\uB428" },
+      verify: { bg: C.verifyBg, fg: C.verify, label: "\uD655\uC778 \uD544\uC694" },
+      note: { bg: C.noteBg, fg: C.note, label: "\uD1B5\uD654 \uC548\uB0B4" }
+    };
+    const s = map[kind] || map.verify;
+    const cycle = () => {
+      const i = order.indexOf(kind);
+      onToggle(order[(i + 1) % order.length]);
+    };
+    return /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        type: "button",
+        onClick: cycle,
+        className: "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold shrink-0",
+        style: { background: s.bg, color: s.fg },
+        title: "\uB20C\uB7EC\uC11C \uD655\uC778\uB428 \u2192 \uD655\uC778 \uD544\uC694 \u2192 \uD1B5\uD654 \uC548\uB0B4 \uC21C\uC11C\uB85C \uC804\uD658"
+      },
+      /* @__PURE__ */ React.createElement(Circle, { size: 6, fill: s.fg, stroke: "none" }),
+      s.label
+    );
   }
-  if (cond.returned) {
-    docs.push({ label: "복직 확인 서류", detail: "복직 후 최근년도 소득 기준 산정 (복직 3개월 미만이면 휴직자로 간주 선택 가능)", kind: "note", group: "휴직/복직" });
+  function EditableResultRow({ label, value, onChange, kind, onToggleKind, numeric }) {
+    return /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between gap-3 py-2 border-b", style: { borderColor: C.border } }, /* @__PURE__ */ React.createElement("span", { className: "text-[13px] shrink-0", style: { color: C.inkSoft } }, label), /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 flex-1 justify-end min-w-0" }, /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        value,
+        onChange: (e) => onChange(e.target.value),
+        placeholder: "\uD655\uC778 \uD544\uC694",
+        className: "text-[13px] font-medium text-right px-2 py-1 rounded-md outline-none min-w-0 flex-1",
+        style: { ...numeric ? mono : {}, border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.ink }
+      }
+    ), /* @__PURE__ */ React.createElement(ToggleBadge3, { kind, onToggle: onToggleKind })));
   }
-  if (cond.combinePrevJob) {
-    docs.push({ label: "전직장 소득 서류", detail: "전직장 퇴직월과 현직장 입사월이 1개월 이내인 경우 심사자 판단으로 합산 가능 (공무원·교사·계열사 전배 등)", kind: "verify", group: "전직장 소득" });
+  function Field({ label, value, kind = "confirmed", numeric }) {
+    if (value === void 0 || value === null || value === "") return null;
+    return /* @__PURE__ */ React.createElement("div", { className: "flex items-start justify-between gap-3 py-2 border-b", style: { borderColor: C.border } }, /* @__PURE__ */ React.createElement("span", { className: "text-[11px]", style: { color: C.inkSoft } }, label), /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-2 text-right" }, /* @__PURE__ */ React.createElement("span", { className: "text-[11px] font-medium", style: numeric ? mono : {} }, value), /* @__PURE__ */ React.createElement(Badge, { kind })));
   }
-  if (cond.overseas) {
-    docs.push({ label: "해외소득 증빙 (최근 2개년)", detail: "해외공관 영사확인 또는 아포스티유 인증 필요", kind: "verify", group: "해외소득" });
-  }
- 
-  return docs;
-}
- 
-/* ---------- 고객 발송용 서류 체크리스트 ---------- */
-const SEND_INCOME_OPTIONS = ["근로소득자", "사업소득자", "연금소득자", "기타"];
- 
-function buildSendChecklist(isPurchase, incomeCategory) {
-  const items = [
-    isPurchase ? "매매계약서" : "등기필증",
-    "주민등록등본 1통",
-    "초본 1통",
-    "전입세대확인서",
-    "외국인체류확인서 (주민센터 · 담보지 기준)",
-    "인감증명서 1통",
-    "인감도장",
-    "신분증",
-    "가족관계확인서",
+  var initialFCs = [
+    { id: "fc1", name: "\uAE40\uAE30\uC6D0", phone: "010-2841-5573", branch: "\uB300\uC804SFP\uC9C0\uC810", lastContact: "2026-08-05", recentIntro: "\uAE40\uAE30\uC724", activeCustomers: 1, paidCustomers: 3, nextContact: "2026-08-20" },
+    { id: "fc2", name: "\uBC31\uC120\uBBF8", phone: "010-6620-9147", branch: "\uB0A8\uB300\uC804\uC9C0\uC810", lastContact: "2026-06-08", recentIntro: "\uC815\uD658\uC11D", activeCustomers: 1, paidCustomers: 5, nextContact: "2026-08-15" },
+    { id: "fc3", name: "\uAC15\uC778\uC219", phone: "010-3390-2286", branch: "\uC138\uC885\uC9C0\uC810", lastContact: "2026-08-01", recentIntro: "-", activeCustomers: 0, paidCustomers: 2, nextContact: "2026-10-01" },
+    { id: "fc4", name: "\uC774\uBBF8\uD76C", phone: "010-7715-4402", branch: "\uB300\uC804\uC2A4\uD0C0\uC9C0\uC810", lastContact: "2026-07-28", recentIntro: "(\uACE0\uAC1D\uBA85 \uBBF8\uD655\uC778)", activeCustomers: 1, paidCustomers: 4, nextContact: "2026-08-13" },
+    { id: "fc5", name: "\uAE40\uC120\uC625", phone: "010-4453-8871", branch: "\uD55C\uBC2D\uC9C0\uC810", lastContact: "2026-08-10", recentIntro: "(\uACE0\uAC1D\uBA85 \uBBF8\uD655\uC778)", activeCustomers: 1, paidCustomers: 1, nextContact: "2026-08-19" },
+    { id: "fc6", name: "\uC2E0\uC18C\uC601", phone: "010-9928-6034", branch: "\uC2E0\uAD00\uC9C0\uC810", lastContact: "2026-08-09", recentIntro: "(\uACE0\uAC1D\uBA85 \uBBF8\uD655\uC778)", activeCustomers: 1, paidCustomers: 6, nextContact: "2026-08-14" }
   ];
-  if (incomeCategory !== "기타") {
-    items.push(`재직증명서 (${incomeCategory})`);
-    items.push(`소득증명서 (${incomeCategory})`);
+  function CallLink({ phone, children, className, style }) {
+    return /* @__PURE__ */ React.createElement(
+      "a",
+      {
+        href: `tel:${phone.replace(/-/g, "")}`,
+        onClick: (e) => e.stopPropagation(),
+        className,
+        style
+      },
+      children
+    );
   }
-  return items;
-}
- 
-function SendChecklist() {
-  const [isPurchase, setIsPurchase] = useState(false);
-  const [incomeCategory, setIncomeCategory] = useState("근로소득자");
-  const [copied, setCopied] = useState(false);
- 
-  const items = buildSendChecklist(isPurchase, incomeCategory);
-  const plainText = `다음서류 준비 부탁드립니다.\n${items.join(", ")}`;
- 
-  function copy() {
-    navigator.clipboard?.writeText(plainText).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    }).catch(() => {});
-  }
- 
-  return (
-    <Panel title="고객 발송용 서류 체크리스트">
-      <div className="flex flex-col sm:flex-row gap-4 py-1 mb-1">
-        <div className="flex-1">
-          <div className="text-[11px] mb-2" style={{ color: C.inkSoft }}>대출용도</div>
-          <div className="flex flex-col gap-1.5">
-            <RadioRow label="구입" checked={isPurchase} onClick={() => setIsPurchase(true)} />
-            <RadioRow label="그 외 (대환·생활자금 등)" checked={!isPurchase} onClick={() => setIsPurchase(false)} />
-          </div>
-        </div>
-        <div className="flex-1">
-          <div className="text-[11px] mb-2" style={{ color: C.inkSoft }}>소득유형</div>
-          <div className="flex flex-wrap gap-1.5">
-            {SEND_INCOME_OPTIONS.map(t => (
-              <RadioRow key={t} label={t} checked={incomeCategory === t} onClick={() => setIncomeCategory(t)} />
-            ))}
-          </div>
-        </div>
-      </div>
- 
-      <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${C.border}` }}>
-        <div className="flex flex-col gap-1.5 mb-3">
-          {items.map((item, i) => {
-            const changed = i === 0 && isPurchase;
-            const isIncomeDoc = item.includes("재직증명서") || item.includes("소득증명서");
-            return (
-              <div key={i} className="flex items-center gap-2 text-[12.5px]">
-                <span className="w-5 shrink-0" style={{ ...mono, color: C.inkFaint }}>{i + 1}.</span>
-                <span style={{ color: C.ink }}>{item}</span>
-                {changed && <Badge kind="note" label="구입 조건 반영" />}
-                {isIncomeDoc && <Badge kind="note" label="소득유형 반영" />}
-              </div>
-            );
-          })}
-          {incomeCategory === "기타" && (
-            <div className="text-[11px] mt-1 flex items-start gap-1.5" style={{ color: C.inkFaint }}>
-              <Info size={13} className="mt-0.5 shrink-0" />
-              <span>소득유형을 "기타"로 선택하여 재직증명서 · 소득증명서 항목이 제외되었습니다.</span>
-            </div>
-          )}
-        </div>
- 
-        <textarea
-          readOnly
-          value={plainText}
-          rows={3}
-          className="w-full resize-none outline-none text-[12px] leading-relaxed p-3 rounded-md"
-          style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, color: C.ink }}
-        />
-        <button
-          onClick={copy}
-          className="mt-2 flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[11.5px] font-semibold text-white"
-          style={{ background: copied ? C.confirmed : C.accent }}
-        >
-          <FileCheck2 size={13} /> {copied ? "복사됨" : "텍스트 복사하기"}
-        </button>
-      </div>
-    </Panel>
-  );
-}
- 
-function DocumentAssistant() {
-  const [incomeType, setIncomeType] = useState("근로소득자");
-  const [cond, setCond] = useState({
-    tenure: "1년이상",
-    steadyIncome: false,
-    highIncome: false,
-    exemptGroup: false,
-    onLeave: false,
-    returned: false,
-    combinePrevJob: false,
-    overseas: false,
-  });
- 
-  const set = (k, v) => setCond({ ...cond, [k]: v });
-  const docs = incomeType === "근로소득자" ? buildEmployeeDocs(cond) : null;
-  const groups = docs ? [...new Set(docs.map(d => d.group))] : [];
- 
-  const STATIC = {
-    "사업소득자": [
-      { label: "건강보험자격득실확인서(필수)", detail: "사업자등록증 사본 + 사업자실명확인 필요", kind: "confirmed" },
-      { label: "사업자등록증명원 · 고용/산재보험 자격이력내역서 등", detail: "무등록 사업자, 보험모집인, 다단계판매원 등은 별도 확인 서류", kind: "confirmed" },
-      { label: "소득금액증명원, 연말정산 사업소득 원천징수영수증", detail: "종빙: 소득금액증명원 100% 인정. 신고소득은 유형에 따라 인정비율 상이", kind: "note" },
-      { label: "개업 1년 미만 / 2년 이상 조건부 인정비율", detail: "개업 1년 미만은 소득 90% 인정, 2년 이상은 27개월 소득증빙 시 최근년도 소득 100% 인정 등 세부기준 상이", kind: "verify" },
-    ],
-    "연금소득자": [
-      { label: "연금수급자확인서 등", detail: "연금수급을 확인할 수 있는 지급기관 증명서, 최근 발생분 우선 인정", kind: "confirmed" },
-      { label: "연금수령 통장사본", detail: "증명서에 수령금액이 표시되지 않는 경우 추가 제출", kind: "verify" },
-      { label: "연금 수령기간 확인", detail: "국민연금·공무원연금·군인연금·사학연금 등 종류별 인정 범위 상이, 기초생활수급·국가유공자 보상금 등은 제외", kind: "note" },
-    ],
+  var initialCustomers = [
+    {
+      id: "c1",
+      name: "\uAE40\uAE30\uC724",
+      phone4: "1520",
+      fc: "\uAE40\uAE30\uC6D0",
+      branch: "\uB300\uC804SFP\uC9C0\uC810",
+      collateral: "\uC720\uC131\uAD6C \uC544\uD30C\uD2B8 (\uAD6C\uC785 \uC608\uC815)",
+      consultDate: "2026-07-20",
+      lastContact: "2026-08-20",
+      consultType: "\uB2E8\uC21C \uAE08\uB9AC\uC0C1\uB2F4",
+      status: "\uB2E8\uC21C\uC0C1\uB2F4",
+      docStatus: "\uBBF8\uC548\uB0B4",
+      nextAction: "\uAD6C\uC785 \uACB0\uC815 \uC5EC\uBD80 \uD655\uC778",
+      followUp: "15\uC77C \uC8FC\uAE30\uB85C \uC7AC\uD655\uC778",
+      notes: "\uAD00\uC2EC\uC740 \uC788\uC73C\uB098 \uACB0\uC815 \uBABB\uD55C \uC0C1\uD0DC. \uC885\uB8CC\uB294 \uACE0\uAC1D\uC774 \uC9C1\uC811 \uC54C\uB824\uC8FC\uAE30\uB85C \uD568.",
+      fields: {},
+      badges: {}
+    },
+    {
+      id: "c2",
+      name: "\uC815\uD658\uC11D",
+      phone4: "9753",
+      fc: "\uBC31\uC120\uBBF8",
+      branch: "\uB0A8\uB300\uC804\uC9C0\uC810",
+      collateral: "\uC138\uC885\uC2DC \uB098\uB9BF\uC7AC 5\uB2E8\uC9C0 84.79\u33A1",
+      consultDate: "2026-06-08",
+      lastContact: "2026-06-08",
+      consultType: "\uAD6C\uC785\uC790\uAE08 \uC0C1\uB2F4 / \uD55C\uB3C4 \uC0C1\uB2F4",
+      status: "\uC0C1\uB2F4\uC911",
+      docStatus: "\uC548\uB0B4 \uC804",
+      nextAction: "DSR \uCD08\uACFC \uC5EC\uBD80 \uC7AC\uD655\uC778",
+      followUp: "\uD655\uC778 \uD544\uC694",
+      notes: "\uC2DC\uC138 880\uBC31\uB9CC\uC6D0 / \uAC00\uB2A5\uAE08\uC561 250\uBC31\uB9CC\uC6D0 \uC548\uB0B4. \uC6D0\uAE08\uADE0\uB4F1 \uC57D 250\uB9CC\uC6D0, \uC6D0\uB9AC\uAE08\uADE0\uB4F1 \uC57D 220\uB9CC\uC6D0 \uC548\uB0B4.",
+      fields: { \uD76C\uB9DD\uB300\uCD9C\uAE08\uC561: "250\uBC31\uB9CC\uC6D0", \uAE08\uB9AC: "5.35%", \uC2DC\uC138: "880\uBC31\uB9CC\uC6D0" },
+      badges: { \uD76C\uB9DD\uB300\uCD9C\uAE08\uC561: "note", \uAE08\uB9AC: "note", \uC2DC\uC138: "note" }
+    },
+    {
+      id: "c3",
+      name: "\uAE40\uD604\uC544",
+      phone4: "7858",
+      fc: "-",
+      branch: "-",
+      collateral: "\uC6D4\uC138 \uAC70\uC8FC \uB2F4\uBCF4\uBB3C\uAC74 (\uBCF4\uC99D\uAE08 150\uBC31\uB9CC\uC6D0 / \uC6D4\uC138 3\uBC31\uB9CC\uC6D0)",
+      consultDate: "2026-07-15",
+      lastContact: "2026-08-02",
+      consultType: "\uB300\uCD9C \uC9C4\uD589 \uC0C1\uB2F4",
+      status: "\uC0C1\uB2F4\uC911",
+      docStatus: "\uBC30\uC6B0\uC790 \uB3D9\uC758 \uB300\uAE30",
+      nextAction: "\uBC30\uC6B0\uC790 \uB3D9\uC758 \uBC0F \uC18C\uB4DD \uD655\uC778",
+      followUp: "\uB3D9\uC758 \uC644\uB8CC \uD6C4 \uC7AC\uC5F0\uB77D",
+      notes: "\uBD80\uCC44 120\uBC31\uB9CC\uC6D0 \uC774\uC0C1, \uC5F0\uC18C\uB4DD \uBD80\uC871. \uCD94\uAC00 2\uC5B5\uC6D0 \uAC00\uB2A5 \uC548\uB0B4\uB418\uC5C8\uC73C\uB098 \uC57D\uC815 \uC9C4\uD589\uC774 \uC5B4\uB824\uC6B8 \uC218 \uC788\uC74C.",
+      fields: { \uBD80\uCC44: "120\uBC31\uB9CC\uC6D0 \uC774\uC0C1", \uCD94\uAC00\uAC00\uB2A5\uC561\uC0C1\uB2F4: "\uC57D 2\uC5B5\uC6D0" },
+      badges: { \uBD80\uCC44: "confirmed", \uCD94\uAC00\uAC00\uB2A5\uC561\uC0C1\uB2F4: "note" }
+    },
+    {
+      id: "c4",
+      name: "\uD64D\uAE38\uB3D9",
+      phone4: "9369",
+      fc: "\uC774\uBBF8\uD76C",
+      branch: "\uB300\uC804\uC2A4\uD0C0\uC9C0\uC810",
+      collateral: "\uADDC\uC81C\uC9C0\uC5ED \uB2F4\uBCF4\uBB3C\uAC74",
+      consultDate: "2026-08-10",
+      lastContact: "2026-08-13",
+      consultType: "\uB300\uCD9C \uC9C4\uD589 \uC0C1\uB2F4",
+      status: "\uC0C1\uB2F4\uC911",
+      docStatus: "\uB4F1\uBCF8 \uC81C\uCD9C \uD544\uC694",
+      nextAction: "\uB4F1\uBCF8 \uC0AC\uC9C4/\uD329\uC2A4 \uC81C\uCD9C \uD655\uC778",
+      followUp: "\uC804\uC785 \uC608\uC815\uC77C \uAE30\uC900 \uD655\uC778",
+      notes: "3\uB144 \uC774\uB0B4 \uC5F0 10%\uAE4C\uC9C0 \uC218\uC218\uB8CC \uC5C6\uC774 \uC0C1\uD658 \uAC00\uB2A5, \uCD08\uACFC \uC2DC 0.6% \uC218\uC218\uB8CC \u2014 \uD1B5\uD654\uC0C1 \uC548\uB0B4\uB0B4\uC6A9\uC73C\uB85C \uBCC4\uB3C4 \uAD00\uB9AC. \uC2B9\uC778\uC73C\uB85C \uC784\uC758 \uD655\uC815\uD558\uC9C0 \uC54A\uC74C.",
+      fields: { \uB300\uCD9C\uAE08: "530\uBC31\uB9CC\uC6D0", \uAE08\uB9AC: "4.31% (5\uB144 \uACE0\uC815)", \uB300\uCD9C\uAE30\uAC04: "30\uB144", \uBC95\uBB34\uC0AC\uBE44\uC6A9: "\uC57D 50~60\uB9CC\uC6D0" },
+      badges: { \uB300\uCD9C\uAE08: "confirmed", \uAE08\uB9AC: "confirmed", \uB300\uCD9C\uAE30\uAC04: "confirmed", \uBC95\uBB34\uC0AC\uBE44\uC6A9: "note" }
+    },
+    {
+      id: "c5",
+      name: "\uAC00\uC0C1\uACE0\uAC1D-2436",
+      phone4: "2436",
+      fc: "-",
+      branch: "-",
+      collateral: "\uC8FC\uD0DD\uB2F4\uBCF4\uB300\uCD9C",
+      consultDate: "2026-08-12",
+      lastContact: "2026-08-13",
+      consultType: "\uB2F4\uBCF4\uB300\uCD9C \uC0C1\uB2F4 / \uC870\uAC74 \uC0C1\uB2F4",
+      status: "\uC0C1\uB2F4\uC911",
+      docStatus: "\uC548\uB0B4/\uC900\uBE44 \uC911",
+      nextAction: "8/13 \uBC29\uBB38 \uBC0F \uC11C\uB958 \uD655\uC778",
+      followUp: "\uBC29\uBB38 \uACB0\uACFC \uD655\uC778",
+      notes: "\uC2E4\uC81C \uACE0\uAC1D\uBA85 \uBBF8\uD655\uC778 \u2192 \uAC00\uC0C1\uACE0\uAC1D\uC73C\uB85C \uC784\uC2DC \uAD00\uB9AC. \uC911\uB3C4\uC0C1\uD658 \uC870\uAC74(3\uB144 \uC774\uD6C4 0.6%)\uC740 \uD1B5\uD654 \uC548\uB0B4\uB0B4\uC6A9\uC774\uBA70 \uD655\uC815 \uC0C1\uD488\uC870\uAC74 \uC544\uB2D8.",
+      fields: { \uD76C\uB9DD\uB300\uCD9C\uAE08\uC561: "9,000\uB9CC\uC6D0", \uAE08\uB9AC: "4.83% (5\uB144 \uACE0\uC815)", \uB300\uCD9C\uAE30\uAC04: "40\uB144", \uC6D4\uC0C1\uD658\uC561: "\uC57D 40.4\uB9CC\uC6D0 (\uC6D0\uAE08 \uC57D 6.2\uB9CC\uC6D0 / \uC774\uC790 \uC57D 36\uB9CC\uC6D0)" },
+      badges: { \uD76C\uB9DD\uB300\uCD9C\uAE08\uC561: "confirmed", \uAE08\uB9AC: "confirmed", \uB300\uCD9C\uAE30\uAC04: "confirmed", \uC6D4\uC0C1\uD658\uC561: "confirmed" }
+    },
+    {
+      id: "c6",
+      name: "\uACE0\uAC1D-4551",
+      phone4: "4551",
+      fc: "-",
+      branch: "-",
+      collateral: "\uB9E4\uB9E4\uAE08\uC561 260\uBC31\uB9CC\uC6D0 (1\uC21C\uC704)",
+      consultDate: "2026-08-01",
+      lastContact: "2026-08-01",
+      consultType: "\uB300\uCD9C \uC9C4\uD589 \uC0C1\uB2F4",
+      status: "\uC0C1\uB2F4\uC911",
+      docStatus: "\uC811\uC218 \uC644\uB8CC",
+      nextAction: "\uC124\uC815 \uD6C4 10~15\uBD84 \uC774\uB0B4 \uC7AC\uC5F0\uB77D (\uC989\uC2DC \uC5C5\uBB34)",
+      followUp: "\uB300\uCD9C \uC9C4\uD589\uAD00\uB9AC\uB85C \uBD84\uB9AC (\uC77C\uBC18 Follow-up \uC81C\uC678)",
+      notes: "\uC9C1\uC811 \uC804\uD654 \uC2E0\uCCAD, \uCD94\uCC9C FC \uC5C6\uC74C. \uACC4\uC88C\uBC88\uD638 \uBBF8\uC800\uC7A5.",
+      fields: { \uB300\uCD9C\uAE08: "80\uBC31\uB9CC\uC6D0", \uB300\uCD9C\uAE30\uAC04: "40\uB144", \uC6D4\uB0A9\uC785\uC561: "\uC57D 353,000\uC6D0" },
+      badges: { \uB300\uCD9C\uAE08: "confirmed", \uB300\uCD9C\uAE30\uAC04: "confirmed", \uC6D4\uB0A9\uC785\uC561: "confirmed" }
+    },
+    {
+      id: "c7",
+      name: "\uC774\uAE08\uC790",
+      phone4: "2391",
+      fc: "-",
+      branch: "-",
+      collateral: "\uAC15\uD638\uB3D9 \uC544\uC774\uD30C\uD06C 3\uB2E8\uC9C0 43\uD3C9, \uB3D9\uAD6C",
+      consultDate: "2026-08-09",
+      lastContact: "2026-08-09",
+      consultType: "\uAD6C\uC785\uC790\uAE08 \uC0C1\uB2F4",
+      status: "\uC0C1\uB2F4\uC911",
+      docStatus: "\uC548\uB0B4 \uC804",
+      nextAction: "\uC794\uAE08\uC77C \uC5F0\uB3C4 \uBC0F \uC9C4\uD589\uC758\uC0AC \uD655\uC778",
+      followUp: "\uC794\uAE08\uC77C \uD655\uC778 \uD6C4 \uACB0\uC815",
+      notes: '\uC794\uAE08\uC77C\uC774 "4\uC6D4 30\uC77C"\uB85C\uB9CC \uC81C\uACF5\uB418\uC5B4 \uC5F0\uB3C4 \uD655\uC778 \uD544\uC694. \uC6B0\uC218\uACE0\uAC1D \uC544\uB2D8, \uC0DD\uB144\uC6D4\uC77C \uBBF8\uC800\uC7A5.',
+      fields: { \uD76C\uB9DD\uB300\uCD9C\uAE08\uC561: "80\uBC31\uB9CC\uC6D0", \uC548\uB0B4\uAE08\uB9AC: "4.4~4.5% (\uC2E0\uC6A9\uC870\uAC74 \uC591\uD638 \uC2DC \uC57D 4.63%)" },
+      badges: { \uD76C\uB9DD\uB300\uCD9C\uAE08\uC561: "confirmed", \uC548\uB0B4\uAE08\uB9AC: "note" }
+    }
+  ];
+  var STATUS_STYLE = {
+    "\uB2E8\uC21C\uC0C1\uB2F4": { bg: C.surfaceAlt, fg: C.inkSoft },
+    "\uC0C1\uB2F4\uC911": { bg: C.noteBg, fg: C.note },
+    "\uC885\uB8CC": { bg: "#EDEDED", fg: C.inkFaint }
   };
- 
-  return (
-    <div>
-      <Header title="서류안내" subtitle="고객에게 보낼 서류 체크리스트를 만들고, 소득유형별 필요서류를 확인합니다." />
- 
-      <SendChecklist />
- 
-      <div className="flex items-center gap-2 mt-9 mb-5">
-        <div className="text-[11px] font-semibold uppercase" style={{ color: C.inkSoft, letterSpacing: "0.07em" }}>심사용 · 소득유형별 필요서류 확인</div>
-        <div className="flex-1 h-px" style={{ background: C.border }} />
-      </div>
- 
-      <div className="grid lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-1 flex flex-col gap-5">
-          <Panel title="소득유형 선택">
-            <div className="flex flex-col gap-1.5 py-1">
-              {INCOME_TYPES.map(t => (
-                <button
-                  key={t}
-                  onClick={() => setIncomeType(t)}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-md text-[12.5px] font-medium text-left"
-                  style={{
-                    background: incomeType === t ? C.brand : C.surfaceAlt,
-                    color: incomeType === t ? "#FFFFFF" : C.ink,
-                  }}
-                >
-                  {t}
-                  {incomeType === t && <ChevronRight size={14} />}
-                </button>
-              ))}
-            </div>
-          </Panel>
- 
-          {incomeType === "근로소득자" && (
-            <Panel title="고객 상황 입력">
-              <div className="flex flex-col gap-4 py-1">
-                <div>
-                  <div className="text-[11px] mb-2" style={{ color: C.inkSoft }}>재직기간</div>
-                  <div className="flex flex-col gap-1.5">
-                    {["1년이상", "1개월~1년미만", "3개월이하"].map(v => (
-                      <RadioRow key={v} label={v} checked={cond.tenure === v} onClick={() => set("tenure", v)} />
-                    ))}
-                  </div>
-                </div>
- 
-                {cond.tenure === "1개월~1년미만" && (
-                  <div>
-                    <div className="text-[11px] mb-2" style={{ color: C.inkSoft }}>재직 1년 미만 추가 조건</div>
-                    <CheckRow label="상시소득으로 인정 가능" checked={cond.steadyIncome} onClick={() => set("steadyIncome", !cond.steadyIncome)} />
-                    <CheckRow label="연소득 5천만원 이상" checked={cond.highIncome} onClick={() => set("highIncome", !cond.highIncome)} />
-                    <CheckRow label="우량직장인 / 상장업체 근무자 등 예외 대상" checked={cond.exemptGroup} onClick={() => set("exemptGroup", !cond.exemptGroup)} />
-                  </div>
-                )}
- 
-                <div>
-                  <div className="text-[11px] mb-2" style={{ color: C.inkSoft }}>기타 상황</div>
-                  <CheckRow label="현재 휴직 중" checked={cond.onLeave} onClick={() => set("onLeave", !cond.onLeave)} />
-                  <CheckRow label="최근 복직함" checked={cond.returned} onClick={() => set("returned", !cond.returned)} />
-                  <CheckRow label="전직장 소득 합산 필요" checked={cond.combinePrevJob} onClick={() => set("combinePrevJob", !cond.combinePrevJob)} />
-                  <CheckRow label="해외소득 포함" checked={cond.overseas} onClick={() => set("overseas", !cond.overseas)} />
-                </div>
-              </div>
-            </Panel>
-          )}
-        </div>
- 
-        <div className="lg:col-span-2 flex flex-col gap-5">
-          {incomeType === "근로소득자" && groups.map(g => (
-            <Panel key={g} title={g}>
-              {docs.filter(d => d.group === g).map((d, i) => (
-                <div key={i} className="py-2.5" style={{ borderBottom: `1px solid ${C.border}` }}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[12.5px] font-medium">{d.label}</span>
-                    <Badge kind={d.kind} />
-                  </div>
-                  <div className="text-[11.5px] leading-relaxed" style={{ color: C.inkSoft }}>{d.detail}</div>
-                </div>
-              ))}
-            </Panel>
-          ))}
- 
-          {incomeType !== "근로소득자" && (
-            <Panel title={`${incomeType} 필요서류`}>
-              {STATIC[incomeType].map((d, i) => (
-                <div key={i} className="py-2.5" style={{ borderBottom: `1px solid ${C.border}` }}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[12.5px] font-medium">{d.label}</span>
-                    <Badge kind={d.kind} />
-                  </div>
-                  <div className="text-[11.5px] leading-relaxed" style={{ color: C.inkSoft }}>{d.detail}</div>
-                </div>
-              ))}
-              <div className="text-[11.5px] mt-3 flex items-start gap-1.5" style={{ color: C.inkFaint }}>
-                <Info size={13} className="mt-0.5 shrink-0" />
-                <span>{incomeType}는 아직 조건부 세부 로직이 반영되지 않았습니다. 현재는 참고자료의 고정 항목만 표시합니다.</span>
-              </div>
-            </Panel>
-          )}
- 
-          <div className="text-[11.5px] leading-relaxed px-1 flex items-start gap-1.5" style={{ color: C.inkFaint }}>
-            <Info size={13} className="mt-0.5 shrink-0" />
-            <span>이 안내는 2021.04 기준 참고자료를 근거로 하며, 실제 적용 전 최신 사내 심사기준으로 반드시 재확인해야 합니다. 재직 확인과 소득 확인은 서로 다른 서류로 구분됩니다.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
- 
-function RadioRow({ label, checked, onClick }) {
-  return (
-    <button onClick={onClick} className="flex items-center gap-2.5 px-3 py-2 rounded-md text-left" style={{ background: checked ? C.confirmedBg : C.surfaceAlt }}>
-      <span className="w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0" style={{ border: `1.5px solid ${checked ? C.confirmed : C.inkFaint}` }}>
-        {checked && <span className="w-1.5 h-1.5 rounded-full" style={{ background: C.confirmed }} />}
-      </span>
-      <span className="text-[12px]" style={{ color: checked ? C.confirmed : C.ink, fontWeight: checked ? 600 : 400 }}>{label}</span>
-    </button>
-  );
-}
- 
-function CheckRow({ label, checked, onClick }) {
-  return (
-    <button onClick={onClick} className="flex items-center gap-2.5 px-3 py-2 rounded-md text-left w-full" style={{ background: checked ? C.confirmedBg : "transparent" }}>
-      <span className="w-3.5 h-3.5 rounded flex items-center justify-center shrink-0" style={{ border: `1.5px solid ${checked ? C.confirmed : C.inkFaint}`, background: checked ? C.confirmed : "transparent" }}>
-        {checked && <CheckCircle2 size={11} color="#FFFFFF" strokeWidth={3} />}
-      </span>
-      <span className="text-[12px]" style={{ color: checked ? C.confirmed : C.ink, fontWeight: checked ? 600 : 400 }}>{label}</span>
-    </button>
-  );
-}
- 
-function RateCalculator() {
-  const [productId, setProductId] = useState(PRODUCTS[0].id);
-  const [baseRate, setBaseRate] = useState(PRODUCTS[0].base);
-  const [checks, setChecks] = useState({}); // { [id]: true/false }
-  const [checkVals, setCheckVals] = useState({}); // { [id]: number } for variable items
-  const [creditId, setCreditId] = useState("none");
-  const [insuranceId, setInsuranceId] = useState("none");
-  const [jeongyeolBp, setJeongyeolBp] = useState(0); // 0~30
- 
-  const product = PRODUCTS.find(p => p.id === productId);
- 
-  function changeProduct(id) {
-    const p = PRODUCTS.find(x => x.id === id);
-    setProductId(id);
-    setBaseRate(p.base); // 상품 변경 시 표 기준금리로 초기화 (직접 수정 가능)
+  var BUCKET_MAP = {
+    "\uB2E8\uC21C\uC0C1\uB2F4": "\uB2E8\uC21C\uC0C1\uB2F4",
+    "\uC0C1\uB2F4\uC911": "\uC0C1\uB2F4\uC911",
+    "\uC885\uB8CC": "\uC885\uB8CC",
+    "\uB300\uCD9C\uC758\uD5A5": "\uC0C1\uB2F4\uC911",
+    "\uB300\uCD9C\uC758\uD5A5(\uCD94\uC815)": "\uC0C1\uB2F4\uC911",
+    "\uC11C\uB958\uC548\uB0B4": "\uC0C1\uB2F4\uC911",
+    "\uC11C\uB958\uC811\uC218": "\uC0C1\uB2F4\uC911",
+    "\uB300\uCD9C\uC811\uC218": "\uC0C1\uB2F4\uC911",
+    "\uC2EC\uC0AC\uC9C4\uD589": "\uC0C1\uB2F4\uC911",
+    "\uC2E4\uD589 \uC804 \uD655\uC778 \uD544\uC694": "\uC0C1\uB2F4\uC911",
+    "\uD655\uC778 \uD544\uC694": "\uC0C1\uB2F4\uC911",
+    "\uC2B9\uC778": "\uC885\uB8CC",
+    "\uC9C0\uAE09\uC644\uB8CC": "\uC885\uB8CC",
+    "\uBCF4\uB958/\uC885\uB8CC": "\uC885\uB8CC"
+  };
+  var BUCKETS = ["\uB2E8\uC21C\uC0C1\uB2F4", "\uC0C1\uB2F4\uC911", "\uC885\uB8CC"];
+  var BUCKET_STYLE = {
+    "\uB2E8\uC21C\uC0C1\uB2F4": { fg: C.inkSoft, bg: C.surfaceAlt },
+    "\uC0C1\uB2F4\uC911": { fg: C.note, bg: C.noteBg },
+    "\uC885\uB8CC": { fg: C.inkFaint, bg: "#EDEDED" }
+  };
+  function getBucket(status) {
+    return BUCKET_MAP[status] || "\uC0C1\uB2F4\uC911";
   }
- 
-  const basicRate = product.spread + (parseFloat(baseRate) || 0); // 기준금리(입력) + 가산금리(고정) = 기본금리
- 
-  const generalTotal = CHECK_ITEMS.reduce((sum, item) => {
-    if (!checks[item.id]) return sum;
-    const v = item.variable ? (checkVals[item.id] ?? item.value) : item.value;
-    return sum + v;
-  }, 0);
-  const creditVal = CREDIT_OPTIONS.find(o => o.id === creditId).value;
-  const insuranceVal = INSURANCE_OPTIONS.find(o => o.id === insuranceId).value;
-  const jeongyeolVal = jeongyeolBp / 100;
- 
-  const rawTotal = generalTotal + creditVal + insuranceVal + jeongyeolVal;
-  const maxAllowed = Math.min(MAX_DISCOUNT_CAP, product.spread, basicRate - MIN_RATE);
-  const appliedTotal = Math.min(rawTotal, Math.max(maxAllowed, 0));
-  const finalRate = Math.max(basicRate - appliedTotal, MIN_RATE);
-  const capped = rawTotal > maxAllowed + 0.0001;
- 
-  return (
-    <div>
-      <Header title="금리계산기" subtitle={`대외비 · FC 전용 · ${RATE_PERIOD} 금리운용 기준`} />
- 
-      <div className="grid lg:grid-cols-3 gap-5 items-start">
-        <div className="lg:col-span-2 flex flex-col gap-5">
-          <StepTitle n={1} title="상품 선택" />
-          <Panel>
-            <select
-              value={productId}
-              onChange={e => changeProduct(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-md text-[12.5px] font-semibold outline-none mb-4"
-              style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, color: C.ink }}
-            >
-              {PRODUCTS.map(p => <option key={p.id} value={p.id}>{p.name} ({p.type})</option>)}
-            </select>
- 
-            <RateBuildRow
-              label="기준금리"
-              tag="직접입력" tagKind="accent"
-              right={
-                <div className="flex items-center gap-1.5">
-                  <input
-                    type="number" step="0.01" min="0" max="20"
-                    value={baseRate}
-                    onChange={e => setBaseRate(e.target.value === "" ? "" : parseFloat(e.target.value))}
-                    className="w-[92px] text-right px-2 py-1.5 rounded-md outline-none text-[14.5px] font-bold"
-                    style={{ ...mono, border: `1.5px solid ${C.border}`, color: C.brand, background: C.surface }}
-                  />
-                  <span className="text-[12.5px]" style={{ ...mono, color: C.inkSoft }}>%</span>
-                </div>
-              }
-            />
-            <div className="text-center text-[12px] py-1" style={{ color: "#B7C0CB", ...mono }}>+</div>
-            <RateBuildRow
-              label="가산금리"
-              tag="표 고정" tagKind="muted"
-              right={<span className="text-[14.5px] font-bold" style={{ color: C.inkSoft }}>{fmt(product.spread)}%</span>}
-            />
-            <div className="text-center text-[12px] py-1" style={{ color: "#B7C0CB", ...mono }}>=</div>
-            <div className="flex items-center justify-between pt-2.5 mt-1" style={{ borderTop: `1.5px solid ${C.border}` }}>
-              <span className="text-[12.5px]">기본금리</span>
-              <span className="text-[20px] font-extrabold" style={{ ...mono, color: C.brand }}>{fmt(basicRate)}%</span>
-            </div>
-            <div className="text-right text-[11px] mt-2.5" style={{ ...mono, color: C.urgent }}>
-              참고 · 표 기준 금리Band {fmt(product.bandLow)}~{fmt(product.bandHigh)}%
-            </div>
-          </Panel>
- 
-          <StepTitle n={2} title="일반할인 · 우대항목" />
-          <Panel noPad>
-            <div className="px-4 pt-3 pb-1 text-[10.5px] uppercase" style={{ ...mono, color: C.inkSoft, letterSpacing: "0.08em" }}>체크하여 적용</div>
-            {CHECK_ITEMS.map(item => {
-              const checked = !!checks[item.id];
-              const val = checkVals[item.id] ?? item.value;
-              return (
-                <div key={item.id} className="flex items-center justify-between gap-2.5 px-4 py-2.5" style={{ borderBottom: `1px solid ${C.border}` }}>
-                  <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                    <input
-                      type="checkbox" checked={checked}
-                      onChange={e => setChecks({ ...checks, [item.id]: e.target.checked })}
-                      style={{ width: 18, height: 18, accentColor: C.brand }}
-                    />
-                    <label className="text-[12.5px] cursor-pointer" onClick={() => setChecks({ ...checks, [item.id]: !checked })}>{item.label}</label>
-                    {item.variable && (
-                      <select
-                        disabled={!checked}
-                        value={val}
-                        onChange={e => setCheckVals({ ...checkVals, [item.id]: parseFloat(e.target.value) })}
-                        className="text-[11px] rounded-md px-1.5 py-1 outline-none"
-                        style={{ border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.ink }}
-                      >
-                        {item.options.map(o => <option key={o} value={o}>△{fmt(o)}</option>)}
-                      </select>
-                    )}
-                  </div>
-                  <div className="text-[12px] font-bold shrink-0" style={{ ...mono, color: checked ? C.confirmed : "#B7C0CB" }}>
-                    △{fmt(checked ? val : item.value)}
-                  </div>
-                </div>
-              );
-            })}
-          </Panel>
- 
-          <Panel noPad>
-            <div className="px-4 pt-3 pb-1 text-[10.5px] uppercase" style={{ ...mono, color: C.inkSoft, letterSpacing: "0.08em" }}>신용평점 우량 / 대출우수 (중복 불가)</div>
-            <TierRadioGroup options={CREDIT_OPTIONS} groupName="credit" value={creditId} onChange={setCreditId} />
-          </Panel>
- 
-          <Panel noPad>
-            <div className="px-4 pt-3 pb-1 text-[10.5px] uppercase" style={{ ...mono, color: C.inkSoft, letterSpacing: "0.08em" }}>보험할인 — 월보험료 또는 보험VIP (① or ②)</div>
-            <TierRadioGroup options={INSURANCE_OPTIONS} groupName="insurance" value={insuranceId} onChange={setInsuranceId} />
-          </Panel>
- 
-          <StepTitle n={3} title="전결할인 (가이드라인 조정)" />
-          <Panel>
-            <div className="flex items-baseline justify-between mb-1.5">
-              <span className="text-[12.5px] font-bold">전결할인</span>
-              <span className="text-[20px] font-extrabold" style={{ ...mono, color: C.accent }}>△{fmt(jeongyeolVal)}</span>
-            </div>
-            <div className="text-[11.5px] mb-3.5 leading-relaxed" style={{ color: C.inkSoft }}>최대전결 30bp · 적용 시 커버페이지(특이사항)에 사유 명기 필요</div>
-            <input
-              type="range" min={0} max={30} step={1} value={jeongyeolBp}
-              onChange={e => setJeongyeolBp(parseInt(e.target.value, 10))}
-              className="w-full" style={{ accentColor: C.accent, height: 6, cursor: "pointer" }}
-            />
-            <div className="flex justify-between text-[10.5px] mt-1" style={{ ...mono, color: "#B0BAC7" }}>
-              <span>0.00</span><span>0.15</span><span>0.30</span>
-            </div>
-            {jeongyeolBp > 0 && (
-              <div className="mt-3 text-[11.5px] rounded-md px-2.5 py-2" style={{ color: C.urgent, background: C.urgentBg }}>
-                전결할인 적용배제 대상(신용평점 7구간 이하 / 신규·추가 2,000만원 미만·재대출 / 고위험군 / 프리론)은 적용 전 확인이 필요합니다.
-              </div>
-            )}
-          </Panel>
-        </div>
- 
-        {/* result column */}
-        <div className="lg:sticky lg:top-6 flex flex-col gap-4">
-          <div className="rounded-lg p-5 text-white" style={{ background: `linear-gradient(155deg, ${C.brand} 0%, #14171E 100%)` }}>
-            <div className="text-[10.5px] uppercase mb-1" style={{ ...mono, letterSpacing: "0.1em", color: "#9FA6B4" }}>적용금리 (기본금리 − 총할인)</div>
-            <div className="text-[30px] font-extrabold leading-none mb-4" style={{ ...mono, color: C.accentSoft }}>
-              {fmt(finalRate)}<span className="text-[14.5px] ml-0.5">%</span>
-            </div>
-            <div className="flex items-center justify-between text-[11px] mb-3 pb-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
-              <span style={{ color: "#9FA6B4" }}>기본금리</span>
-              <span className="font-bold text-[12.5px]" style={mono}>{fmt(basicRate)}%</span>
-            </div>
-            <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-[11px]" style={{ ...mono, color: "#B7C4D3" }}>
-              <div>일반할인 <b style={{ color: "#EAF0F7" }}>{fmt(generalTotal)}</b></div>
-              <div>신용/대출우수 <b style={{ color: "#EAF0F7" }}>{fmt(creditVal)}</b></div>
-              <div>보험할인 <b style={{ color: "#EAF0F7" }}>{fmt(insuranceVal)}</b></div>
-              <div>전결할인 <b style={{ color: "#EAF0F7" }}>{fmt(jeongyeolVal)}</b></div>
-              <div className="col-span-2 pt-1.5 mt-0.5" style={{ borderTop: "1px solid rgba(255,255,255,0.12)" }}>
-                총할인 <b style={{ color: C.accentSoft }}>{fmt(appliedTotal)}</b>
-              </div>
-            </div>
-            {capped && (
-              <div className="text-[10.5px] mt-3" style={{ color: "#E7B4A0" }}>
-                ⚠ 최대 할인한도(가산금리·최저금리 기준)를 초과하여 한도까지만 적용되었습니다.
-              </div>
-            )}
-          </div>
- 
-          <div className="text-[11.5px] leading-relaxed px-1 flex items-start gap-1.5" style={{ color: C.inkFaint }}>
-            <Info size={13} className="mt-0.5 shrink-0" />
-            <span>이 결과는 계산기 산출 예상금리이며, 통화상 안내금리·실제 심사 적용금리와 구분해 관리합니다. FC 내부 참고용이며 실제 적용 시 개별 조건 재확인이 필요합니다.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
- 
-function StepTitle({ n, title }) {
-  return (
-    <div className="flex items-center gap-2 -mb-1">
-      <span className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0" style={{ ...mono, background: C.brand }}>{n}</span>
-      <h2 className="text-[13px] font-bold">{title}</h2>
-    </div>
-  );
-}
- 
-function RateBuildRow({ label, tag, tagKind, right }) {
-  return (
-    <div className="flex items-center justify-between py-1">
-      <div className="text-[12px] font-semibold flex items-center gap-2">
-        {label}
-        <span
-          className="text-[9px] px-1.5 py-0.5 rounded-full"
-          style={{ ...mono, letterSpacing: "0.04em", color: tagKind === "accent" ? C.brand : C.inkSoft, background: tagKind === "accent" ? "#EFE0BE" : "#EEF1F5" }}
-        >
-          {tag}
-        </span>
-      </div>
-      {right}
-    </div>
-  );
-}
- 
-function TierRadioGroup({ options, groupName, value, onChange }) {
-  return (
-    <div>
-      {options.map(o => (
-        <div key={o.id} className="flex items-center justify-between gap-2.5 px-4 py-2.5" style={{ borderBottom: `1px solid ${C.border}` }}>
-          <div className="flex items-center gap-2.5">
-            <input
-              type="radio" name={groupName} checked={value === o.id}
-              onChange={() => onChange(o.id)}
-              style={{ width: 18, height: 18, accentColor: C.brand, cursor: "pointer" }}
-            />
-            <label className="text-[12.5px] cursor-pointer" onClick={() => onChange(o.id)}>{o.label}</label>
-          </div>
-          <div className="text-[12px] font-bold" style={{ ...mono, color: o.value === 0 ? "#B7C0CB" : C.confirmed }}>
-            {o.value === 0 ? "—" : `△${fmt(o.value)}`}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
- 
-/* ================= FC MANAGEMENT ================= */
-function FCManagement({ fcs, customers, onSelect }) {
-  return (
-    <div>
-      <Header title="FC관리" subtitle="FC별 소개 이력과 연락 예정을 관리합니다. 고객 통화와 분리해서 관리합니다. 카드를 누르면 상세 내용을 볼 수 있습니다." />
- 
-      <div className="grid sm:grid-cols-2 gap-4">
-        {fcs.map(f => {
-          const related = customers.filter(c => c.fc === f.name);
-          return (
-            <button
-              key={f.id}
-              onClick={() => onSelect(f.id)}
-              className="text-left rounded-lg p-4 transition-colors"
-              style={{ background: C.surface, border: `1px solid ${C.border}` }}
-              onMouseEnter={e => e.currentTarget.style.background = C.surfaceAlt}
-              onMouseLeave={e => e.currentTarget.style.background = C.surface}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <div className="text-[15px] font-semibold">{f.name} <span className="text-[12px] font-normal" style={{ color: C.inkSoft }}>FC</span></div>
-                  <div className="text-[12.5px]" style={{ color: C.inkSoft }}>{f.branch}</div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CallLink
-                    phone={f.phone}
-                    className="flex items-center gap-1 text-[11px] px-2 py-1 rounded-full"
-                    style={{ background: C.noteBg, color: C.note }}
-                  >
-                    <Phone size={11} /> 전화
-                  </CallLink>
-                  <ChevronRight size={15} color={C.inkFaint} />
-                </div>
-              </div>
-              <Field label="최근 소개 고객" value={f.recentIntro} kind="confirmed" />
-              <Field label="현재 진행 고객" value={`${f.activeCustomers}명`} kind="confirmed" numeric />
-              <Field label="지급 완료 고객" value={`${f.paidCustomers}명`} kind="confirmed" numeric />
-              <Field label="다음 연락 예정일" value={f.nextContact} kind="verify" numeric />
-              {related.length > 0 && (
-                <div className="mt-2 pt-2" style={{ borderTop: `1px solid ${C.border}` }}>
-                  <div className="text-[11.5px] mb-1.5" style={{ color: C.inkFaint }}>연결된 고객</div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {related.map(r => <StatusPill key={r.id} status={r.name} />)}
-                  </div>
-                </div>
-              )}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
- 
-/* ================= FC DETAIL ================= */
-function FCDetail({ fc, customers, onBack, goCustomer }) {
-  const related = customers.filter(c => c.fc === fc.name);
- 
-  return (
-    <div>
-      <button onClick={onBack} className="flex items-center gap-1.5 text-[13px] mb-5" style={{ color: C.inkSoft }}>
-        <ArrowLeft size={15} /> FC목록으로
-      </button>
- 
-      <div className="flex items-start justify-between mb-6 flex-wrap gap-3">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-[21px] font-semibold tracking-tight">{fc.name}</h1>
-            <span className="text-[12.5px] px-2 py-0.5 rounded-full" style={{ background: C.surfaceAlt, color: C.inkSoft }}>FC</span>
-          </div>
-          <div className="text-[13px] mt-1" style={{ color: C.inkSoft }}>{fc.branch}</div>
-        </div>
-        <CallLink
-          phone={fc.phone}
-          className="flex items-center gap-1.5 text-[12.5px] font-semibold px-3 py-1.5 rounded-full"
-          style={{ color: "#FFFFFF", background: C.accent }}
-        >
-          <Phone size={12} /> {fc.name} FC에게 전화
-        </CallLink>
-      </div>
- 
-      <div className="grid lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-2 flex flex-col gap-5">
-          <Panel title="소개 현황">
-            <Field label="최근 소개 고객" value={fc.recentIntro} kind="confirmed" />
-            <Field label="현재 진행 고객" value={`${fc.activeCustomers}명`} kind="confirmed" numeric />
-            <Field label="지급 완료 고객" value={`${fc.paidCustomers}명`} kind="confirmed" numeric />
-            <Field label="최근 연락일" value={fc.lastContact} kind="confirmed" numeric />
-            <Field label="다음 연락 예정일" value={fc.nextContact} kind="verify" numeric />
-          </Panel>
- 
-          <Panel title={`연결된 고객 (${related.length}명)`}>
-            {related.length === 0 && <Empty text="이 FC를 통해 연결된 고객이 아직 없습니다." />}
-            {related.map(c => (
-              <TaskRow
-                key={c.id}
-                title={c.name}
-                sub={`${c.consultType} · ${c.nextAction}`}
-                tag={c.status}
-                tagColor={STATUS_STYLE[c.status]?.fg}
-                tagBg={STATUS_STYLE[c.status]?.bg}
-                onClick={() => goCustomer(c.id)}
-              />
-            ))}
-          </Panel>
-        </div>
- 
-        <div className="flex flex-col gap-5">
-          <Panel title="다음 행동">
-            <div className="flex items-start gap-2 py-1">
-              <Clock size={16} color={C.note} className="mt-0.5 shrink-0" />
-              <span className="text-[13.5px]">{fc.nextContact}에 연락 예정</span>
-            </div>
-          </Panel>
-          <div className="text-[11.5px] leading-relaxed px-1" style={{ color: C.inkFaint }}>
-            FC 통화는 고객 통화와 분리해서 관리합니다. 연결된 고객 목록은 현재 이 FC의 추천으로 등록된 기록을 기준으로 합니다.
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
- 
- 
-const { useState, useMemo } = React;
-const container = document.getElementById('root');
-const root = ReactDOM.createRoot(container);
-root.render(<App />);
- 
+  function StatusPill({ status }) {
+    const s = STATUS_STYLE[status] || STATUS_STYLE["\uB2E8\uC21C\uC0C1\uB2F4"];
+    return /* @__PURE__ */ React.createElement("span", { className: "inline-block shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold", style: { background: s.bg, color: s.fg } }, status);
+  }
+  function StatusSelector({ value, onChange }) {
+    return /* @__PURE__ */ React.createElement("div", { className: "inline-flex rounded-full p-1", style: { background: C.surfaceAlt } }, BUCKETS.map((b) => {
+      const active = value === b;
+      const s = BUCKET_STYLE[b];
+      return /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          key: b,
+          onClick: () => onChange(b),
+          className: "px-3 py-1.5 rounded-full text-[12px] font-semibold transition-colors",
+          style: { background: active ? s.fg : "transparent", color: active ? "#FFFFFF" : s.fg }
+        },
+        b
+      );
+    }));
+  }
+  var RATE_PERIOD = "2026.08.01 ~ 2026.08.31";
+  var MIN_RATE = 4;
+  var MAX_DISCOUNT_CAP = 2.45;
+  var PRODUCTS = [
+    { id: "cofix6", name: "COFIX(\uC2E0\uC794\uC561) 6\uAC1C\uC6D4 \uBCC0\uB3D9", type: "\uBCC0\uB3D9\uD615", base: 2.54, spread: 3.76, bandLow: 4, bandHigh: 6.9 },
+    { id: "t1y", name: "\uAD6D\uACE03\uB144 1\uB144 \uBCC0\uB3D9", type: "\uBCC0\uB3D9\uD615", base: 3.84, spread: 2.8, bandLow: 4, bandHigh: 7.24 },
+    { id: "t3y", name: "\uAD6D\uACE03\uB144 3\uB144 \uD63C\uD569", type: "\uBCC0\uB3D9\uD615", base: 3.84, spread: 2.61, bandLow: 4, bandHigh: 7.05 },
+    { id: "t5y", name: "\uAD6D\uACE03\uB144 5\uB144 \uBCC0\uB3D9", type: "\uBCC0\uB3D9\uD615", base: 3.84, spread: 2.62, bandLow: 4, bandHigh: 7.06 },
+    { id: "fixed", name: "\uAD6D\uACE03\uB144 \uACE0\uC815\uD615", type: "\uACE0\uC815\uD615", base: 3.84, spread: 2.82, bandLow: 4, bandHigh: 7.26 }
+  ];
+  var CHECK_ITEMS = [
+    { id: "proof", label: "\uC99D\uBE59 / \uBE44\uAC70\uCE58\uC2DD", variable: true, options: [0.1, 0.2], value: 0.1 },
+    { id: "buy", label: "\uAD6C\uC785", value: 0.2 },
+    { id: "eco_car", label: "\uCE5C\uD658\uACBD \uC790\uB3D9\uCC28 \uC18C\uC720", value: 0.05 },
+    { id: "eco_col", label: "\uCE5C\uD658\uACBD \uB2F4\uBCF4\uBB3C \uC99D\uBE59", value: 0.1 },
+    { id: "multi", label: "\uB2E4\uC790\uB140 \uC6B0\uB300 (3\uC790\uB140 \uC774\uC0C1)", value: 0.3 },
+    { id: "merit", label: "\uAD6D\uAC00\uC720\uACF5\uC790 \uC6B0\uB300", value: 0.2 },
+    { id: "dsr", label: "\uC6D0\uB9AC\uAE08\uC0C1\uD658\uB2A5\uB825 \uC6B0\uC218 (DSR 40% \uC774\uB0B4)", value: 0.2 },
+    { id: "mobile", label: "\uBAA8\uBC14\uC77C \uC774\uC6A9", value: 0.1 }
+  ];
+  var CREDIT_OPTIONS = [
+    { id: "none", label: "\uC120\uD0DD \uC548 \uD568", value: 0 },
+    { id: "grade", label: "\uC2E0\uC6A9\uD3C9\uC810 \uC6B0\uB7C9 (1~2\uAD6C\uAC04)", value: 0.1 },
+    { id: "sa", label: "\uB300\uCD9C\uC6B0\uC218 SA", value: 0.3 },
+    { id: "a", label: "\uB300\uCD9C\uC6B0\uC218 A / C(\uC6B0\uB7C9\uACE0\uAC1D\uB300)", value: 0.2 },
+    { id: "b", label: "\uB300\uCD9C\uC6B0\uC218 B", value: 0.1 }
+  ];
+  var INSURANCE_OPTIONS = [
+    { id: "none", label: "\uC120\uD0DD \uC548 \uD568", value: 0 },
+    { id: "m10", label: "\uC6D4\uBCF4\uD5D8\uB8CC 10\uB9CC\uC6D0 \uC774\uC0C1", value: 0.1 },
+    { id: "m30", label: "\uC6D4\uBCF4\uD5D8\uB8CC 30\uB9CC\uC6D0 \uC774\uC0C1", value: 0.2 },
+    { id: "m50", label: "\uC6D4\uBCF4\uD5D8\uB8CC 50\uB9CC\uC6D0 \uC774\uC0C1", value: 0.3 },
+    { id: "vip_dream", label: "\uBCF4\uD5D8VIP \xB7 \uB4DC\uB9BC", value: 0.4 },
+    { id: "vip_noble", label: "\uBCF4\uD5D8VIP \xB7 \uB178\uBE14/\uB514\uC5B4", value: 0.5 }
+  ];
+  var fmt = (n) => n.toFixed(2);
+  function parseSummary(text) {
+    const out = { fields: {}, badges: {}, name: "", phone4: "", fc: "", branch: "", rrnDetected: false };
+    const branchMarkerMatch = text.match(/\*\*(?!\*)\s*([^\s,*]+)/);
+    if (branchMarkerMatch) {
+      out.branch = branchMarkerMatch[1];
+      out.badges.branch = "confirmed";
+    }
+    const fcMarkerMatch = text.match(/\*\*\*\s*([^\s,*]+)/);
+    const labeledNameMatch = text.match(/고객\s*[:：]\s*([가-힣]{2,4})/) || text.match(/고객\s+([가-힣]{2,4})(?!\s*(?:하고|와|과|님|은|는|이|가))/);
+    const conversationalNameMatch = text.match(/^([가-힣]{2,4})\s*(?:고객|님)?(?:하고|와|과)?\s*통화/) || text.match(/([가-힣]{2,4})\s*고객/);
+    const nameMatch = labeledNameMatch || conversationalNameMatch;
+    if (nameMatch) {
+      out.name = nameMatch[1];
+      out.badges.name = "confirmed";
+    }
+    if (nameMatch) {
+      const windowStart = nameMatch.index + nameMatch[0].length;
+      const afterName = text.slice(windowStart, windowStart + 20);
+      const rrnMatch = afterName.match(/(\d{6})(?!\d)/);
+      if (rrnMatch) {
+        out.rrnDetected = true;
+        out.badges.rrn = "verify";
+      }
+    }
+    const phoneMatch = text.match(/(?:전화|끝번호|뒤\s*4자리)[^\d]{0,10}(\d{4})(?!\d)/);
+    if (phoneMatch) {
+      out.phone4 = phoneMatch[1];
+      out.badges.phone4 = "confirmed";
+    }
+    const labeledFcMatch = text.match(/추천\s*[:：]\s*([가-힣]{2,4})/) || text.match(/추천\s+([가-힣]{2,4})(?!\s*(?:이|가|은|는|으로|FC))/);
+    const conversationalFcMatch = text.match(/([가-힣]{2,4})\s*FC/);
+    const fcMatch = fcMarkerMatch || labeledFcMatch || conversationalFcMatch;
+    if (fcMatch) {
+      out.fc = fcMatch[1];
+      out.badges.fc = fcMarkerMatch ? "confirmed" : "confirmed";
+    }
+    const explicitAmounts = [...text.matchAll(/(\d[\d,]*)\s*(백만원|만원)/g)];
+    if (explicitAmounts.length) {
+      out.fields["\uAE08\uC561 \uC5B8\uAE09"] = explicitAmounts.map((a) => a[0]).join(", ");
+      out.badges["\uAE08\uC561 \uC5B8\uAE09"] = "note";
+    }
+    const bareAmounts = [...text.matchAll(/(?:희망|대출|필요|정도|한도)[^\d]{0,4}(\d{1,4})(?!\s*(?:만원|백만원|%|월|일|시|분|년|개월))(?!\d)(?!\.\d)/g)];
+    if (bareAmounts.length) {
+      out.fields["\uAE08\uC561 \uC5B8\uAE09(\uB2E8\uC704 \uCD94\uC815)"] = bareAmounts.map((a) => `${a[1]}\uBC31\uB9CC\uC6D0`).join(", ");
+      out.badges["\uAE08\uC561 \uC5B8\uAE09(\uB2E8\uC704 \uCD94\uC815)"] = "verify";
+    }
+    const rateMatch = text.match(/(\d\.\d{1,2})\s*%/);
+    if (rateMatch) {
+      out.fields["\uAE08\uB9AC"] = rateMatch[0];
+      out.badges["\uAE08\uB9AC"] = "note";
+    }
+    const collateralMatch = text.match(/([가-힣]{2,}(?:구|시|동)\s?[가-힣0-9\s]{2,20}(?:아파트|평형|단지))/);
+    if (collateralMatch) {
+      out.fields["\uB2F4\uBCF4"] = collateralMatch[0].trim();
+      out.badges["\uB2F4\uBCF4"] = "confirmed";
+    }
+    const followUpMatch = text.match(/(일주일|1주일|한\s?달|10분|15분|열흘)\s?(뒤|후|이내)/);
+    if (followUpMatch) {
+      out.fields["Follow-up"] = followUpMatch[0];
+      out.badges["Follow-up"] = "confirmed";
+    }
+    return out;
+  }
+  var SAMPLE_TEXT = "\uAE40\uBBFC\uC900 \uACE0\uAC1D\uD558\uACE0 \uD1B5\uD654\uD588\uC5B4. 880521 \uC8FC\uBBFC\uBC88\uD638 \uC55E\uC790\uB9AC \uD655\uC778\uD588\uACE0, \uC804\uD654 \uB05D\uBC88\uD638 1401\uC774\uACE0 \uBD80\uC0B0 \uB3D9\uAD6C \uC88C\uCC9C\uB3D9 \uB3D9\uC6D0\uC544\uD30C\uD2B8 34\uD3C9\uD615\uC774\uC57C. \uB098\uC601\uD76C FC\uAC00 \uC18C\uAC1C\uD588\uACE0 \uB300\uCD9C 80 \uC815\uB3C4 \uD76C\uB9DD\uD558\uACE0 8\uC6D4 \uAD6C\uC785\uC790\uAE08 \uAE08\uB9AC\uB9CC \uC0C1\uB2F4\uD588\uC5B4. \uC11C\uB958\uB294 \uC544\uC9C1 \uC548\uB0B4 \uC548 \uD588\uACE0 \uC77C\uC8FC\uC77C \uB4A4 \uB2E4\uC2DC \uC758\uC0AC \uD655\uC778\uD558\uAE30\uB85C \uD588\uC5B4.";
+  var SAMPLE_TEXT_LABELED = "\uACE0\uAC1D: \uC774\uC11C\uC900 / \uCD94\uCC9C: \uBC15\uC120\uBBF8 / \uC804\uD654 \uB05D\uBC88\uD638 7742 / \uB300\uC804 \uC720\uC131\uAD6C \uBD09\uBA85\uB3D9 \uD55C\uBE5B\uC544\uD30C\uD2B8 25\uD3C9 / \uB300\uCD9C 65 \uC815\uB3C4 \uD544\uC694\uD558\uB2E4\uACE0 \uD568 / \uAE08\uB9AC 4.6% \uC548\uB0B4 / \uC11C\uB958\uB294 \uC544\uC9C1\uC774\uACE0 \uC5F4\uD758 \uB4A4 \uB2E4\uC2DC \uC5F0\uB77D\uD558\uAE30\uB85C \uD568.";
+  var SAMPLE_TEXT_MARKER = "\uCD5C\uC724\uC544 \uACE0\uAC1D\uD558\uACE0 \uC804\uD654 \uB05D\uBC88\uD638 3320\uC73C\uB85C \uD1B5\uD654\uD568. \uC11C\uC6B8 \uAC15\uB0A8\uAD6C \uB300\uCE58\uB3D9 \uC740\uB9C8\uC544\uD30C\uD2B8 \uAD6C\uC785\uC790\uAE08 \uC0C1\uB2F4. \uB300\uCD9C 120 \uC815\uB3C4 \uD76C\uB9DD\uD558\uACE0 \uAE08\uB9AC\uB294 4.2% \uC548\uB0B4\uD588\uC74C. \uC11C\uB958\uB294 \uB2E4\uC74C\uC8FC\uC5D0 \uC900\uBE44\uD558\uAE30\uB85C \uD568.\n\n**\uAC15\uB0A8\uC911\uC559\uC9C0\uC810, ***\uC774\uD558\uB298";
+  var NAV = [
+    { key: "todos", label: "\uC624\uB298\uC758 \uD560\uC77C", icon: CheckCircle2 },
+    { key: "customers", label: "\uACE0\uAC1D\uAD00\uB9AC", icon: Users },
+    { key: "callai", label: "\uD1B5\uD654\uC694\uC57D AI", icon: PhoneCall },
+    { key: "docs", label: "\uC11C\uB958\uC548\uB0B4", icon: FileCheck2 },
+    { key: "rate", label: "\uAE08\uB9AC\uACC4\uC0B0\uAE30", icon: Calculator },
+    { key: "fc", label: "FC\uAD00\uB9AC", icon: UserCog }
+  ];
+  function App() {
+    const [tab, setTab] = useState("todos");
+    const [customers, setCustomers] = useState(initialCustomers);
+    const [todayMemo, setTodayMemo] = useState("");
+    const [fcs] = useState(initialFCs);
+    const [selectedId, setSelectedId] = useState(null);
+    const [selectedFcId, setSelectedFcId] = useState(null);
+    const selected = customers.find((c) => c.id === selectedId) || null;
+    const selectedFc = fcs.find((f) => f.id === selectedFcId) || null;
+    return /* @__PURE__ */ React.createElement("div", { className: "min-h-screen w-full flex flex-col", style: { background: C.bg, color: C.ink, ...sans } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between px-5 py-3.5", style: { background: C.brand } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "text-white font-semibold text-[16px] tracking-tight" }, "My AI ", /* @__PURE__ */ React.createElement("span", { style: { color: C.accentSoft } }, "Mate")), /* @__PURE__ */ React.createElement("div", { className: "text-[9.5px] mt-0.5 uppercase", style: { color: "#8B8F9C", letterSpacing: "0.08em" } }, "\uB300\uCD9C \uACE0\uAC1D\xB7FC \uAD00\uB9AC Agent")), /* @__PURE__ */ React.createElement("div", { className: "text-[10px]", style: { color: "#5C5F6B" } }, "\uC2DC\uC5F0\uC6A9 \xB7 2026.08")), /* @__PURE__ */ React.createElement("div", { className: "fixed bottom-0 left-0 right-0 z-20 flex justify-around py-2 border-t", style: { background: C.brand, borderColor: "rgba(255,255,255,0.08)" } }, NAV.map((n) => {
+      const Icon = n.icon;
+      const active = tab === n.key;
+      return /* @__PURE__ */ React.createElement("button", { key: n.key, onClick: () => {
+        setTab(n.key);
+        setSelectedId(null);
+        setSelectedFcId(null);
+      }, className: "flex flex-col items-center gap-0.5 px-2 py-1" }, /* @__PURE__ */ React.createElement(Icon, { size: 17, strokeWidth: 1.75, color: active ? C.accentSoft : "#7C7F8B" }), /* @__PURE__ */ React.createElement("span", { className: "text-[10px] text-center", style: { color: active ? "#F2EEE6" : "#7C7F8B", wordBreak: "keep-all" } }, n.label));
+    })), /* @__PURE__ */ React.createElement("main", { className: "flex-1 min-w-0 p-5 sm:p-8 pb-20" }, tab === "todos" && /* @__PURE__ */ React.createElement(TodayTasks, { customers, goCustomer: (id) => {
+      setTab("customers");
+      setSelectedId(id);
+    }, memo: todayMemo, setMemo: setTodayMemo }), tab === "customers" && (selected ? /* @__PURE__ */ React.createElement(CustomerDetail, { key: selected.id, customer: selected, onBack: () => setSelectedId(null), onUpdate: (id, updates) => setCustomers(customers.map((cu) => cu.id === id ? { ...cu, ...updates } : cu)) }) : /* @__PURE__ */ React.createElement(CustomerList, { customers, onSelect: setSelectedId })), tab === "callai" && /* @__PURE__ */ React.createElement(CallSummaryAI, { customers, setCustomers }), tab === "docs" && /* @__PURE__ */ React.createElement(DocumentAssistant, null), tab === "rate" && /* @__PURE__ */ React.createElement(RateCalculator, null), tab === "fc" && (selectedFc ? /* @__PURE__ */ React.createElement(FCDetail, { fc: selectedFc, customers, onBack: () => setSelectedFcId(null), goCustomer: (id) => {
+      setTab("customers");
+      setSelectedId(id);
+      setSelectedFcId(null);
+    } }) : /* @__PURE__ */ React.createElement(FCManagement, { fcs, customers, onSelect: setSelectedFcId }))));
+  }
+  function Panel({ title, children, noPad, hint }) {
+    return /* @__PURE__ */ React.createElement("div", { className: "rounded-lg overflow-hidden", style: { background: C.surface, border: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: noPad ? "" : "p-5" }, title && /* @__PURE__ */ React.createElement("div", { className: noPad ? "px-4 pt-4" : "mb-4" }, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] font-semibold uppercase", style: { color: C.inkSoft, letterSpacing: "0.07em" } }, title), hint && /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mt-1 leading-relaxed", style: { color: C.inkFaint } }, hint)), /* @__PURE__ */ React.createElement("div", { className: noPad ? "" : "flex flex-col gap-1" }, children)));
+  }
+  function TaskRow({ title, sub, tag, tagColor, tagBg, onClick, onToggleHandled, toggleMode = "beside" }) {
+    return /* @__PURE__ */ React.createElement(
+      "div",
+      {
+        className: "flex items-center justify-between gap-3 py-2.5 px-2 rounded-lg transition-colors",
+        onMouseEnter: (e) => onClick && (e.currentTarget.style.background = C.surfaceAlt),
+        onMouseLeave: (e) => onClick && (e.currentTarget.style.background = "transparent")
+      },
+      /* @__PURE__ */ React.createElement("button", { onClick, disabled: !onClick, className: "min-w-0 text-left flex-1", style: { cursor: onClick ? "pointer" : "default" } }, /* @__PURE__ */ React.createElement("div", { className: "text-[13.5px] font-medium truncate" }, title), /* @__PURE__ */ React.createElement("div", { className: "text-[12px] truncate", style: { color: C.inkSoft } }, sub)),
+      /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 shrink-0" }, onToggleHandled && toggleMode === "replace" ? /* @__PURE__ */ React.createElement(MiniToggle, { label: tag, onClick: onToggleHandled }) : /* @__PURE__ */ React.createElement(React.Fragment, null, tag && /* @__PURE__ */ React.createElement("span", { className: "text-[11px] font-semibold px-2 py-0.5 rounded-full", style: { color: tagColor, background: tagBg } }, tag), onToggleHandled && /* @__PURE__ */ React.createElement(MiniToggle, { onClick: onToggleHandled })))
+    );
+  }
+  function MiniToggle({ label, onClick }) {
+    const [on, setOn] = useState(false);
+    return /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        type: "button",
+        onClick: (e) => {
+          e.stopPropagation();
+          setOn(true);
+          setTimeout(() => onClick(), 180);
+        },
+        className: "flex items-center gap-1.5",
+        title: "\uCC98\uB9AC \uC644\uB8CC\uB85C \uD45C\uC2DC\uD558\uBA74 \uBAA9\uB85D\uC5D0\uC11C \uC0AC\uB77C\uC838\uC694"
+      },
+      label && /* @__PURE__ */ React.createElement("span", { className: "text-[11px] font-semibold", style: { color: on ? C.confirmed : C.urgent } }, label),
+      /* @__PURE__ */ React.createElement(
+        "span",
+        {
+          className: "inline-flex items-center rounded-full transition-colors",
+          style: { width: 30, height: 17, background: on ? C.confirmed : C.border, padding: 2 }
+        },
+        /* @__PURE__ */ React.createElement(
+          "span",
+          {
+            className: "rounded-full bg-white transition-transform",
+            style: { width: 13, height: 13, transform: on ? "translateX(13px)" : "translateX(0px)", boxShadow: "0 1px 2px rgba(0,0,0,0.25)" }
+          }
+        )
+      )
+    );
+  }
+  function Empty({ text }) {
+    return /* @__PURE__ */ React.createElement("div", { className: "text-[13px] py-4 text-center", style: { color: C.inkFaint } }, text);
+  }
+  function Header({ title, subtitle }) {
+    return /* @__PURE__ */ React.createElement("div", { className: "mb-7" }, /* @__PURE__ */ React.createElement("h1", { className: "text-[21px] font-semibold tracking-tight", style: { color: C.ink } }, title), subtitle && /* @__PURE__ */ React.createElement("p", { className: "text-[13px] mt-1.5", style: { color: C.inkSoft } }, subtitle), /* @__PURE__ */ React.createElement("div", { className: "mt-3 w-8 h-[2px]", style: { background: C.accent } }));
+  }
+  var YEARS = [2026, 2027, 2028];
+  var MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+  var BIZ_CARD_TEXT = `\u{1F4C7} \uC0BC\uC131\uC0DD\uBA85 \uC11C\uBD80\uC735\uC790\uBD80
+\uD55C\uADDC\uD638 \uD504\uB85C
+
+\u{1F4DE} 010-8525-1501
+\u{1F4CD} \uB300\uC804\uAD11\uC5ED\uC2DC \uC11C\uAD6C \uD55C\uBC2D\uB300\uB85C 755
+    (\uB454\uC0B0\uB3D9, \uC0BC\uC131\uC0DD\uBA85) 3\uCE35 \uC11C\uBD80\uC735\uC790\uBD80`;
+  function TodayTasks({ customers, goCustomer, memo, setMemo }) {
+    const today = /* @__PURE__ */ new Date();
+    const todayLabel = today.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" });
+    const todayISO = today.toISOString().slice(0, 10);
+    const todayList = customers.filter((c) => c.lastContact === todayISO);
+    const [copied, setCopied] = useState(false);
+    function copyCard() {
+      var _a;
+      (_a = navigator.clipboard) == null ? void 0 : _a.writeText(BIZ_CARD_TEXT).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      }).catch(() => {
+      });
+    }
+    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Header, { title: "\uC624\uB298\uC758 \uD560\uC77C", subtitle: todayLabel }), /* @__PURE__ */ React.createElement(Panel, { title: "\uC624\uB298 \uC5F0\uB77D\uD560 \uACE0\uAC1D", hint: "\uC5F0\uB77D\uC608\uC815\uC77C\uC774 \uC624\uB298 \uB0A0\uC9DC\uC778 \uACE0\uAC1D\uC774\uC5D0\uC694." }, todayList.length === 0 && /* @__PURE__ */ React.createElement(Empty, { text: "\uC624\uB298 \uC5F0\uB77D\uD560 \uACE0\uAC1D\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. \uC5F0\uB77D\uC608\uC815\uC77C\uC774 \uC624\uB298\uB85C \uB4F1\uB85D\uB41C \uACE0\uAC1D\uC774 \uC788\uC73C\uBA74 \uC5EC\uAE30 \uD45C\uC2DC\uB3FC\uC694." }), todayList.map((c) => {
+      var _a, _b;
+      return /* @__PURE__ */ React.createElement(
+        TaskRow,
+        {
+          key: c.id,
+          title: c.name,
+          sub: c.followUp,
+          tag: c.status,
+          tagColor: (_a = STATUS_STYLE[c.status]) == null ? void 0 : _a.fg,
+          tagBg: (_b = STATUS_STYLE[c.status]) == null ? void 0 : _b.bg,
+          onClick: () => goCustomer(c.id)
+        }
+      );
+    })), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uBA54\uBAA8" }, /* @__PURE__ */ React.createElement(
+      "textarea",
+      {
+        value: memo,
+        onChange: (e) => setMemo(e.target.value),
+        placeholder: "\uC624\uB298 \uBA54\uBAA8\uB97C \uC790\uC720\uB86D\uAC8C \uC801\uC5B4\uBCF4\uC138\uC694...",
+        rows: 5,
+        className: "w-full text-[13.5px] leading-relaxed p-2.5 rounded-md outline-none resize-none",
+        style: { color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }
+      }
+    ))), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uBA85\uD568" }, /* @__PURE__ */ React.createElement(
+      "pre",
+      {
+        className: "whitespace-pre-wrap text-[13px] leading-relaxed p-3 rounded-md",
+        style: { fontFamily: "inherit", background: C.surfaceAlt, border: `1px solid ${C.border}`, color: C.ink }
+      },
+      BIZ_CARD_TEXT
+    ), /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        onClick: copyCard,
+        className: "mt-2.5 flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[12.5px] font-semibold text-white",
+        style: { background: copied ? C.confirmed : C.accent }
+      },
+      /* @__PURE__ */ React.createElement(FileCheck2, { size: 13 }),
+      " ",
+      copied ? "\uBCF5\uC0AC\uB428" : "\uBA85\uD568 \uD14D\uC2A4\uD2B8 \uBCF5\uC0AC\uD558\uAE30"
+    ))));
+  }
+  function CustomerList({ customers, onSelect }) {
+    const [q, setQ] = useState("");
+    const [openYear, setOpenYear] = useState(2026);
+    const [selectedMonth, setSelectedMonth] = useState("\uC804\uCCB4");
+    const [bucket, setBucket] = useState("\uC804\uCCB4");
+    const countFor = (ym) => customers.filter((c) => c.consultDate.slice(0, 7) === ym).length;
+    const countForYear = (y) => customers.filter((c) => c.consultDate.slice(0, 4) === String(y)).length;
+    const countForBucket = (b) => customers.filter((c) => getBucket(c.status) === b).length;
+    const filtered = customers.filter((c) => c.name.includes(q) || c.phone4.includes(q) || c.fc.includes(q) || c.status.includes(q)).filter((c) => selectedMonth === "\uC804\uCCB4" || c.consultDate.slice(0, 7) === selectedMonth).filter((c) => bucket === "\uC804\uCCB4" || getBucket(c.status) === bucket).slice().sort((a, b) => new Date(b.consultDate) - new Date(a.consultDate));
+    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Header, { title: "\uACE0\uAC1D\uAD00\uB9AC", subtitle: `\uCD1D ${customers.length}\uBA85\uC758 \uACE0\uAC1D\uC774 \uB4F1\uB85D\uB418\uC5B4 \uC788\uC2B5\uB2C8\uB2E4. \xB7 \uC0C1\uB2F4\uC77C \uCD5C\uC2E0\uC21C` }), /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap gap-2 mb-4" }, /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        onClick: () => setBucket("\uC804\uCCB4"),
+        className: "px-4 py-2.5 rounded-lg text-[12px] font-semibold",
+        style: { background: bucket === "\uC804\uCCB4" ? C.brand : C.surfaceAlt, color: bucket === "\uC804\uCCB4" ? "#FFFFFF" : C.ink }
+      },
+      "\uC804\uCCB4 ",
+      /* @__PURE__ */ React.createElement("span", { className: "text-[11px]", style: { opacity: 0.8 } }, customers.length)
+    ), BUCKETS.map((b) => {
+      const active = bucket === b;
+      const s = BUCKET_STYLE[b];
+      return /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          key: b,
+          onClick: () => setBucket(active ? "\uC804\uCCB4" : b),
+          className: "px-4 py-2.5 rounded-lg text-[12px] font-semibold flex items-center gap-1.5",
+          style: { background: active ? s.fg : s.bg, color: active ? "#FFFFFF" : s.fg }
+        },
+        b,
+        " ",
+        /* @__PURE__ */ React.createElement("span", { className: "text-[11px]", style: { opacity: 0.8 } }, countForBucket(b))
+      );
+    })), /* @__PURE__ */ React.createElement("div", { className: "relative mb-4 max-w-sm" }, /* @__PURE__ */ React.createElement(Search, { size: 15, className: "absolute left-3 top-1/2 -translate-y-1/2", color: C.inkFaint }), /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        value: q,
+        onChange: (e) => setQ(e.target.value),
+        placeholder: "\uC774\uB984, \uC804\uD654\uBC88\uD638, FC, \uC0C1\uD0DC\uB85C \uAC80\uC0C9",
+        className: "w-full pl-9 pr-3 py-2.5 rounded-lg text-[12.5px] outline-none",
+        style: { background: C.surface, border: `1px solid ${C.border}` }
+      }
+    )), /* @__PURE__ */ React.createElement("div", { className: "rounded-lg mb-4", style: { background: C.surface, border: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap gap-2 p-3" }, /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        onClick: () => {
+          setSelectedMonth("\uC804\uCCB4");
+        },
+        className: "px-3.5 py-2 rounded-md text-[12px] font-semibold",
+        style: { background: selectedMonth === "\uC804\uCCB4" ? C.brand : C.surfaceAlt, color: selectedMonth === "\uC804\uCCB4" ? "#FFFFFF" : C.ink }
+      },
+      "\uC804\uCCB4 \uAE30\uAC04"
+    ), YEARS.map((y) => {
+      const active = openYear === y;
+      const n = countForYear(y);
+      return /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          key: y,
+          onClick: () => setOpenYear(active ? null : y),
+          className: "px-3.5 py-2 rounded-md text-[12px] font-semibold flex items-center gap-1.5",
+          style: { background: active ? C.brand : C.surfaceAlt, color: active ? "#FFFFFF" : C.ink }
+        },
+        y,
+        "\uB144",
+        /* @__PURE__ */ React.createElement("span", { className: "text-[11px]", style: { color: active ? "#C9A876" : C.inkFaint } }, n, "\uAC74"),
+        /* @__PURE__ */ React.createElement(ChevronRight, { size: 13, style: { transform: active ? "rotate(90deg)" : "none", transition: "transform 0.15s" } })
+      );
+    })), openYear && /* @__PURE__ */ React.createElement("div", { className: "px-3 pb-3 pt-1 grid grid-cols-4 sm:grid-cols-6 gap-2", style: { borderTop: `1px solid ${C.border}` } }, MONTHS.map((m) => {
+      const ym = `${openYear}-${String(m).padStart(2, "0")}`;
+      const n = countFor(ym);
+      const active = selectedMonth === ym;
+      return /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          key: m,
+          onClick: () => setSelectedMonth(active ? "\uC804\uCCB4" : ym),
+          disabled: n === 0,
+          className: "rounded-md py-2.5 text-center mt-2",
+          style: {
+            background: active ? C.accent : n === 0 ? C.bg : C.confirmedBg,
+            color: active ? "#FFFFFF" : n === 0 ? C.inkFaint : C.confirmed,
+            cursor: n === 0 ? "default" : "pointer"
+          }
+        },
+        /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-semibold" }, m, "\uC6D4"),
+        /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px] mt-0.5", style: { opacity: 0.85 } }, n, "\uAC74")
+      );
+    }))), /* @__PURE__ */ React.createElement("div", { className: "rounded-lg overflow-hidden", style: { border: `1px solid ${C.border}`, background: C.surface } }, filtered.map((c, i) => /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        key: c.id,
+        onClick: () => onSelect(c.id),
+        className: "w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors",
+        style: { borderTop: i > 0 ? `1px solid ${C.border}` : "none" },
+        onMouseEnter: (e) => e.currentTarget.style.background = C.surfaceAlt,
+        onMouseLeave: (e) => e.currentTarget.style.background = "transparent"
+      },
+      /* @__PURE__ */ React.createElement("div", { className: "flex-1 min-w-0" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 min-w-0" }, /* @__PURE__ */ React.createElement("span", { className: "text-[11.5px] font-semibold truncate" }, c.name), /* @__PURE__ */ React.createElement("span", { className: "text-[10px] shrink-0", style: { ...mono, color: C.inkFaint } }, "****-", c.phone4)), /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px] mt-0.5 truncate", style: { color: C.inkSoft } }, /* @__PURE__ */ React.createElement("span", { style: mono }, c.consultDate), c.fc !== "-" ? ` \xB7 ${c.fc} FC` : "", " \xB7 ", c.consultType)),
+      /* @__PURE__ */ React.createElement(StatusPill, { status: c.status }),
+      /* @__PURE__ */ React.createElement(ChevronRight, { size: 16, color: C.inkFaint, className: "shrink-0" })
+    )), filtered.length === 0 && /* @__PURE__ */ React.createElement(Empty, { text: "\uAC80\uC0C9 \uACB0\uACFC\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4." })));
+  }
+  function CustomerDetail({ customer: c, onBack, onUpdate }) {
+    const [status, setStatus] = useState(c.status);
+    const [consultType, setConsultType] = useState(c.consultType);
+    const [collateral, setCollateral] = useState(c.collateral);
+    const [consultDate, setConsultDate] = useState(c.consultDate);
+    const [lastContact, setLastContact] = useState(c.lastContact);
+    const [docStatus, setDocStatus] = useState(c.docStatus);
+    const [badges, setBadges] = useState(c.consultBadges || {
+      consultType: "confirmed",
+      collateral: "confirmed",
+      consultDate: "confirmed",
+      lastContact: "confirmed",
+      docStatus: "verify"
+    });
+    const [notes, setNotes] = useState(c.notes);
+    const [nextAction, setNextAction] = useState(c.nextAction);
+    const [followUp, setFollowUp] = useState(c.followUp);
+    const [saved, setSaved] = useState(false);
+    const toggleBadge = (key) => setBadges((b) => ({ ...b, [key]: b[key] === "confirmed" ? "verify" : "confirmed" }));
+    const dirty = status !== c.status || consultType !== c.consultType || collateral !== c.collateral || consultDate !== c.consultDate || lastContact !== c.lastContact || docStatus !== c.docStatus || notes !== c.notes || nextAction !== c.nextAction || followUp !== c.followUp || JSON.stringify(badges) !== JSON.stringify(c.consultBadges || { consultType: "confirmed", collateral: "confirmed", consultDate: "confirmed", lastContact: "confirmed", docStatus: "verify" });
+    function save() {
+      onUpdate(c.id, { status, consultType, collateral, consultDate, lastContact, docStatus, consultBadges: badges, notes, nextAction, followUp });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1600);
+    }
+    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between mb-5 flex-wrap gap-2" }, /* @__PURE__ */ React.createElement("button", { onClick: onBack, className: "flex items-center gap-1.5 text-[12px]", style: { color: C.inkSoft } }, /* @__PURE__ */ React.createElement(ArrowLeft, { size: 15 }), " \uACE0\uAC1D\uBAA9\uB85D\uC73C\uB85C"), dirty && /* @__PURE__ */ React.createElement("button", { onClick: save, className: "flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[12px] font-semibold text-white", style: { background: saved ? C.confirmed : C.accent } }, /* @__PURE__ */ React.createElement(Save, { size: 13 }), " ", saved ? "\uC800\uC7A5\uB428" : "\uBCC0\uACBD\uC0AC\uD56D \uC800\uC7A5")), /* @__PURE__ */ React.createElement("div", { className: "flex items-start justify-between mb-6 flex-wrap gap-3" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2.5" }, /* @__PURE__ */ React.createElement("h1", { className: "text-[19px] font-bold" }, c.name), /* @__PURE__ */ React.createElement("span", { className: "text-[12px]", style: { ...mono, color: C.inkFaint } }, "****-", c.phone4)), /* @__PURE__ */ React.createElement("div", { className: "text-[12px] mt-1", style: { color: C.inkSoft } }, c.fc !== "-" ? `\uCD94\uCC9C FC: ${c.fc} \xB7 ${c.branch}` : "\uC9C1\uC811 \uC2E0\uCCAD (\uCD94\uCC9C FC \uC5C6\uC74C)")), /* @__PURE__ */ React.createElement(StatusSelector, { value: status, onChange: setStatus })), /* @__PURE__ */ React.createElement("div", { className: "grid lg:grid-cols-3 gap-5" }, /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-2 flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uC0C1\uB2F4 \uC815\uBCF4" }, /* @__PURE__ */ React.createElement(EditableRow, { label: "\uC0C1\uB2F4\uC720\uD615", value: consultType, onChange: setConsultType, kind: badges.consultType, onToggleKind: () => toggleBadge("consultType") }), /* @__PURE__ */ React.createElement(EditableRow, { label: "\uB2F4\uBCF4", value: collateral, onChange: setCollateral, kind: badges.collateral, onToggleKind: () => toggleBadge("collateral") }), /* @__PURE__ */ React.createElement(EditableRow, { label: "\uC0C1\uB2F4\uC77C", value: consultDate, onChange: setConsultDate, kind: badges.consultDate, onToggleKind: () => toggleBadge("consultDate"), numeric: true, type: "date" }), /* @__PURE__ */ React.createElement(EditableRow, { label: "\uC5F0\uB77D\uC608\uC815\uC77C", value: lastContact, onChange: setLastContact, kind: badges.lastContact, onToggleKind: () => toggleBadge("lastContact"), numeric: true, type: "date" }), /* @__PURE__ */ React.createElement(EditableRow, { label: "\uC11C\uB958\uC0C1\uD0DC", value: docStatus, onChange: setDocStatus, kind: badges.docStatus, onToggleKind: () => toggleBadge("docStatus") }), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mt-2.5", style: { color: C.inkFaint } }, "\uBC30\uC9C0\uB97C \uB20C\uB7EC \uD655\uC778\uB428 \xB7 \uD655\uC778 \uD544\uC694 \uC0C1\uD0DC\uB97C \uC804\uD658\uD560 \uC218 \uC788\uC5B4\uC694.")), Object.keys(c.fields).length > 0 && /* @__PURE__ */ React.createElement(Panel, { title: "\uB300\uCD9C \uC870\uAC74" }, Object.entries(c.fields).map(([k, v]) => /* @__PURE__ */ React.createElement(Field, { key: k, label: k, value: v, kind: c.badges[k] || "note", numeric: true })), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mt-2 flex items-start gap-1.5", style: { color: C.inkFaint } }, /* @__PURE__ */ React.createElement("span", null, "\xB7 ", /* @__PURE__ */ React.createElement(Badge, { kind: "note", label: "\uD1B5\uD654 \uC548\uB0B4" }), "\uB294 \uD1B5\uD654 \uC911 \uC548\uB0B4\uB41C \uB0B4\uC6A9\uC73C\uB85C, \uD655\uC815 \uC0C1\uD488\uC870\uAC74\uACFC \uAD6C\uBD84\uD574 \uAD00\uB9AC\uD569\uB2C8\uB2E4."))), /* @__PURE__ */ React.createElement(Panel, { title: "\uBA54\uBAA8" }, /* @__PURE__ */ React.createElement(
+      "textarea",
+      {
+        value: notes,
+        onChange: (e) => setNotes(e.target.value),
+        rows: 4,
+        className: "w-full text-[12.5px] leading-relaxed p-2.5 rounded-md outline-none resize-none",
+        style: { color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }
+      }
+    ))), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uB2E4\uC74C \uD589\uB3D9" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-start gap-2 py-1" }, /* @__PURE__ */ React.createElement(CheckCircle2, { size: 16, color: C.brandSoft, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        value: nextAction,
+        onChange: (e) => setNextAction(e.target.value),
+        className: "w-full text-[12.5px] px-2 py-1.5 rounded-md outline-none",
+        style: { color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }
+      }
+    ))), /* @__PURE__ */ React.createElement(Panel, { title: "Follow-up" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-start gap-2 py-1" }, /* @__PURE__ */ React.createElement(Clock, { size: 16, color: C.note, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        value: followUp,
+        onChange: (e) => setFollowUp(e.target.value),
+        className: "w-full text-[12.5px] px-2 py-1.5 rounded-md outline-none",
+        style: { color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }
+      }
+    ))))));
+  }
+  function CallSummaryAI({ customers, setCustomers }) {
+    const [text, setText] = useState("");
+    const [result, setResult] = useState(null);
+    const [saved, setSaved] = useState(false);
+    const [justUpdated, setJustUpdated] = useState(false);
+    function analyze() {
+      if (!text.trim()) return;
+      const wasResult = result !== null;
+      setResult(parseSummary(text));
+      setSaved(false);
+      if (wasResult) {
+        setJustUpdated(true);
+        setTimeout(() => setJustUpdated(false), 1600);
+      }
+    }
+    function saveAsCustomer() {
+      if (!result) return;
+      const newC = {
+        id: `c${Date.now()}`,
+        name: result.name || `\uAC00\uC0C1\uACE0\uAC1D-${result.phone4 || Date.now().toString().slice(-4)}`,
+        phone4: result.phone4 || "----",
+        fc: result.fc || "-",
+        branch: result.branch || "-",
+        collateral: result.fields["\uB2F4\uBCF4"] || "\uD655\uC778 \uD544\uC694",
+        consultDate: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
+        lastContact: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
+        consultType: "\uC790\uC5F0\uC5B4 \uC785\uB825 (\uD1B5\uD654\uC694\uC57D AI)",
+        status: "\uB2E8\uC21C\uC0C1\uB2F4",
+        docStatus: "\uBBF8\uC548\uB0B4",
+        nextAction: "\uAD6C\uC870\uD654\uB41C \uC815\uBCF4 \uAC80\uD1A0 \uBC0F \uBCF4\uC644",
+        followUp: result.fields["Follow-up"] || "\uD655\uC778 \uD544\uC694",
+        notes: text,
+        fields: result.fields,
+        badges: result.badges
+      };
+      setCustomers([newC, ...customers]);
+      setSaved(true);
+    }
+    const REQUIRED = ["name", "phone4", "fc"];
+    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Header, { title: "\uD1B5\uD654\uC694\uC57D AI", subtitle: "\uD1B5\uD654\uC694\uC57D\uC774\uB098 \uC0C1\uB2F4 \uBA54\uBAA8\uB97C \uBD99\uC5EC\uB123\uC73C\uBA74 \uAD6C\uC870\uD654\uB41C \uACE0\uAC1D \uAE30\uB85D\uC744 \uB9CC\uB4E4\uC5B4 \uB4DC\uB9BD\uB2C8\uB2E4." }), /* @__PURE__ */ React.createElement("div", { className: "grid lg:grid-cols-2 gap-5" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "rounded-lg p-4", style: { background: C.surface, border: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement(
+      "textarea",
+      {
+        value: text,
+        onChange: (e) => setText(e.target.value),
+        placeholder: "\uC608: \uAE40\uACBD\uD76C \uACE0\uAC1D\uD558\uACE0 \uD1B5\uD654\uD588\uC5B4. \uB05D\uBC88\uD638 1401\uC774\uACE0...\n\n\uC9C0\uC810\xB7FC\uAC00 \uD5F7\uAC08\uB9AC\uBA74 \uB9E8 \uC544\uB798\uC5D0 \uC774\uB807\uAC8C \uCD94\uAC00\uB85C \uC801\uC5B4\uC8FC\uC138\uC694:\n**\uB300\uC804SFP\uC9C0\uC810, ***\uAE40\uAE30\uC6D0",
+        rows: 9,
+        className: "w-full resize-none outline-none text-[12.5px] leading-relaxed",
+        style: { color: C.ink }
+      }
+    ), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mt-2", style: { color: C.inkFaint } }, "\uC9C0\uC810\xB7FC\uAC00 \uBB38\uB9E5\uC0C1 \uB204\uB77D\uB420 \uC218 \uC788\uC73C\uBA74 \uB9E8 \uC544\uB798 \uC904\uC5D0 ", /* @__PURE__ */ React.createElement("b", null, "**\uC9C0\uC810\uBA85"), ", ", /* @__PURE__ */ React.createElement("b", null, "***FC\uBA85"), " \uD615\uC2DD\uC73C\uB85C \uCD94\uAC00 \uC785\uB825\uD558\uBA74 \uD655\uC2E4\uD558\uAC8C \uC778\uC2DD\uB3FC\uC694. (\uC608: **\uB300\uC804SFP\uC9C0\uC810, ***\uAE40\uAE30\uC6D0)"), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3" }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap items-center gap-x-3 gap-y-2" }, /* @__PURE__ */ React.createElement("button", { onClick: () => setText(SAMPLE_TEXT), className: "text-[11px] text-left", style: { color: C.note, wordBreak: "keep-all" } }, "\uB300\uD654\uCCB4 \uC608\uC2DC"), /* @__PURE__ */ React.createElement("button", { onClick: () => setText(SAMPLE_TEXT_LABELED), className: "text-[11px] text-left", style: { color: C.note, wordBreak: "keep-all" } }, "\uB77C\uBCA8\uD615\uC2DD \uC608\uC2DC (\uACE0\uAC1D: / \uCD94\uCC9C:)"), /* @__PURE__ */ React.createElement("button", { onClick: () => setText(SAMPLE_TEXT_MARKER), className: "text-[11px] text-left", style: { color: C.note, wordBreak: "keep-all" } }, "\uC9C0\uC810\xB7FC \uB9C8\uCEE4 \uC608\uC2DC (**\uC9C0\uC810 / ***FC)")), /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        onClick: analyze,
+        className: "flex items-center gap-1.5 px-4 py-2 rounded-md text-[12px] font-semibold text-white",
+        style: { background: C.accent }
+      },
+      /* @__PURE__ */ React.createElement(Sparkles, { size: 14 }),
+      " \uAD6C\uC870\uD654\uD558\uAE30"
+    ))), /* @__PURE__ */ React.createElement("div", { className: "mt-3 text-[10px] leading-relaxed", style: { color: C.inkFaint } }, "\uD604\uC7AC \uD1B5\uD654\uC694\uC57D AI\uB294 \uC2E4\uC81C LLM\uC774 \uC544\uB2CC \uADDC\uCE59 \uAE30\uBC18 \uC2DC\uC5F0\uC6A9 Prototype\uC785\uB2C8\uB2E4. \uC2E4\uC81C \uC11C\uBE44\uC2A4\uC5D0\uC11C\uB294 LLM \uBD84\uC11D \u2192 \uAE30\uC874 \uACE0\uAC1D \uAC80\uC0C9 \u2192 \uC800\uC7A5 \uC804 \uC0AC\uC6A9\uC790 \uD655\uC778 \uAD6C\uC870\uB85C \uBC1C\uC804\uD569\uB2C8\uB2E4.")), /* @__PURE__ */ React.createElement("div", null, !result && /* @__PURE__ */ React.createElement("div", { className: "rounded-lg p-8 h-full flex items-center justify-center text-center", style: { background: C.surfaceAlt, border: `1px dashed ${C.border}` } }, /* @__PURE__ */ React.createElement("span", { className: "text-[11px]", style: { color: C.inkFaint } }, "\uC67C\uCABD\uC5D0 \uD1B5\uD654 \uB0B4\uC6A9\uC744 \uC785\uB825\uD558\uACE0 \uAD6C\uC870\uD654\uD558\uAE30\uB97C \uB20C\uB7EC\uC8FC\uC138\uC694.")), result && /* @__PURE__ */ React.createElement("div", { className: "rounded-lg p-4", style: { background: C.surface, border: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 mb-3" }, /* @__PURE__ */ React.createElement("div", { className: "text-[12.5px] font-semibold" }, "\uCD94\uCD9C \uACB0\uACFC"), justUpdated && /* @__PURE__ */ React.createElement("span", { className: "text-[11px] font-semibold px-2 py-0.5 rounded-full", style: { background: C.confirmedBg, color: C.confirmed } }, "\uBC29\uAE08 \uB2E4\uC2DC \uAD6C\uC870\uD654\uB428")), /* @__PURE__ */ React.createElement(
+      EditableResultRow,
+      {
+        label: "\uACE0\uAC1D\uBA85",
+        value: result.name,
+        onChange: (v) => setResult((r) => ({ ...r, name: v })),
+        kind: result.badges.name || "verify",
+        onToggleKind: (k) => setResult((r) => ({ ...r, badges: { ...r.badges, name: k } }))
+      }
+    ), /* @__PURE__ */ React.createElement(
+      EditableResultRow,
+      {
+        label: "\uC804\uD654\uBC88\uD638 \uB4A4 4\uC790\uB9AC",
+        value: result.phone4,
+        numeric: true,
+        onChange: (v) => setResult((r) => ({ ...r, phone4: v })),
+        kind: result.badges.phone4 || "verify",
+        onToggleKind: (k) => setResult((r) => ({ ...r, badges: { ...r.badges, phone4: k } }))
+      }
+    ), result.rrnDetected && /* @__PURE__ */ React.createElement(Field, { label: "\uC8FC\uBBFC\uBC88\uD638 \uC55E\uC790\uB9AC", value: "\uAC10\uC9C0\uB428 \xB7 \uAC1C\uC778\uC815\uBCF4 \uBCF4\uD638\uC815\uCC45\uC0C1 \uBBF8\uC800\uC7A5", kind: "verify" }), /* @__PURE__ */ React.createElement(
+      EditableResultRow,
+      {
+        label: "\uCD94\uCC9C FC",
+        value: result.fc,
+        onChange: (v) => setResult((r) => ({ ...r, fc: v })),
+        kind: result.badges.fc || "verify",
+        onToggleKind: (k) => setResult((r) => ({ ...r, badges: { ...r.badges, fc: k } }))
+      }
+    ), /* @__PURE__ */ React.createElement(
+      EditableResultRow,
+      {
+        label: "\uC9C0\uC810",
+        value: result.branch,
+        onChange: (v) => setResult((r) => ({ ...r, branch: v })),
+        kind: result.badges.branch || "verify",
+        onToggleKind: (k) => setResult((r) => ({ ...r, badges: { ...r.badges, branch: k } }))
+      }
+    ), Object.entries(result.fields).map(([k, v]) => /* @__PURE__ */ React.createElement(
+      EditableResultRow,
+      {
+        key: k,
+        label: k,
+        value: v,
+        onChange: (nv) => setResult((r) => ({ ...r, fields: { ...r.fields, [k]: nv } })),
+        kind: result.badges[k] || "note",
+        onToggleKind: (nk) => setResult((r) => ({ ...r, badges: { ...r.badges, [k]: nk } }))
+      }
+    )), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mt-3 mb-3", style: { color: C.inkFaint } }, "\uBAA8\uB4E0 \uD56D\uBAA9\uC740 \uC9C1\uC811 \uC218\uC815\uD560 \uC218 \uC788\uC5B4\uC694. \uBC30\uC9C0\uB97C \uB204\uB974\uBA74 \uD655\uC778\uB428 \xB7 \uD655\uC778 \uD544\uC694 \xB7 \uD1B5\uD654 \uC548\uB0B4 \uC21C\uC11C\uB85C \uBC14\uB00C\uC5B4\uC694. \uC8FC\uBBFC\uB4F1\uB85D\uBC88\uD638\uB294 \uC778\uC2DD\uD558\uB354\uB77C\uB3C4 \uC800\uC7A5\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."), /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        onClick: saveAsCustomer,
+        className: "w-full flex items-center justify-center gap-1.5 py-2.5 rounded-md text-[12.5px] font-semibold text-white",
+        style: { background: saved ? C.confirmed : C.accent }
+      },
+      /* @__PURE__ */ React.createElement(Save, { size: 14 }),
+      " ",
+      saved ? "\uACE0\uAC1D\uAD00\uB9AC\uC5D0 \uC800\uC7A5\uB428" : "\uD655\uC778 \uD6C4 \uACE0\uAC1D\uC73C\uB85C \uC800\uC7A5"
+    )))));
+  }
+  var INCOME_TYPES = ["\uADFC\uB85C\uC18C\uB4DD\uC790", "\uC0AC\uC5C5\uC18C\uB4DD\uC790", "\uC5F0\uAE08\uC18C\uB4DD\uC790"];
+  function buildEmployeeDocs(cond) {
+    const docs = [];
+    docs.push({ label: "\uAC74\uAC15\uBCF4\uD5D8\uC790\uACA9\uB4DD\uC2E4\uD655\uC778\uC11C", detail: "1\uAC1C\uC6D4 \uC774\uB0B4 \uBC1C\uAE09\uBD84", kind: "confirmed", group: "\uC7AC\uC9C1 \uD655\uC778" });
+    docs.push({ label: "\uC7AC\uC9C1\uC99D\uBA85\uC11C", detail: "1\uAC1C\uC6D4 \uC774\uB0B4 \uBC1C\uAE09\uBD84", kind: "confirmed", group: "\uC7AC\uC9C1 \uD655\uC778" });
+    docs.push({
+      label: "\uC18C\uB4DD \uC99D\uBE59\uC11C\uB958 (\uD0DD1)",
+      detail: "\uADFC\uB85C\uC18C\uB4DD\uC6D0\uCC9C\uC9D5\uC218\uC601\uC218\uC99D \xB7 \uC18C\uB4DD\uAE08\uC561\uC99D\uBA85\uC6D0 \xB7 \uC18C\uB4DD\uD655\uC778\uC99D\uBA85\uC11C(SA\uC6A9) \xB7 \uC18C\uB4DD\uC138\uC6D0\uCC9C\uC9D5\uC218\uD655\uC778\uC11C(\uC138\uBB34\uC0AC\uBC1C\uD589) \xB7 \uAE09\uC5EC\uBA85\uC138\uD45C/\uC784\uAE08\uB300\uC7A5(\uC9C1\uC778 \uD544\uC218) \uC911 1\uC885",
+      kind: "confirmed",
+      group: "\uC18C\uB4DD \uD655\uC778"
+    });
+    docs.push({
+      label: "\uAE09\uC5EC\uC785\uAE08 \uD1B5\uC7A5 \uC0AC\uBCF8",
+      detail: "\uC18C\uB4DD\uBC1C\uC0DD\uAE30\uAC04 1\uAC1C\uC6D4 \uC774\uC0C1\uC774\uB098 \uC2E4\uC9C8\uC218\uB839\uC561\uC774 1\uAC1C\uC6D4 \uBBF8\uB9CC\uC778 \uACBD\uC6B0\uC5D0\uB9CC \uCD94\uAC00",
+      kind: "note",
+      group: "\uC18C\uB4DD \uD655\uC778"
+    });
+    if (cond.tenure === "3\uAC1C\uC6D4\uC774\uD558") {
+      docs.push({ label: "\uC7AC\uC9C1 \uC5EC\uBD80 \uC720\uC120\uD655\uC778 + \uC11C\uBA85\uB0A0\uC778", detail: "\uC7AC\uC9C1 3\uAC1C\uC6D4 \uC774\uD558\uC790\uB294 \uD544\uC218 \uD655\uC778 \uC808\uCC28", kind: "verify", group: "\uC7AC\uC9C1\uAE30\uAC04 \uC870\uAC74" });
+    }
+    if (cond.tenure === "1\uAC1C\uC6D4~1\uB144\uBBF8\uB9CC") {
+      docs.push({
+        label: "\uC5F0\uD658\uC0B0 \uC18C\uB4DD \uC801\uC6A9",
+        detail: cond.steadyIncome ? "\uC0C1\uC2DC\uC18C\uB4DD\uC73C\uB85C \uC778\uC815\uB418\uC5B4 100% \uC778\uC815" : "\uC0C1\uC2DC\uC18C\uB4DD \uBBF8\uC778\uC815 \uC2DC \uC5F0\uD658\uC0B0 90%\uB9CC \uC778\uC815 (\uACC4\uC57D\uC9C1\xB7\uC784\uC2DC\uC9C1\uC740 \uC0C1\uC2DC\uC18C\uB4DD \uC544\uB2D8)",
+        kind: "note",
+        group: "\uC7AC\uC9C1\uAE30\uAC04 \uC870\uAC74"
+      });
+      if (cond.highIncome && !cond.exemptGroup) {
+        docs.push({ label: "\uCD5C\uADFC 6\uAC1C\uC6D4 \uAE09\uC5EC\uC785\uAE08\uB0B4\uC5ED", detail: "\uC5F0\uC18C\uB4DD 5\uCC9C\uB9CC\uC6D0 \uC774\uC0C1 & \uC7AC\uC9C1 1\uB144 \uBBF8\uB9CC\uC740 \uC99D\uBE59 \uAC15\uD654 \uB300\uC0C1", kind: "verify", group: "\uC7AC\uC9C1\uAE30\uAC04 \uC870\uAC74" });
+      }
+      if (cond.exemptGroup) {
+        docs.push({ label: "\uC99D\uBE59 \uAC15\uD654 \uC608\uC678 \uC801\uC6A9", detail: "\uC6B0\uB7C9\uC9C1\uC7A5\uC778\xB7\uC0C1\uC7A5\uC5C5\uCCB4 \uADFC\uBB34\uC790\xB7\uC804\uC9C1\uC7A5 \uC18C\uB4DD\uC790 20% \uC774\uB0B4 \uB4F1\uC740 \uC608\uC678 \uAC00\uB2A5 (\uC138\uBD80 \uAE30\uC900 \uD655\uC778 \uD544\uC694)", kind: "note", group: "\uC7AC\uC9C1\uAE30\uAC04 \uC870\uAC74" });
+      }
+    }
+    if (cond.onLeave) {
+      docs.push({ label: "\uD734\uC9C1 \uD655\uC778 \uC11C\uB958", detail: "\uD734\uC9C1 \uC804 \uCD5C\uADFC\uB144\uB3C4 \uC18C\uB4DD\uC73C\uB85C \uC5F0\uC18C\uB4DD \uC0B0\uC815. \uC2E0\uCCAD\uC77C \uAE30\uC900 \uCD5C\uADFC 36\uAC1C\uC6D4 \uB0B4 1\uAC1C\uC6D4 \uC774\uC0C1 \uC5F0\uC18D \uC18C\uB4DD \uC5C6\uC73C\uBA74 \uCD94\uC815\uC18C\uB4DD \uC801\uC6A9", kind: "note", group: "\uD734\uC9C1/\uBCF5\uC9C1" });
+    }
+    if (cond.returned) {
+      docs.push({ label: "\uBCF5\uC9C1 \uD655\uC778 \uC11C\uB958", detail: "\uBCF5\uC9C1 \uD6C4 \uCD5C\uADFC\uB144\uB3C4 \uC18C\uB4DD \uAE30\uC900 \uC0B0\uC815 (\uBCF5\uC9C1 3\uAC1C\uC6D4 \uBBF8\uB9CC\uC774\uBA74 \uD734\uC9C1\uC790\uB85C \uAC04\uC8FC \uC120\uD0DD \uAC00\uB2A5)", kind: "note", group: "\uD734\uC9C1/\uBCF5\uC9C1" });
+    }
+    if (cond.combinePrevJob) {
+      docs.push({ label: "\uC804\uC9C1\uC7A5 \uC18C\uB4DD \uC11C\uB958", detail: "\uC804\uC9C1\uC7A5 \uD1F4\uC9C1\uC6D4\uACFC \uD604\uC9C1\uC7A5 \uC785\uC0AC\uC6D4\uC774 1\uAC1C\uC6D4 \uC774\uB0B4\uC778 \uACBD\uC6B0 \uC2EC\uC0AC\uC790 \uD310\uB2E8\uC73C\uB85C \uD569\uC0B0 \uAC00\uB2A5 (\uACF5\uBB34\uC6D0\xB7\uAD50\uC0AC\xB7\uACC4\uC5F4\uC0AC \uC804\uBC30 \uB4F1)", kind: "verify", group: "\uC804\uC9C1\uC7A5 \uC18C\uB4DD" });
+    }
+    if (cond.overseas) {
+      docs.push({ label: "\uD574\uC678\uC18C\uB4DD \uC99D\uBE59 (\uCD5C\uADFC 2\uAC1C\uB144)", detail: "\uD574\uC678\uACF5\uAD00 \uC601\uC0AC\uD655\uC778 \uB610\uB294 \uC544\uD3EC\uC2A4\uD2F0\uC720 \uC778\uC99D \uD544\uC694", kind: "verify", group: "\uD574\uC678\uC18C\uB4DD" });
+    }
+    return docs;
+  }
+  var SEND_INCOME_OPTIONS = ["\uADFC\uB85C\uC18C\uB4DD\uC790", "\uC0AC\uC5C5\uC18C\uB4DD\uC790", "\uC5F0\uAE08\uC18C\uB4DD\uC790", "\uAE30\uD0C0"];
+  function buildSendChecklist(isPurchase, incomeCategory) {
+    const items = [
+      isPurchase ? "\uB9E4\uB9E4\uACC4\uC57D\uC11C" : "\uB4F1\uAE30\uD544\uC99D",
+      "\uC8FC\uBBFC\uB4F1\uB85D\uB4F1\uBCF8 1\uD1B5",
+      "\uCD08\uBCF8 1\uD1B5",
+      "\uC804\uC785\uC138\uB300\uD655\uC778\uC11C",
+      "\uC678\uAD6D\uC778\uCCB4\uB958\uD655\uC778\uC11C (\uC8FC\uBBFC\uC13C\uD130 \xB7 \uB2F4\uBCF4\uC9C0 \uAE30\uC900)",
+      "\uC778\uAC10\uC99D\uBA85\uC11C 1\uD1B5",
+      "\uC778\uAC10\uB3C4\uC7A5",
+      "\uC2E0\uBD84\uC99D",
+      "\uAC00\uC871\uAD00\uACC4\uD655\uC778\uC11C"
+    ];
+    if (incomeCategory !== "\uAE30\uD0C0") {
+      items.push(`\uC7AC\uC9C1\uC99D\uBA85\uC11C (${incomeCategory})`);
+      items.push(`\uC18C\uB4DD\uC99D\uBA85\uC11C (${incomeCategory})`);
+    }
+    return items;
+  }
+  function SendChecklist() {
+    const [isPurchase, setIsPurchase] = useState(false);
+    const [incomeCategory, setIncomeCategory] = useState("\uADFC\uB85C\uC18C\uB4DD\uC790");
+    const [copied, setCopied] = useState(false);
+    const items = buildSendChecklist(isPurchase, incomeCategory);
+    const plainText = `\uB2E4\uC74C\uC11C\uB958 \uC900\uBE44 \uBD80\uD0C1\uB4DC\uB9BD\uB2C8\uB2E4.
+${items.join(", ")}`;
+    function copy() {
+      var _a;
+      (_a = navigator.clipboard) == null ? void 0 : _a.writeText(plainText).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      }).catch(() => {
+      });
+    }
+    return /* @__PURE__ */ React.createElement(Panel, { title: "\uACE0\uAC1D \uBC1C\uC1A1\uC6A9 \uC11C\uB958 \uCCB4\uD06C\uB9AC\uC2A4\uD2B8" }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-col sm:flex-row gap-4 py-1 mb-1" }, /* @__PURE__ */ React.createElement("div", { className: "flex-1" }, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mb-2", style: { color: C.inkSoft } }, "\uB300\uCD9C\uC6A9\uB3C4"), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-1.5" }, /* @__PURE__ */ React.createElement(RadioRow, { label: "\uAD6C\uC785", checked: isPurchase, onClick: () => setIsPurchase(true) }), /* @__PURE__ */ React.createElement(RadioRow, { label: "\uADF8 \uC678 (\uB300\uD658\xB7\uC0DD\uD65C\uC790\uAE08 \uB4F1)", checked: !isPurchase, onClick: () => setIsPurchase(false) }))), /* @__PURE__ */ React.createElement("div", { className: "flex-1" }, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mb-2", style: { color: C.inkSoft } }, "\uC18C\uB4DD\uC720\uD615"), /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap gap-1.5" }, SEND_INCOME_OPTIONS.map((t) => /* @__PURE__ */ React.createElement(RadioRow, { key: t, label: t, checked: incomeCategory === t, onClick: () => setIncomeCategory(t) }))))), /* @__PURE__ */ React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-1.5 mb-3" }, items.map((item, i) => {
+      const changed = i === 0 && isPurchase;
+      const isIncomeDoc = item.includes("\uC7AC\uC9C1\uC99D\uBA85\uC11C") || item.includes("\uC18C\uB4DD\uC99D\uBA85\uC11C");
+      return /* @__PURE__ */ React.createElement("div", { key: i, className: "flex items-center gap-2 text-[12.5px]" }, /* @__PURE__ */ React.createElement("span", { className: "w-5 shrink-0", style: { ...mono, color: C.inkFaint } }, i + 1, "."), /* @__PURE__ */ React.createElement("span", { style: { color: C.ink } }, item), changed && /* @__PURE__ */ React.createElement(Badge, { kind: "note", label: "\uAD6C\uC785 \uC870\uAC74 \uBC18\uC601" }), isIncomeDoc && /* @__PURE__ */ React.createElement(Badge, { kind: "note", label: "\uC18C\uB4DD\uC720\uD615 \uBC18\uC601" }));
+    }), incomeCategory === "\uAE30\uD0C0" && /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mt-1 flex items-start gap-1.5", style: { color: C.inkFaint } }, /* @__PURE__ */ React.createElement(Info, { size: 13, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement("span", null, '\uC18C\uB4DD\uC720\uD615\uC744 "\uAE30\uD0C0"\uB85C \uC120\uD0DD\uD558\uC5EC \uC7AC\uC9C1\uC99D\uBA85\uC11C \xB7 \uC18C\uB4DD\uC99D\uBA85\uC11C \uD56D\uBAA9\uC774 \uC81C\uC678\uB418\uC5C8\uC2B5\uB2C8\uB2E4.'))), /* @__PURE__ */ React.createElement(
+      "textarea",
+      {
+        readOnly: true,
+        value: plainText,
+        rows: 3,
+        className: "w-full resize-none outline-none text-[12px] leading-relaxed p-3 rounded-md",
+        style: { background: C.surfaceAlt, border: `1px solid ${C.border}`, color: C.ink }
+      }
+    ), /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        onClick: copy,
+        className: "mt-2 flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[11.5px] font-semibold text-white",
+        style: { background: copied ? C.confirmed : C.accent }
+      },
+      /* @__PURE__ */ React.createElement(FileCheck2, { size: 13 }),
+      " ",
+      copied ? "\uBCF5\uC0AC\uB428" : "\uD14D\uC2A4\uD2B8 \uBCF5\uC0AC\uD558\uAE30"
+    )));
+  }
+  function DocumentAssistant() {
+    const [incomeType, setIncomeType] = useState("\uADFC\uB85C\uC18C\uB4DD\uC790");
+    const [cond, setCond] = useState({
+      tenure: "1\uB144\uC774\uC0C1",
+      steadyIncome: false,
+      highIncome: false,
+      exemptGroup: false,
+      onLeave: false,
+      returned: false,
+      combinePrevJob: false,
+      overseas: false
+    });
+    const set = (k, v) => setCond({ ...cond, [k]: v });
+    const docs = incomeType === "\uADFC\uB85C\uC18C\uB4DD\uC790" ? buildEmployeeDocs(cond) : null;
+    const groups = docs ? [...new Set(docs.map((d) => d.group))] : [];
+    const STATIC = {
+      "\uC0AC\uC5C5\uC18C\uB4DD\uC790": [
+        { label: "\uAC74\uAC15\uBCF4\uD5D8\uC790\uACA9\uB4DD\uC2E4\uD655\uC778\uC11C(\uD544\uC218)", detail: "\uC0AC\uC5C5\uC790\uB4F1\uB85D\uC99D \uC0AC\uBCF8 + \uC0AC\uC5C5\uC790\uC2E4\uBA85\uD655\uC778 \uD544\uC694", kind: "confirmed" },
+        { label: "\uC0AC\uC5C5\uC790\uB4F1\uB85D\uC99D\uBA85\uC6D0 \xB7 \uACE0\uC6A9/\uC0B0\uC7AC\uBCF4\uD5D8 \uC790\uACA9\uC774\uB825\uB0B4\uC5ED\uC11C \uB4F1", detail: "\uBB34\uB4F1\uB85D \uC0AC\uC5C5\uC790, \uBCF4\uD5D8\uBAA8\uC9D1\uC778, \uB2E4\uB2E8\uACC4\uD310\uB9E4\uC6D0 \uB4F1\uC740 \uBCC4\uB3C4 \uD655\uC778 \uC11C\uB958", kind: "confirmed" },
+        { label: "\uC18C\uB4DD\uAE08\uC561\uC99D\uBA85\uC6D0, \uC5F0\uB9D0\uC815\uC0B0 \uC0AC\uC5C5\uC18C\uB4DD \uC6D0\uCC9C\uC9D5\uC218\uC601\uC218\uC99D", detail: "\uC885\uBE59: \uC18C\uB4DD\uAE08\uC561\uC99D\uBA85\uC6D0 100% \uC778\uC815. \uC2E0\uACE0\uC18C\uB4DD\uC740 \uC720\uD615\uC5D0 \uB530\uB77C \uC778\uC815\uBE44\uC728 \uC0C1\uC774", kind: "note" },
+        { label: "\uAC1C\uC5C5 1\uB144 \uBBF8\uB9CC / 2\uB144 \uC774\uC0C1 \uC870\uAC74\uBD80 \uC778\uC815\uBE44\uC728", detail: "\uAC1C\uC5C5 1\uB144 \uBBF8\uB9CC\uC740 \uC18C\uB4DD 90% \uC778\uC815, 2\uB144 \uC774\uC0C1\uC740 27\uAC1C\uC6D4 \uC18C\uB4DD\uC99D\uBE59 \uC2DC \uCD5C\uADFC\uB144\uB3C4 \uC18C\uB4DD 100% \uC778\uC815 \uB4F1 \uC138\uBD80\uAE30\uC900 \uC0C1\uC774", kind: "verify" }
+      ],
+      "\uC5F0\uAE08\uC18C\uB4DD\uC790": [
+        { label: "\uC5F0\uAE08\uC218\uAE09\uC790\uD655\uC778\uC11C \uB4F1", detail: "\uC5F0\uAE08\uC218\uAE09\uC744 \uD655\uC778\uD560 \uC218 \uC788\uB294 \uC9C0\uAE09\uAE30\uAD00 \uC99D\uBA85\uC11C, \uCD5C\uADFC \uBC1C\uC0DD\uBD84 \uC6B0\uC120 \uC778\uC815", kind: "confirmed" },
+        { label: "\uC5F0\uAE08\uC218\uB839 \uD1B5\uC7A5\uC0AC\uBCF8", detail: "\uC99D\uBA85\uC11C\uC5D0 \uC218\uB839\uAE08\uC561\uC774 \uD45C\uC2DC\uB418\uC9C0 \uC54A\uB294 \uACBD\uC6B0 \uCD94\uAC00 \uC81C\uCD9C", kind: "verify" },
+        { label: "\uC5F0\uAE08 \uC218\uB839\uAE30\uAC04 \uD655\uC778", detail: "\uAD6D\uBBFC\uC5F0\uAE08\xB7\uACF5\uBB34\uC6D0\uC5F0\uAE08\xB7\uAD70\uC778\uC5F0\uAE08\xB7\uC0AC\uD559\uC5F0\uAE08 \uB4F1 \uC885\uB958\uBCC4 \uC778\uC815 \uBC94\uC704 \uC0C1\uC774, \uAE30\uCD08\uC0DD\uD65C\uC218\uAE09\xB7\uAD6D\uAC00\uC720\uACF5\uC790 \uBCF4\uC0C1\uAE08 \uB4F1\uC740 \uC81C\uC678", kind: "note" }
+      ]
+    };
+    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Header, { title: "\uC11C\uB958\uC548\uB0B4", subtitle: "\uACE0\uAC1D\uC5D0\uAC8C \uBCF4\uB0BC \uC11C\uB958 \uCCB4\uD06C\uB9AC\uC2A4\uD2B8\uB97C \uB9CC\uB4E4\uACE0, \uC18C\uB4DD\uC720\uD615\uBCC4 \uD544\uC694\uC11C\uB958\uB97C \uD655\uC778\uD569\uB2C8\uB2E4." }), /* @__PURE__ */ React.createElement(SendChecklist, null), /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 mt-9 mb-5" }, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] font-semibold uppercase", style: { color: C.inkSoft, letterSpacing: "0.07em" } }, "\uC2EC\uC0AC\uC6A9 \xB7 \uC18C\uB4DD\uC720\uD615\uBCC4 \uD544\uC694\uC11C\uB958 \uD655\uC778"), /* @__PURE__ */ React.createElement("div", { className: "flex-1 h-px", style: { background: C.border } })), /* @__PURE__ */ React.createElement("div", { className: "grid lg:grid-cols-3 gap-5" }, /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-1 flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uC18C\uB4DD\uC720\uD615 \uC120\uD0DD" }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-1.5 py-1" }, INCOME_TYPES.map((t) => /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        key: t,
+        onClick: () => setIncomeType(t),
+        className: "flex items-center justify-between px-3 py-2.5 rounded-md text-[12.5px] font-medium text-left",
+        style: {
+          background: incomeType === t ? C.brand : C.surfaceAlt,
+          color: incomeType === t ? "#FFFFFF" : C.ink
+        }
+      },
+      t,
+      incomeType === t && /* @__PURE__ */ React.createElement(ChevronRight, { size: 14 })
+    )))), incomeType === "\uADFC\uB85C\uC18C\uB4DD\uC790" && /* @__PURE__ */ React.createElement(Panel, { title: "\uACE0\uAC1D \uC0C1\uD669 \uC785\uB825" }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-4 py-1" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mb-2", style: { color: C.inkSoft } }, "\uC7AC\uC9C1\uAE30\uAC04"), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-1.5" }, ["1\uB144\uC774\uC0C1", "1\uAC1C\uC6D4~1\uB144\uBBF8\uB9CC", "3\uAC1C\uC6D4\uC774\uD558"].map((v) => /* @__PURE__ */ React.createElement(RadioRow, { key: v, label: v, checked: cond.tenure === v, onClick: () => set("tenure", v) })))), cond.tenure === "1\uAC1C\uC6D4~1\uB144\uBBF8\uB9CC" && /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mb-2", style: { color: C.inkSoft } }, "\uC7AC\uC9C1 1\uB144 \uBBF8\uB9CC \uCD94\uAC00 \uC870\uAC74"), /* @__PURE__ */ React.createElement(CheckRow, { label: "\uC0C1\uC2DC\uC18C\uB4DD\uC73C\uB85C \uC778\uC815 \uAC00\uB2A5", checked: cond.steadyIncome, onClick: () => set("steadyIncome", !cond.steadyIncome) }), /* @__PURE__ */ React.createElement(CheckRow, { label: "\uC5F0\uC18C\uB4DD 5\uCC9C\uB9CC\uC6D0 \uC774\uC0C1", checked: cond.highIncome, onClick: () => set("highIncome", !cond.highIncome) }), /* @__PURE__ */ React.createElement(CheckRow, { label: "\uC6B0\uB7C9\uC9C1\uC7A5\uC778 / \uC0C1\uC7A5\uC5C5\uCCB4 \uADFC\uBB34\uC790 \uB4F1 \uC608\uC678 \uB300\uC0C1", checked: cond.exemptGroup, onClick: () => set("exemptGroup", !cond.exemptGroup) })), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mb-2", style: { color: C.inkSoft } }, "\uAE30\uD0C0 \uC0C1\uD669"), /* @__PURE__ */ React.createElement(CheckRow, { label: "\uD604\uC7AC \uD734\uC9C1 \uC911", checked: cond.onLeave, onClick: () => set("onLeave", !cond.onLeave) }), /* @__PURE__ */ React.createElement(CheckRow, { label: "\uCD5C\uADFC \uBCF5\uC9C1\uD568", checked: cond.returned, onClick: () => set("returned", !cond.returned) }), /* @__PURE__ */ React.createElement(CheckRow, { label: "\uC804\uC9C1\uC7A5 \uC18C\uB4DD \uD569\uC0B0 \uD544\uC694", checked: cond.combinePrevJob, onClick: () => set("combinePrevJob", !cond.combinePrevJob) }), /* @__PURE__ */ React.createElement(CheckRow, { label: "\uD574\uC678\uC18C\uB4DD \uD3EC\uD568", checked: cond.overseas, onClick: () => set("overseas", !cond.overseas) }))))), /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-2 flex flex-col gap-5" }, incomeType === "\uADFC\uB85C\uC18C\uB4DD\uC790" && groups.map((g) => /* @__PURE__ */ React.createElement(Panel, { key: g, title: g }, docs.filter((d) => d.group === g).map((d, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "py-2.5", style: { borderBottom: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 mb-1" }, /* @__PURE__ */ React.createElement("span", { className: "text-[12.5px] font-medium" }, d.label), /* @__PURE__ */ React.createElement(Badge, { kind: d.kind })), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] leading-relaxed", style: { color: C.inkSoft } }, d.detail))))), incomeType !== "\uADFC\uB85C\uC18C\uB4DD\uC790" && /* @__PURE__ */ React.createElement(Panel, { title: `${incomeType} \uD544\uC694\uC11C\uB958` }, STATIC[incomeType].map((d, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "py-2.5", style: { borderBottom: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 mb-1" }, /* @__PURE__ */ React.createElement("span", { className: "text-[12.5px] font-medium" }, d.label), /* @__PURE__ */ React.createElement(Badge, { kind: d.kind })), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] leading-relaxed", style: { color: C.inkSoft } }, d.detail))), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mt-3 flex items-start gap-1.5", style: { color: C.inkFaint } }, /* @__PURE__ */ React.createElement(Info, { size: 13, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement("span", null, incomeType, "\uB294 \uC544\uC9C1 \uC870\uAC74\uBD80 \uC138\uBD80 \uB85C\uC9C1\uC774 \uBC18\uC601\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. \uD604\uC7AC\uB294 \uCC38\uACE0\uC790\uB8CC\uC758 \uACE0\uC815 \uD56D\uBAA9\uB9CC \uD45C\uC2DC\uD569\uB2C8\uB2E4."))), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] leading-relaxed px-1 flex items-start gap-1.5", style: { color: C.inkFaint } }, /* @__PURE__ */ React.createElement(Info, { size: 13, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement("span", null, "\uC774 \uC548\uB0B4\uB294 2021.04 \uAE30\uC900 \uCC38\uACE0\uC790\uB8CC\uB97C \uADFC\uAC70\uB85C \uD558\uBA70, \uC2E4\uC81C \uC801\uC6A9 \uC804 \uCD5C\uC2E0 \uC0AC\uB0B4 \uC2EC\uC0AC\uAE30\uC900\uC73C\uB85C \uBC18\uB4DC\uC2DC \uC7AC\uD655\uC778\uD574\uC57C \uD569\uB2C8\uB2E4. \uC7AC\uC9C1 \uD655\uC778\uACFC \uC18C\uB4DD \uD655\uC778\uC740 \uC11C\uB85C \uB2E4\uB978 \uC11C\uB958\uB85C \uAD6C\uBD84\uB429\uB2C8\uB2E4.")))));
+  }
+  function RadioRow({ label, checked, onClick }) {
+    return /* @__PURE__ */ React.createElement("button", { onClick, className: "flex items-center gap-2.5 px-3 py-2 rounded-md text-left", style: { background: checked ? C.confirmedBg : C.surfaceAlt } }, /* @__PURE__ */ React.createElement("span", { className: "w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0", style: { border: `1.5px solid ${checked ? C.confirmed : C.inkFaint}` } }, checked && /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.confirmed } })), /* @__PURE__ */ React.createElement("span", { className: "text-[12px]", style: { color: checked ? C.confirmed : C.ink, fontWeight: checked ? 600 : 400 } }, label));
+  }
+  function CheckRow({ label, checked, onClick }) {
+    return /* @__PURE__ */ React.createElement("button", { onClick, className: "flex items-center gap-2.5 px-3 py-2 rounded-md text-left w-full", style: { background: checked ? C.confirmedBg : "transparent" } }, /* @__PURE__ */ React.createElement("span", { className: "w-3.5 h-3.5 rounded flex items-center justify-center shrink-0", style: { border: `1.5px solid ${checked ? C.confirmed : C.inkFaint}`, background: checked ? C.confirmed : "transparent" } }, checked && /* @__PURE__ */ React.createElement(CheckCircle2, { size: 11, color: "#FFFFFF", strokeWidth: 3 })), /* @__PURE__ */ React.createElement("span", { className: "text-[12px]", style: { color: checked ? C.confirmed : C.ink, fontWeight: checked ? 600 : 400 } }, label));
+  }
+  function RateCalculator() {
+    const [productId, setProductId] = useState(PRODUCTS[0].id);
+    const [baseRate, setBaseRate] = useState(PRODUCTS[0].base);
+    const [checks, setChecks] = useState({});
+    const [checkVals, setCheckVals] = useState({});
+    const [creditId, setCreditId] = useState("none");
+    const [insuranceId, setInsuranceId] = useState("none");
+    const [jeongyeolBp, setJeongyeolBp] = useState(0);
+    const product = PRODUCTS.find((p) => p.id === productId);
+    function changeProduct(id) {
+      const p = PRODUCTS.find((x) => x.id === id);
+      setProductId(id);
+      setBaseRate(p.base);
+    }
+    const basicRate = product.spread + (parseFloat(baseRate) || 0);
+    const generalTotal = CHECK_ITEMS.reduce((sum, item) => {
+      var _a;
+      if (!checks[item.id]) return sum;
+      const v = item.variable ? (_a = checkVals[item.id]) != null ? _a : item.value : item.value;
+      return sum + v;
+    }, 0);
+    const creditVal = CREDIT_OPTIONS.find((o) => o.id === creditId).value;
+    const insuranceVal = INSURANCE_OPTIONS.find((o) => o.id === insuranceId).value;
+    const jeongyeolVal = jeongyeolBp / 100;
+    const rawTotal = generalTotal + creditVal + insuranceVal + jeongyeolVal;
+    const maxAllowed = Math.min(MAX_DISCOUNT_CAP, product.spread, basicRate - MIN_RATE);
+    const appliedTotal = Math.min(rawTotal, Math.max(maxAllowed, 0));
+    const finalRate = Math.max(basicRate - appliedTotal, MIN_RATE);
+    const capped = rawTotal > maxAllowed + 1e-4;
+    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Header, { title: "\uAE08\uB9AC\uACC4\uC0B0\uAE30", subtitle: `\uB300\uC678\uBE44 \xB7 FC \uC804\uC6A9 \xB7 ${RATE_PERIOD} \uAE08\uB9AC\uC6B4\uC6A9 \uAE30\uC900` }), /* @__PURE__ */ React.createElement("div", { className: "grid lg:grid-cols-3 gap-5 items-start" }, /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-2 flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(StepTitle, { n: 1, title: "\uC0C1\uD488 \uC120\uD0DD" }), /* @__PURE__ */ React.createElement(Panel, null, /* @__PURE__ */ React.createElement(
+      "select",
+      {
+        value: productId,
+        onChange: (e) => changeProduct(e.target.value),
+        className: "w-full px-3 py-2.5 rounded-md text-[12.5px] font-semibold outline-none mb-4",
+        style: { background: C.surfaceAlt, border: `1px solid ${C.border}`, color: C.ink }
+      },
+      PRODUCTS.map((p) => /* @__PURE__ */ React.createElement("option", { key: p.id, value: p.id }, p.name, " (", p.type, ")"))
+    ), /* @__PURE__ */ React.createElement(
+      RateBuildRow,
+      {
+        label: "\uAE30\uC900\uAE08\uB9AC",
+        tag: "\uC9C1\uC811\uC785\uB825",
+        tagKind: "accent",
+        right: /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-1.5" }, /* @__PURE__ */ React.createElement(
+          "input",
+          {
+            type: "number",
+            step: "0.01",
+            min: "0",
+            max: "20",
+            value: baseRate,
+            onChange: (e) => setBaseRate(e.target.value === "" ? "" : parseFloat(e.target.value)),
+            className: "w-[92px] text-right px-2 py-1.5 rounded-md outline-none text-[14.5px] font-bold",
+            style: { ...mono, border: `1.5px solid ${C.border}`, color: C.brand, background: C.surface }
+          }
+        ), /* @__PURE__ */ React.createElement("span", { className: "text-[12.5px]", style: { ...mono, color: C.inkSoft } }, "%"))
+      }
+    ), /* @__PURE__ */ React.createElement("div", { className: "text-center text-[12px] py-1", style: { color: "#B7C0CB", ...mono } }, "+"), /* @__PURE__ */ React.createElement(
+      RateBuildRow,
+      {
+        label: "\uAC00\uC0B0\uAE08\uB9AC",
+        tag: "\uD45C \uACE0\uC815",
+        tagKind: "muted",
+        right: /* @__PURE__ */ React.createElement("span", { className: "text-[14.5px] font-bold", style: { color: C.inkSoft } }, fmt(product.spread), "%")
+      }
+    ), /* @__PURE__ */ React.createElement("div", { className: "text-center text-[12px] py-1", style: { color: "#B7C0CB", ...mono } }, "="), /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between pt-2.5 mt-1", style: { borderTop: `1.5px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("span", { className: "text-[12.5px]" }, "\uAE30\uBCF8\uAE08\uB9AC"), /* @__PURE__ */ React.createElement("span", { className: "text-[20px] font-extrabold", style: { ...mono, color: C.brand } }, fmt(basicRate), "%")), /* @__PURE__ */ React.createElement("div", { className: "text-right text-[11px] mt-2.5", style: { ...mono, color: C.urgent } }, "\uCC38\uACE0 \xB7 \uD45C \uAE30\uC900 \uAE08\uB9ACBand ", fmt(product.bandLow), "~", fmt(product.bandHigh), "%")), /* @__PURE__ */ React.createElement(StepTitle, { n: 2, title: "\uC77C\uBC18\uD560\uC778 \xB7 \uC6B0\uB300\uD56D\uBAA9" }), /* @__PURE__ */ React.createElement(Panel, { noPad: true }, /* @__PURE__ */ React.createElement("div", { className: "px-4 pt-3 pb-1 text-[10.5px] uppercase", style: { ...mono, color: C.inkSoft, letterSpacing: "0.08em" } }, "\uCCB4\uD06C\uD558\uC5EC \uC801\uC6A9"), CHECK_ITEMS.map((item) => {
+      var _a;
+      const checked = !!checks[item.id];
+      const val = (_a = checkVals[item.id]) != null ? _a : item.value;
+      return /* @__PURE__ */ React.createElement("div", { key: item.id, className: "flex items-center justify-between gap-2.5 px-4 py-2.5", style: { borderBottom: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2.5 flex-1 min-w-0" }, /* @__PURE__ */ React.createElement(
+        "input",
+        {
+          type: "checkbox",
+          checked,
+          onChange: (e) => setChecks({ ...checks, [item.id]: e.target.checked }),
+          style: { width: 18, height: 18, accentColor: C.brand }
+        }
+      ), /* @__PURE__ */ React.createElement("label", { className: "text-[12.5px] cursor-pointer", onClick: () => setChecks({ ...checks, [item.id]: !checked }) }, item.label), item.variable && /* @__PURE__ */ React.createElement(
+        "select",
+        {
+          disabled: !checked,
+          value: val,
+          onChange: (e) => setCheckVals({ ...checkVals, [item.id]: parseFloat(e.target.value) }),
+          className: "text-[11px] rounded-md px-1.5 py-1 outline-none",
+          style: { border: `1px solid ${C.border}`, background: C.surfaceAlt, color: C.ink }
+        },
+        item.options.map((o) => /* @__PURE__ */ React.createElement("option", { key: o, value: o }, "\u25B3", fmt(o)))
+      )), /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-bold shrink-0", style: { ...mono, color: checked ? C.confirmed : "#B7C0CB" } }, "\u25B3", fmt(checked ? val : item.value)));
+    })), /* @__PURE__ */ React.createElement(Panel, { noPad: true }, /* @__PURE__ */ React.createElement("div", { className: "px-4 pt-3 pb-1 text-[10.5px] uppercase", style: { ...mono, color: C.inkSoft, letterSpacing: "0.08em" } }, "\uC2E0\uC6A9\uD3C9\uC810 \uC6B0\uB7C9 / \uB300\uCD9C\uC6B0\uC218 (\uC911\uBCF5 \uBD88\uAC00)"), /* @__PURE__ */ React.createElement(TierRadioGroup, { options: CREDIT_OPTIONS, groupName: "credit", value: creditId, onChange: setCreditId })), /* @__PURE__ */ React.createElement(Panel, { noPad: true }, /* @__PURE__ */ React.createElement("div", { className: "px-4 pt-3 pb-1 text-[10.5px] uppercase", style: { ...mono, color: C.inkSoft, letterSpacing: "0.08em" } }, "\uBCF4\uD5D8\uD560\uC778 \u2014 \uC6D4\uBCF4\uD5D8\uB8CC \uB610\uB294 \uBCF4\uD5D8VIP (\u2460 or \u2461)"), /* @__PURE__ */ React.createElement(TierRadioGroup, { options: INSURANCE_OPTIONS, groupName: "insurance", value: insuranceId, onChange: setInsuranceId })), /* @__PURE__ */ React.createElement(StepTitle, { n: 3, title: "\uC804\uACB0\uD560\uC778 (\uAC00\uC774\uB4DC\uB77C\uC778 \uC870\uC815)" }), /* @__PURE__ */ React.createElement(Panel, null, /* @__PURE__ */ React.createElement("div", { className: "flex items-baseline justify-between mb-1.5" }, /* @__PURE__ */ React.createElement("span", { className: "text-[12.5px] font-bold" }, "\uC804\uACB0\uD560\uC778"), /* @__PURE__ */ React.createElement("span", { className: "text-[20px] font-extrabold", style: { ...mono, color: C.accent } }, "\u25B3", fmt(jeongyeolVal))), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mb-3.5 leading-relaxed", style: { color: C.inkSoft } }, "\uCD5C\uB300\uC804\uACB0 30bp \xB7 \uC801\uC6A9 \uC2DC \uCEE4\uBC84\uD398\uC774\uC9C0(\uD2B9\uC774\uC0AC\uD56D)\uC5D0 \uC0AC\uC720 \uBA85\uAE30 \uD544\uC694"), /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: "range",
+        min: 0,
+        max: 30,
+        step: 1,
+        value: jeongyeolBp,
+        onChange: (e) => setJeongyeolBp(parseInt(e.target.value, 10)),
+        className: "w-full",
+        style: { accentColor: C.accent, height: 6, cursor: "pointer" }
+      }
+    ), /* @__PURE__ */ React.createElement("div", { className: "flex justify-between text-[10.5px] mt-1", style: { ...mono, color: "#B0BAC7" } }, /* @__PURE__ */ React.createElement("span", null, "0.00"), /* @__PURE__ */ React.createElement("span", null, "0.15"), /* @__PURE__ */ React.createElement("span", null, "0.30")), jeongyeolBp > 0 && /* @__PURE__ */ React.createElement("div", { className: "mt-3 text-[11.5px] rounded-md px-2.5 py-2", style: { color: C.urgent, background: C.urgentBg } }, "\uC804\uACB0\uD560\uC778 \uC801\uC6A9\uBC30\uC81C \uB300\uC0C1(\uC2E0\uC6A9\uD3C9\uC810 7\uAD6C\uAC04 \uC774\uD558 / \uC2E0\uADDC\xB7\uCD94\uAC00 2,000\uB9CC\uC6D0 \uBBF8\uB9CC\xB7\uC7AC\uB300\uCD9C / \uACE0\uC704\uD5D8\uAD70 / \uD504\uB9AC\uB860)\uC740 \uC801\uC6A9 \uC804 \uD655\uC778\uC774 \uD544\uC694\uD569\uB2C8\uB2E4."))), /* @__PURE__ */ React.createElement("div", { className: "lg:sticky lg:top-6 flex flex-col gap-4" }, /* @__PURE__ */ React.createElement("div", { className: "rounded-lg p-5 text-white", style: { background: `linear-gradient(155deg, ${C.brand} 0%, #14171E 100%)` } }, /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px] uppercase mb-1", style: { ...mono, letterSpacing: "0.1em", color: "#9FA6B4" } }, "\uC801\uC6A9\uAE08\uB9AC (\uAE30\uBCF8\uAE08\uB9AC \u2212 \uCD1D\uD560\uC778)"), /* @__PURE__ */ React.createElement("div", { className: "text-[30px] font-extrabold leading-none mb-4", style: { ...mono, color: C.accentSoft } }, fmt(finalRate), /* @__PURE__ */ React.createElement("span", { className: "text-[14.5px] ml-0.5" }, "%")), /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between text-[11px] mb-3 pb-3", style: { borderBottom: "1px solid rgba(255,255,255,0.12)" } }, /* @__PURE__ */ React.createElement("span", { style: { color: "#9FA6B4" } }, "\uAE30\uBCF8\uAE08\uB9AC"), /* @__PURE__ */ React.createElement("span", { className: "font-bold text-[12.5px]", style: mono }, fmt(basicRate), "%")), /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-2 gap-x-3 gap-y-2 text-[11px]", style: { ...mono, color: "#B7C4D3" } }, /* @__PURE__ */ React.createElement("div", null, "\uC77C\uBC18\uD560\uC778 ", /* @__PURE__ */ React.createElement("b", { style: { color: "#EAF0F7" } }, fmt(generalTotal))), /* @__PURE__ */ React.createElement("div", null, "\uC2E0\uC6A9/\uB300\uCD9C\uC6B0\uC218 ", /* @__PURE__ */ React.createElement("b", { style: { color: "#EAF0F7" } }, fmt(creditVal))), /* @__PURE__ */ React.createElement("div", null, "\uBCF4\uD5D8\uD560\uC778 ", /* @__PURE__ */ React.createElement("b", { style: { color: "#EAF0F7" } }, fmt(insuranceVal))), /* @__PURE__ */ React.createElement("div", null, "\uC804\uACB0\uD560\uC778 ", /* @__PURE__ */ React.createElement("b", { style: { color: "#EAF0F7" } }, fmt(jeongyeolVal))), /* @__PURE__ */ React.createElement("div", { className: "col-span-2 pt-1.5 mt-0.5", style: { borderTop: "1px solid rgba(255,255,255,0.12)" } }, "\uCD1D\uD560\uC778 ", /* @__PURE__ */ React.createElement("b", { style: { color: C.accentSoft } }, fmt(appliedTotal)))), capped && /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px] mt-3", style: { color: "#E7B4A0" } }, "\u26A0 \uCD5C\uB300 \uD560\uC778\uD55C\uB3C4(\uAC00\uC0B0\uAE08\uB9AC\xB7\uCD5C\uC800\uAE08\uB9AC \uAE30\uC900)\uB97C \uCD08\uACFC\uD558\uC5EC \uD55C\uB3C4\uAE4C\uC9C0\uB9CC \uC801\uC6A9\uB418\uC5C8\uC2B5\uB2C8\uB2E4.")), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] leading-relaxed px-1 flex items-start gap-1.5", style: { color: C.inkFaint } }, /* @__PURE__ */ React.createElement(Info, { size: 13, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement("span", null, "\uC774 \uACB0\uACFC\uB294 \uACC4\uC0B0\uAE30 \uC0B0\uCD9C \uC608\uC0C1\uAE08\uB9AC\uC774\uBA70, \uD1B5\uD654\uC0C1 \uC548\uB0B4\uAE08\uB9AC\xB7\uC2E4\uC81C \uC2EC\uC0AC \uC801\uC6A9\uAE08\uB9AC\uC640 \uAD6C\uBD84\uD574 \uAD00\uB9AC\uD569\uB2C8\uB2E4. FC \uB0B4\uBD80 \uCC38\uACE0\uC6A9\uC774\uBA70 \uC2E4\uC81C \uC801\uC6A9 \uC2DC \uAC1C\uBCC4 \uC870\uAC74 \uC7AC\uD655\uC778\uC774 \uD544\uC694\uD569\uB2C8\uB2E4.")))));
+  }
+  function StepTitle({ n, title }) {
+    return /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 -mb-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-5 h-5 rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0", style: { ...mono, background: C.brand } }, n), /* @__PURE__ */ React.createElement("h2", { className: "text-[13px] font-bold" }, title));
+  }
+  function RateBuildRow({ label, tag, tagKind, right }) {
+    return /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between py-1" }, /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-semibold flex items-center gap-2" }, label, /* @__PURE__ */ React.createElement(
+      "span",
+      {
+        className: "text-[9px] px-1.5 py-0.5 rounded-full",
+        style: { ...mono, letterSpacing: "0.04em", color: tagKind === "accent" ? C.brand : C.inkSoft, background: tagKind === "accent" ? "#EFE0BE" : "#EEF1F5" }
+      },
+      tag
+    )), right);
+  }
+  function TierRadioGroup({ options, groupName, value, onChange }) {
+    return /* @__PURE__ */ React.createElement("div", null, options.map((o) => /* @__PURE__ */ React.createElement("div", { key: o.id, className: "flex items-center justify-between gap-2.5 px-4 py-2.5", style: { borderBottom: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2.5" }, /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: "radio",
+        name: groupName,
+        checked: value === o.id,
+        onChange: () => onChange(o.id),
+        style: { width: 18, height: 18, accentColor: C.brand, cursor: "pointer" }
+      }
+    ), /* @__PURE__ */ React.createElement("label", { className: "text-[12.5px] cursor-pointer", onClick: () => onChange(o.id) }, o.label)), /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-bold", style: { ...mono, color: o.value === 0 ? "#B7C0CB" : C.confirmed } }, o.value === 0 ? "\u2014" : `\u25B3${fmt(o.value)}`))));
+  }
+  function FCManagement({ fcs, customers, onSelect }) {
+    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Header, { title: "FC\uAD00\uB9AC", subtitle: "FC\uBCC4 \uC18C\uAC1C \uC774\uB825\uACFC \uC5F0\uB77D \uC608\uC815\uC744 \uAD00\uB9AC\uD569\uB2C8\uB2E4. \uACE0\uAC1D \uD1B5\uD654\uC640 \uBD84\uB9AC\uD574\uC11C \uAD00\uB9AC\uD569\uB2C8\uB2E4. \uCE74\uB4DC\uB97C \uB204\uB974\uBA74 \uC0C1\uC138 \uB0B4\uC6A9\uC744 \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4." }), /* @__PURE__ */ React.createElement("div", { className: "grid sm:grid-cols-2 gap-4" }, fcs.map((f) => {
+      const related = customers.filter((c) => c.fc === f.name);
+      return /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          key: f.id,
+          onClick: () => onSelect(f.id),
+          className: "text-left rounded-lg p-4 transition-colors",
+          style: { background: C.surface, border: `1px solid ${C.border}` },
+          onMouseEnter: (e) => e.currentTarget.style.background = C.surfaceAlt,
+          onMouseLeave: (e) => e.currentTarget.style.background = C.surface
+        },
+        /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between mb-3" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "text-[15px] font-semibold" }, f.name, " ", /* @__PURE__ */ React.createElement("span", { className: "text-[12px] font-normal", style: { color: C.inkSoft } }, "FC")), /* @__PURE__ */ React.createElement("div", { className: "text-[12.5px]", style: { color: C.inkSoft } }, f.branch)), /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2" }, /* @__PURE__ */ React.createElement(
+          CallLink,
+          {
+            phone: f.phone,
+            className: "flex items-center gap-1 text-[11px] px-2 py-1 rounded-full",
+            style: { background: C.noteBg, color: C.note }
+          },
+          /* @__PURE__ */ React.createElement(Phone, { size: 11 }),
+          " \uC804\uD654"
+        ), /* @__PURE__ */ React.createElement(ChevronRight, { size: 15, color: C.inkFaint }))),
+        /* @__PURE__ */ React.createElement(Field, { label: "\uCD5C\uADFC \uC18C\uAC1C \uACE0\uAC1D", value: f.recentIntro, kind: "confirmed" }),
+        /* @__PURE__ */ React.createElement(Field, { label: "\uD604\uC7AC \uC9C4\uD589 \uACE0\uAC1D", value: `${f.activeCustomers}\uBA85`, kind: "confirmed", numeric: true }),
+        /* @__PURE__ */ React.createElement(Field, { label: "\uC9C0\uAE09 \uC644\uB8CC \uACE0\uAC1D", value: `${f.paidCustomers}\uBA85`, kind: "confirmed", numeric: true }),
+        /* @__PURE__ */ React.createElement(Field, { label: "\uB2E4\uC74C \uC5F0\uB77D \uC608\uC815\uC77C", value: f.nextContact, kind: "verify", numeric: true }),
+        related.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "mt-2 pt-2", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mb-1.5", style: { color: C.inkFaint } }, "\uC5F0\uACB0\uB41C \uACE0\uAC1D"), /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap gap-1.5" }, related.map((r) => /* @__PURE__ */ React.createElement(StatusPill, { key: r.id, status: r.name }))))
+      );
+    })));
+  }
+  function FCDetail({ fc, customers, onBack, goCustomer }) {
+    const related = customers.filter((c) => c.fc === fc.name);
+    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("button", { onClick: onBack, className: "flex items-center gap-1.5 text-[13px] mb-5", style: { color: C.inkSoft } }, /* @__PURE__ */ React.createElement(ArrowLeft, { size: 15 }), " FC\uBAA9\uB85D\uC73C\uB85C"), /* @__PURE__ */ React.createElement("div", { className: "flex items-start justify-between mb-6 flex-wrap gap-3" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2.5" }, /* @__PURE__ */ React.createElement("h1", { className: "text-[21px] font-semibold tracking-tight" }, fc.name), /* @__PURE__ */ React.createElement("span", { className: "text-[12.5px] px-2 py-0.5 rounded-full", style: { background: C.surfaceAlt, color: C.inkSoft } }, "FC")), /* @__PURE__ */ React.createElement("div", { className: "text-[13px] mt-1", style: { color: C.inkSoft } }, fc.branch)), /* @__PURE__ */ React.createElement(
+      CallLink,
+      {
+        phone: fc.phone,
+        className: "flex items-center gap-1.5 text-[12.5px] font-semibold px-3 py-1.5 rounded-full",
+        style: { color: "#FFFFFF", background: C.accent }
+      },
+      /* @__PURE__ */ React.createElement(Phone, { size: 12 }),
+      " ",
+      fc.name,
+      " FC\uC5D0\uAC8C \uC804\uD654"
+    )), /* @__PURE__ */ React.createElement("div", { className: "grid lg:grid-cols-3 gap-5" }, /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-2 flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uC18C\uAC1C \uD604\uD669" }, /* @__PURE__ */ React.createElement(Field, { label: "\uCD5C\uADFC \uC18C\uAC1C \uACE0\uAC1D", value: fc.recentIntro, kind: "confirmed" }), /* @__PURE__ */ React.createElement(Field, { label: "\uD604\uC7AC \uC9C4\uD589 \uACE0\uAC1D", value: `${fc.activeCustomers}\uBA85`, kind: "confirmed", numeric: true }), /* @__PURE__ */ React.createElement(Field, { label: "\uC9C0\uAE09 \uC644\uB8CC \uACE0\uAC1D", value: `${fc.paidCustomers}\uBA85`, kind: "confirmed", numeric: true }), /* @__PURE__ */ React.createElement(Field, { label: "\uCD5C\uADFC \uC5F0\uB77D\uC77C", value: fc.lastContact, kind: "confirmed", numeric: true }), /* @__PURE__ */ React.createElement(Field, { label: "\uB2E4\uC74C \uC5F0\uB77D \uC608\uC815\uC77C", value: fc.nextContact, kind: "verify", numeric: true })), /* @__PURE__ */ React.createElement(Panel, { title: `\uC5F0\uACB0\uB41C \uACE0\uAC1D (${related.length}\uBA85)` }, related.length === 0 && /* @__PURE__ */ React.createElement(Empty, { text: "\uC774 FC\uB97C \uD1B5\uD574 \uC5F0\uACB0\uB41C \uACE0\uAC1D\uC774 \uC544\uC9C1 \uC5C6\uC2B5\uB2C8\uB2E4." }), related.map((c) => {
+      var _a, _b;
+      return /* @__PURE__ */ React.createElement(
+        TaskRow,
+        {
+          key: c.id,
+          title: c.name,
+          sub: `${c.consultType} \xB7 ${c.nextAction}`,
+          tag: c.status,
+          tagColor: (_a = STATUS_STYLE[c.status]) == null ? void 0 : _a.fg,
+          tagBg: (_b = STATUS_STYLE[c.status]) == null ? void 0 : _b.bg,
+          onClick: () => goCustomer(c.id)
+        }
+      );
+    }))), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uB2E4\uC74C \uD589\uB3D9" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-start gap-2 py-1" }, /* @__PURE__ */ React.createElement(Clock, { size: 16, color: C.note, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement("span", { className: "text-[13.5px]" }, fc.nextContact, "\uC5D0 \uC5F0\uB77D \uC608\uC815"))), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] leading-relaxed px-1", style: { color: C.inkFaint } }, "FC \uD1B5\uD654\uB294 \uACE0\uAC1D \uD1B5\uD654\uC640 \uBD84\uB9AC\uD574\uC11C \uAD00\uB9AC\uD569\uB2C8\uB2E4. \uC5F0\uACB0\uB41C \uACE0\uAC1D \uBAA9\uB85D\uC740 \uD604\uC7AC \uC774 FC\uC758 \uCD94\uCC9C\uC73C\uB85C \uB4F1\uB85D\uB41C \uAE30\uB85D\uC744 \uAE30\uC900\uC73C\uB85C \uD569\uB2C8\uB2E4."))));
+  }
+  var { useState, useMemo } = React;
+  var container = document.getElementById("root");
+  var root = ReactDOM.createRoot(container);
+  root.render(/* @__PURE__ */ React.createElement(App, null));
+})();
+
+</script>
+
+<script>
+  clearTimeout(__bootTimeout);
 </script>
 </body>
 </html>
- 
