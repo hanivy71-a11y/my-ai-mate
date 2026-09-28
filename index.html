@@ -2,61 +2,34 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#20242E" />
 <title>My AI Mate</title>
-
-<!-- Tailwind (full JIT build, supports arbitrary values like text-[13px]) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A4%9D%3C/text%3E%3C/svg%3E" />
 <script src="https://cdn.tailwindcss.com"></script>
-
-<!-- React 18 + ReactDOM 18 (UMD builds) -->
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
 <style>
+  :root { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: #F6F5F1; }
+  body { padding-top: env(safe-area-inset-top, 0px); }
   #root { min-height: 100vh; }
   #load-status { display:flex; align-items:center; justify-content:center; height:100vh; font-family:-apple-system,sans-serif; color:#6B675D; font-size:14px; text-align:center; padding:24px; box-sizing:border-box; }
 </style>
 </head>
 <body>
-<div id="root">
-  <div id="load-status">불러오는 중...</div>
-</div>
-
+<div id="root"><div id="load-status">불러오는 중...</div></div>
 <script>
-  // 안전장치: 8초 안에 앱이 뜨지 않으면 안내 메시지로 교체 (무한 로딩 방지)
   var __bootTimeout = setTimeout(function () {
     var el = document.getElementById('load-status');
-    if (el) {
-      el.innerHTML = '앱을 불러오지 못했어요.<br/>인터넷 연결을 확인하거나<br/>Wi-Fi로 전환 후 새로고침 해주세요.';
-    }
-  }, 8000);
+    if (el) el.innerHTML = '앱을 불러오지 못했어요.<br/>인터넷 연결을 확인하고 새로고침 해주세요.';
+  }, 10000);
 </script>
-
-<!-- 미리 컴파일된 앱 코드 (브라우저에서 실시간 변환 없이 바로 실행) -->
 <script>
 (() => {
   // combined.jsx
   function IconBase({ children, size = 16, color = "currentColor", strokeWidth = 2, className, fill = "none", stroke, ...rest }) {
-    return /* @__PURE__ */ React.createElement(
-      "svg",
-      {
-        width: size,
-        height: size,
-        viewBox: "0 0 24 24",
-        fill,
-        stroke: stroke != null ? stroke : color,
-        strokeWidth,
-        strokeLinecap: "round",
-        strokeLinejoin: "round",
-        className,
-        ...rest
-      },
-      children
-    );
+    return /* @__PURE__ */ React.createElement("svg", { width: size, height: size, viewBox: "0 0 24 24", fill, stroke: stroke != null ? stroke : color, strokeWidth, strokeLinecap: "round", strokeLinejoin: "round", className, ...rest }, children);
   }
   var Users = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "9", cy: "7", r: "4" }), /* @__PURE__ */ React.createElement("path", { d: "M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2" }), /* @__PURE__ */ React.createElement("path", { d: "M17 11a4 4 0 0 0 0-8" }), /* @__PURE__ */ React.createElement("path", { d: "M23 21v-2a4 4 0 0 0-3-3.87" }));
   var PhoneCall = (p) => /* @__PURE__ */ React.createElement(IconBase, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.78.66 2.61a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.47-1.47a2 2 0 0 1 2.11-.45c.83.32 1.71.54 2.61.66A2 2 0 0 1 22 16.92z" }));
@@ -190,12 +163,12 @@
     return /* @__PURE__ */ React.createElement("div", { className: "flex items-start justify-between gap-3 py-2 border-b", style: { borderColor: C.border } }, /* @__PURE__ */ React.createElement("span", { className: "text-[11px]", style: { color: C.inkSoft } }, label), /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-2 text-right" }, /* @__PURE__ */ React.createElement("span", { className: "text-[11px] font-medium", style: numeric ? mono : {} }, value), /* @__PURE__ */ React.createElement(Badge, { kind })));
   }
   var initialFCs = [
-    { id: "fc1", name: "\uAE40\uAE30\uC6D0", phone: "010-2841-5573", branch: "\uB300\uC804SFP\uC9C0\uC810", lastContact: "2026-08-05", recentIntro: "\uAE40\uAE30\uC724", activeCustomers: 1, paidCustomers: 3, nextContact: "2026-08-20" },
-    { id: "fc2", name: "\uBC31\uC120\uBBF8", phone: "010-6620-9147", branch: "\uB0A8\uB300\uC804\uC9C0\uC810", lastContact: "2026-06-08", recentIntro: "\uC815\uD658\uC11D", activeCustomers: 1, paidCustomers: 5, nextContact: "2026-08-15" },
-    { id: "fc3", name: "\uAC15\uC778\uC219", phone: "010-3390-2286", branch: "\uC138\uC885\uC9C0\uC810", lastContact: "2026-08-01", recentIntro: "-", activeCustomers: 0, paidCustomers: 2, nextContact: "2026-10-01" },
-    { id: "fc4", name: "\uC774\uBBF8\uD76C", phone: "010-7715-4402", branch: "\uB300\uC804\uC2A4\uD0C0\uC9C0\uC810", lastContact: "2026-07-28", recentIntro: "(\uACE0\uAC1D\uBA85 \uBBF8\uD655\uC778)", activeCustomers: 1, paidCustomers: 4, nextContact: "2026-08-13" },
-    { id: "fc5", name: "\uAE40\uC120\uC625", phone: "010-4453-8871", branch: "\uD55C\uBC2D\uC9C0\uC810", lastContact: "2026-08-10", recentIntro: "(\uACE0\uAC1D\uBA85 \uBBF8\uD655\uC778)", activeCustomers: 1, paidCustomers: 1, nextContact: "2026-08-19" },
-    { id: "fc6", name: "\uC2E0\uC18C\uC601", phone: "010-9928-6034", branch: "\uC2E0\uAD00\uC9C0\uC810", lastContact: "2026-08-09", recentIntro: "(\uACE0\uAC1D\uBA85 \uBBF8\uD655\uC778)", activeCustomers: 1, paidCustomers: 6, nextContact: "2026-08-14" }
+    { id: "fc1", firstContact: "2026-03-12", name: "\uAE40\uAE30\uC6D0", phone: "010-2841-5573", branch: "\uB300\uC804SFP\uC9C0\uC810", lastContact: "2026-08-05", recentIntro: "\uAE40\uAE30\uC724", activeCustomers: 1, paidCustomers: 3, nextContact: "2026-08-20" },
+    { id: "fc2", firstContact: "2026-02-20", name: "\uBC31\uC120\uBBF8", phone: "010-6620-9147", branch: "\uB0A8\uB300\uC804\uC9C0\uC810", lastContact: "2026-06-08", recentIntro: "\uC815\uD658\uC11D", activeCustomers: 1, paidCustomers: 5, nextContact: "2026-08-15" },
+    { id: "fc3", firstContact: "2026-05-07", name: "\uAC15\uC778\uC219", phone: "010-3390-2286", branch: "\uC138\uC885\uC9C0\uC810", lastContact: "2026-08-01", recentIntro: "-", activeCustomers: 0, paidCustomers: 2, nextContact: "2026-10-01" },
+    { id: "fc4", firstContact: "2026-04-15", name: "\uC774\uBBF8\uD76C", phone: "010-7715-4402", branch: "\uB300\uC804\uC2A4\uD0C0\uC9C0\uC810", lastContact: "2026-07-28", recentIntro: "(\uACE0\uAC1D\uBA85 \uBBF8\uD655\uC778)", activeCustomers: 1, paidCustomers: 4, nextContact: "2026-08-13" },
+    { id: "fc5", firstContact: "2026-06-22", name: "\uAE40\uC120\uC625", phone: "010-4453-8871", branch: "\uD55C\uBC2D\uC9C0\uC810", lastContact: "2026-08-10", recentIntro: "(\uACE0\uAC1D\uBA85 \uBBF8\uD655\uC778)", activeCustomers: 1, paidCustomers: 1, nextContact: "2026-08-19" },
+    { id: "fc6", firstContact: "2026-01-30", name: "\uC2E0\uC18C\uC601", phone: "010-9928-6034", branch: "\uC2E0\uAD00\uC9C0\uC810", lastContact: "2026-08-09", recentIntro: "(\uACE0\uAC1D\uBA85 \uBBF8\uD655\uC778)", activeCustomers: 1, paidCustomers: 6, nextContact: "2026-08-14" }
   ];
   function CallLink({ phone, children, className, style }) {
     return /* @__PURE__ */ React.createElement(
@@ -497,16 +470,44 @@
     { key: "rate", label: "\uAE08\uB9AC\uACC4\uC0B0\uAE30", icon: Calculator },
     { key: "fc", label: "FC\uAD00\uB9AC", icon: UserCog }
   ];
+  var STORE_KEYS = { customers: "myaimate:v1:customers", memo: "myaimate:v1:memo", memos: "myaimate:v1:memos" };
+  function loadSaved(key, fallback) {
+    try {
+      const raw = window.localStorage.getItem(key);
+      if (raw === null || raw === void 0) return fallback;
+      const v = JSON.parse(raw);
+      return v === null || v === void 0 ? fallback : v;
+    } catch (e) {
+      return fallback;
+    }
+  }
+  function saveLocal(key, value) {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+    }
+  }
   function App() {
     const [tab, setTab] = useState("todos");
-    const [customers, setCustomers] = useState(initialCustomers);
-    const [todayMemo, setTodayMemo] = useState("");
+    const [customers, setCustomers] = useState(() => loadSaved(STORE_KEYS.customers, initialCustomers));
+    const [fcFilter, setFcFilter] = useState({ year: 2026, month: "\uC804\uCCB4" });
+    const [todayMemo, setTodayMemo] = useState(() => loadSaved(STORE_KEYS.memo, ""));
+    useEffect(() => {
+      saveLocal(STORE_KEYS.customers, customers);
+    }, [customers]);
+    useEffect(() => {
+      saveLocal(STORE_KEYS.memo, todayMemo);
+    }, [todayMemo]);
+    const [memoList, setMemoList] = useState(() => loadSaved(STORE_KEYS.memos, []));
+    useEffect(() => {
+      saveLocal(STORE_KEYS.memos, memoList);
+    }, [memoList]);
     const [fcs] = useState(initialFCs);
     const [selectedId, setSelectedId] = useState(null);
     const [selectedFcId, setSelectedFcId] = useState(null);
     const selected = customers.find((c) => c.id === selectedId) || null;
     const selectedFc = fcs.find((f) => f.id === selectedFcId) || null;
-    return /* @__PURE__ */ React.createElement("div", { className: "min-h-screen w-full flex flex-col", style: { background: C.bg, color: C.ink, ...sans } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between px-5 py-3.5", style: { background: C.brand } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "text-white font-semibold text-[16px] tracking-tight" }, "My AI ", /* @__PURE__ */ React.createElement("span", { style: { color: C.accentSoft } }, "Mate")), /* @__PURE__ */ React.createElement("div", { className: "text-[9.5px] mt-0.5 uppercase", style: { color: "#8B8F9C", letterSpacing: "0.08em" } }, "\uB300\uCD9C \uACE0\uAC1D\xB7FC \uAD00\uB9AC Agent")), /* @__PURE__ */ React.createElement("div", { className: "text-[10px]", style: { color: "#5C5F6B" } }, "\uC2DC\uC5F0\uC6A9 \xB7 2026.08")), /* @__PURE__ */ React.createElement("div", { className: "fixed bottom-0 left-0 right-0 z-20 flex justify-around py-2 border-t", style: { background: C.brand, borderColor: "rgba(255,255,255,0.08)" } }, NAV.map((n) => {
+    return /* @__PURE__ */ React.createElement("div", { className: "min-h-screen w-full flex flex-col", style: { background: C.bg, color: C.ink, ...sans } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between px-5 py-3.5", style: { background: C.brand } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "text-white font-semibold text-[16px] tracking-tight" }, "My AI ", /* @__PURE__ */ React.createElement("span", { style: { color: C.accentSoft } }, "Mate")), /* @__PURE__ */ React.createElement("div", { className: "text-[9.5px] mt-0.5 uppercase", style: { color: "#8B8F9C", letterSpacing: "0.08em" } }, "\uB300\uCD9C \uACE0\uAC1D\xB7FC \uAD00\uB9AC Agent")), /* @__PURE__ */ React.createElement("div", { className: "text-[10px]", style: { color: "#5C5F6B" } }, "\uC2DC\uC5F0\uC6A9 \xB7 2026.08")), /* @__PURE__ */ React.createElement("div", { className: "fixed bottom-0 left-0 right-0 z-20 flex justify-around py-2 border-t", style: { background: C.brand, borderColor: "rgba(255,255,255,0.08)", paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom, 0px))" } }, NAV.map((n) => {
       const Icon = n.icon;
       const active = tab === n.key;
       return /* @__PURE__ */ React.createElement("button", { key: n.key, onClick: () => {
@@ -517,11 +518,11 @@
     })), /* @__PURE__ */ React.createElement("main", { className: "flex-1 min-w-0 p-5 sm:p-8 pb-20" }, tab === "todos" && /* @__PURE__ */ React.createElement(TodayTasks, { customers, goCustomer: (id) => {
       setTab("customers");
       setSelectedId(id);
-    }, memo: todayMemo, setMemo: setTodayMemo }), tab === "customers" && (selected ? /* @__PURE__ */ React.createElement(CustomerDetail, { key: selected.id, customer: selected, onBack: () => setSelectedId(null), onUpdate: (id, updates) => setCustomers(customers.map((cu) => cu.id === id ? { ...cu, ...updates } : cu)) }) : /* @__PURE__ */ React.createElement(CustomerList, { customers, onSelect: setSelectedId })), tab === "callai" && /* @__PURE__ */ React.createElement(CallSummaryAI, { customers, setCustomers }), tab === "docs" && /* @__PURE__ */ React.createElement(DocumentAssistant, null), tab === "rate" && /* @__PURE__ */ React.createElement(RateCalculator, null), tab === "fc" && (selectedFc ? /* @__PURE__ */ React.createElement(FCDetail, { fc: selectedFc, customers, onBack: () => setSelectedFcId(null), goCustomer: (id) => {
+    }, memo: todayMemo, setMemo: setTodayMemo, memoList, setMemoList }), tab === "customers" && (selected ? /* @__PURE__ */ React.createElement(CustomerDetail, { key: selected.id, customer: selected, onBack: () => setSelectedId(null), onUpdate: (id, updates) => setCustomers(customers.map((cu) => cu.id === id ? { ...cu, ...updates } : cu)) }) : /* @__PURE__ */ React.createElement(CustomerList, { customers, onSelect: setSelectedId })), tab === "callai" && /* @__PURE__ */ React.createElement(CallSummaryAI, { customers, setCustomers }), tab === "docs" && /* @__PURE__ */ React.createElement(DocumentAssistant, null), tab === "rate" && /* @__PURE__ */ React.createElement(RateCalculator, null), tab === "fc" && (selectedFc ? /* @__PURE__ */ React.createElement(FCDetail, { fc: selectedFc, customers, onBack: () => setSelectedFcId(null), goCustomer: (id) => {
       setTab("customers");
       setSelectedId(id);
       setSelectedFcId(null);
-    } }) : /* @__PURE__ */ React.createElement(FCManagement, { fcs, customers, onSelect: setSelectedFcId }))));
+    } }) : /* @__PURE__ */ React.createElement(FCManagement, { fcs, onSelect: setSelectedFcId, filter: fcFilter, setFilter: setFcFilter }))));
   }
   function Panel({ title, children, noPad, hint }) {
     return /* @__PURE__ */ React.createElement("div", { className: "rounded-lg overflow-hidden", style: { background: C.surface, border: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: noPad ? "" : "p-5" }, title && /* @__PURE__ */ React.createElement("div", { className: noPad ? "px-4 pt-4" : "mb-4" }, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] font-semibold uppercase", style: { color: C.inkSoft, letterSpacing: "0.07em" } }, title), hint && /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mt-1 leading-relaxed", style: { color: C.inkFaint } }, hint)), /* @__PURE__ */ React.createElement("div", { className: noPad ? "" : "flex flex-col gap-1" }, children)));
@@ -583,12 +584,68 @@
 \u{1F4DE} 010-8525-1501
 \u{1F4CD} \uB300\uC804\uAD11\uC5ED\uC2DC \uC11C\uAD6C \uD55C\uBC2D\uB300\uB85C 755
     (\uB454\uC0B0\uB3D9, \uC0BC\uC131\uC0DD\uBA85) 3\uCE35 \uC11C\uBD80\uC735\uC790\uBD80`;
-  function TodayTasks({ customers, goCustomer, memo, setMemo }) {
+  function toLocalISO(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+  function MemoCalendar({ customers, memoList, todayISO, goCustomer }) {
+    const now = /* @__PURE__ */ new Date(todayISO + "T00:00:00");
+    const [view, setView] = useState({ y: now.getFullYear(), m: now.getMonth() });
+    const [selected, setSelected] = useState(todayISO);
+    const firstDow = new Date(view.y, view.m, 1).getDay();
+    const daysInMonth = new Date(view.y, view.m + 1, 0).getDate();
+    const cells = [];
+    for (let i = 0; i < firstDow; i++) cells.push(null);
+    for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+    while (cells.length % 7 !== 0) cells.push(null);
+    const iso = (d) => `${view.y}-${String(view.m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    const hasCustomer = (d) => customers.some((c) => c.lastContact === iso(d));
+    const hasMemo = (d) => memoList.some((m) => m.date === iso(d));
+    const moveMonth = (delta) => {
+      const dt = new Date(view.y, view.m + delta, 1);
+      setView({ y: dt.getFullYear(), m: dt.getMonth() });
+    };
+    const selCustomers = customers.filter((c) => c.lastContact === selected);
+    const selMemos = memoList.filter((m) => m.date === selected);
+    const selLabel = (/* @__PURE__ */ new Date(selected + "T00:00:00")).toLocaleDateString("ko-KR", { month: "long", day: "numeric", weekday: "short" });
+    return /* @__PURE__ */ React.createElement(Panel, { title: "\uB2EC\uB825" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between mb-2" }, /* @__PURE__ */ React.createElement("button", { onClick: () => moveMonth(-1), className: "px-2.5 py-1.5 rounded-md", style: { background: C.surfaceAlt }, "aria-label": "\uC774\uC804 \uB2EC" }, /* @__PURE__ */ React.createElement(ChevronRight, { size: 14, style: { transform: "rotate(180deg)" } })), /* @__PURE__ */ React.createElement("div", { className: "text-[13px] font-semibold" }, view.y, "\uB144 ", view.m + 1, "\uC6D4"), /* @__PURE__ */ React.createElement("button", { onClick: () => moveMonth(1), className: "px-2.5 py-1.5 rounded-md", style: { background: C.surfaceAlt }, "aria-label": "\uB2E4\uC74C \uB2EC" }, /* @__PURE__ */ React.createElement(ChevronRight, { size: 14 }))), /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-7 text-center mb-1" }, ["\uC77C", "\uC6D4", "\uD654", "\uC218", "\uBAA9", "\uAE08", "\uD1A0"].map((w, i) => /* @__PURE__ */ React.createElement("div", { key: w, className: "text-[10.5px] py-1", style: { color: i === 0 ? C.urgent : C.inkFaint } }, w))), /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-7 gap-y-1" }, cells.map((d, idx) => {
+      if (d === null) return /* @__PURE__ */ React.createElement("div", { key: idx });
+      const dateISO = iso(d);
+      const isToday = dateISO === todayISO;
+      const isSel = dateISO === selected;
+      return /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          key: idx,
+          onClick: () => setSelected(dateISO),
+          className: "flex flex-col items-center py-1"
+        },
+        /* @__PURE__ */ React.createElement(
+          "span",
+          {
+            className: "w-7 h-7 flex items-center justify-center rounded-full text-[12px]",
+            style: {
+              background: isSel ? C.brand : "transparent",
+              color: isSel ? "#FFFFFF" : idx % 7 === 0 ? C.urgent : C.ink,
+              border: isToday && !isSel ? `1.5px solid ${C.accent}` : "1.5px solid transparent",
+              fontWeight: isToday ? 700 : 400
+            }
+          },
+          d
+        ),
+        /* @__PURE__ */ React.createElement("span", { className: "flex gap-0.5 h-1.5 mt-0.5" }, hasCustomer(d) && /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.note } }), hasMemo(d) && /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.accent } }))
+      );
+    })), /* @__PURE__ */ React.createElement("div", { className: "flex gap-3 mt-2 text-[10.5px]", style: { color: C.inkSoft } }, /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.note } }), "\uC5F0\uB77D\uC608\uC815 \uACE0\uAC1D"), /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.accent } }), "\uC800\uC7A5\uD55C \uBA54\uBAA8")), /* @__PURE__ */ React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-semibold mb-1.5" }, selLabel), selCustomers.length === 0 && selMemos.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px]", style: { color: C.inkFaint } }, "\uC774 \uB0A0\uC9DC\uC5D0 \uB4F1\uB85D\uB41C \uC77C\uC815\uC774\uB098 \uBA54\uBAA8\uAC00 \uC5C6\uC5B4\uC694."), selCustomers.map((c) => /* @__PURE__ */ React.createElement("button", { key: c.id, onClick: () => goCustomer(c.id), className: "w-full flex items-center justify-between text-left py-1.5" }, /* @__PURE__ */ React.createElement("span", { className: "text-[12px]" }, /* @__PURE__ */ React.createElement("b", null, c.name), " ", /* @__PURE__ */ React.createElement("span", { style: { color: C.inkSoft } }, "\xB7 ", c.followUp)), /* @__PURE__ */ React.createElement(ChevronRight, { size: 13, color: C.inkFaint }))), selMemos.map((m) => /* @__PURE__ */ React.createElement("div", { key: m.id, className: "text-[12px] py-1.5 whitespace-pre-wrap", style: { color: C.ink } }, /* @__PURE__ */ React.createElement("span", { style: { color: C.accent } }, "\uBA54\uBAA8 \xB7 "), m.text))));
+  }
+  function TodayTasks({ customers, goCustomer, memo, setMemo, memoList, setMemoList }) {
     const today = /* @__PURE__ */ new Date();
     const todayLabel = today.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" });
-    const todayISO = today.toISOString().slice(0, 10);
+    const todayISO = toLocalISO(today);
     const todayList = customers.filter((c) => c.lastContact === todayISO);
     const [copied, setCopied] = useState(false);
+    const [memoSaved, setMemoSaved] = useState(false);
     function copyCard() {
       var _a;
       (_a = navigator.clipboard) == null ? void 0 : _a.writeText(BIZ_CARD_TEXT).then(() => {
@@ -596,6 +653,17 @@
         setTimeout(() => setCopied(false), 1500);
       }).catch(() => {
       });
+    }
+    function saveMemo() {
+      const text = memo.trim();
+      if (!text) return;
+      setMemoList([{ id: Date.now(), date: todayISO, text }, ...memoList]);
+      setMemo("");
+      setMemoSaved(true);
+      setTimeout(() => setMemoSaved(false), 1500);
+    }
+    function deleteMemo(id) {
+      setMemoList(memoList.filter((m) => m.id !== id));
     }
     return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Header, { title: "\uC624\uB298\uC758 \uD560\uC77C", subtitle: todayLabel }), /* @__PURE__ */ React.createElement(Panel, { title: "\uC624\uB298 \uC5F0\uB77D\uD560 \uACE0\uAC1D", hint: "\uC5F0\uB77D\uC608\uC815\uC77C\uC774 \uC624\uB298 \uB0A0\uC9DC\uC778 \uACE0\uAC1D\uC774\uC5D0\uC694." }, todayList.length === 0 && /* @__PURE__ */ React.createElement(Empty, { text: "\uC624\uB298 \uC5F0\uB77D\uD560 \uACE0\uAC1D\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. \uC5F0\uB77D\uC608\uC815\uC77C\uC774 \uC624\uB298\uB85C \uB4F1\uB85D\uB41C \uACE0\uAC1D\uC774 \uC788\uC73C\uBA74 \uC5EC\uAE30 \uD45C\uC2DC\uB3FC\uC694." }), todayList.map((c) => {
       var _a, _b;
@@ -616,12 +684,23 @@
       {
         value: memo,
         onChange: (e) => setMemo(e.target.value),
-        placeholder: "\uC624\uB298 \uBA54\uBAA8\uB97C \uC790\uC720\uB86D\uAC8C \uC801\uC5B4\uBCF4\uC138\uC694...",
-        rows: 5,
-        className: "w-full text-[13.5px] leading-relaxed p-2.5 rounded-md outline-none resize-none",
+        placeholder: "\uC624\uB298 \uBA54\uBAA8\uB97C \uC801\uACE0 \uC800\uC7A5 \uBC84\uD2BC\uC744 \uB20C\uB7EC\uC8FC\uC138\uC694...",
+        rows: 4,
+        className: "w-full text-[13px] leading-relaxed p-2.5 rounded-md outline-none resize-none",
         style: { color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }
       }
-    ))), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uBA85\uD568" }, /* @__PURE__ */ React.createElement(
+    ), /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        onClick: saveMemo,
+        disabled: !memo.trim(),
+        className: "mt-2.5 flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[12.5px] font-semibold text-white",
+        style: { background: memoSaved ? C.confirmed : C.accent, opacity: memo.trim() || memoSaved ? 1 : 0.45 }
+      },
+      /* @__PURE__ */ React.createElement(Save, { size: 13 }),
+      " ",
+      memoSaved ? "\uC800\uC7A5\uB428" : "\uBA54\uBAA8 \uC800\uC7A5"
+    ), memoList.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] font-semibold mb-1.5", style: { color: C.inkSoft } }, "\uC800\uC7A5\uD55C \uBA54\uBAA8 (", memoList.length, ")"), memoList.map((m) => /* @__PURE__ */ React.createElement("div", { key: m.id, className: "flex items-start justify-between gap-3 py-2", style: { borderBottom: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "min-w-0" }, /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px]", style: { ...mono, color: C.inkFaint } }, m.date), /* @__PURE__ */ React.createElement("div", { className: "text-[12.5px] whitespace-pre-wrap mt-0.5", style: { color: C.ink } }, m.text)), /* @__PURE__ */ React.createElement("button", { onClick: () => deleteMemo(m.id), className: "text-[11px] shrink-0 px-2 py-1 rounded-md", style: { color: C.urgent, background: C.urgentBg } }, "\uC0AD\uC81C")))))), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(MemoCalendar, { customers, memoList, todayISO, goCustomer })), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uBA85\uD568" }, /* @__PURE__ */ React.createElement(
       "pre",
       {
         className: "whitespace-pre-wrap text-[13px] leading-relaxed p-3 rounded-md",
@@ -844,11 +923,25 @@
         className: "w-full resize-none outline-none text-[12.5px] leading-relaxed",
         style: { color: C.ink }
       }
-    ), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mt-2", style: { color: C.inkFaint } }, "\uC9C0\uC810\xB7FC\uAC00 \uBB38\uB9E5\uC0C1 \uB204\uB77D\uB420 \uC218 \uC788\uC73C\uBA74 \uB9E8 \uC544\uB798 \uC904\uC5D0 ", /* @__PURE__ */ React.createElement("b", null, "**\uC9C0\uC810\uBA85"), ", ", /* @__PURE__ */ React.createElement("b", null, "***FC\uBA85"), " \uD615\uC2DD\uC73C\uB85C \uCD94\uAC00 \uC785\uB825\uD558\uBA74 \uD655\uC2E4\uD558\uAC8C \uC778\uC2DD\uB3FC\uC694. (\uC608: **\uB300\uC804SFP\uC9C0\uC810, ***\uAE40\uAE30\uC6D0)"), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3" }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap items-center gap-x-3 gap-y-2" }, /* @__PURE__ */ React.createElement("button", { onClick: () => setText(SAMPLE_TEXT), className: "text-[11px] text-left", style: { color: C.note, wordBreak: "keep-all" } }, "\uB300\uD654\uCCB4 \uC608\uC2DC"), /* @__PURE__ */ React.createElement("button", { onClick: () => setText(SAMPLE_TEXT_LABELED), className: "text-[11px] text-left", style: { color: C.note, wordBreak: "keep-all" } }, "\uB77C\uBCA8\uD615\uC2DD \uC608\uC2DC (\uACE0\uAC1D: / \uCD94\uCC9C:)"), /* @__PURE__ */ React.createElement("button", { onClick: () => setText(SAMPLE_TEXT_MARKER), className: "text-[11px] text-left", style: { color: C.note, wordBreak: "keep-all" } }, "\uC9C0\uC810\xB7FC \uB9C8\uCEE4 \uC608\uC2DC (**\uC9C0\uC810 / ***FC)")), /* @__PURE__ */ React.createElement(
+    ), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mt-2", style: { color: C.inkFaint } }, "\uC9C0\uC810\xB7FC\uAC00 \uBB38\uB9E5\uC0C1 \uB204\uB77D\uB420 \uC218 \uC788\uC73C\uBA74 \uB9E8 \uC544\uB798 \uC904\uC5D0 ", /* @__PURE__ */ React.createElement("b", null, "**\uC9C0\uC810\uBA85"), ", ", /* @__PURE__ */ React.createElement("b", null, "***FC\uBA85"), " \uD615\uC2DD\uC73C\uB85C \uCD94\uAC00 \uC785\uB825\uD558\uBA74 \uD655\uC2E4\uD558\uAC8C \uC778\uC2DD\uB3FC\uC694. (\uC608: **\uB300\uC804SFP\uC9C0\uC810, ***\uAE40\uAE30\uC6D0)"), /* @__PURE__ */ React.createElement("div", { className: "mt-3" }, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] font-semibold mb-1.5", style: { color: C.inkSoft } }, "\uC608\uC2DC \uBD88\uB7EC\uC624\uAE30 (\uB20C\uB7EC\uC11C \uC785\uB825\uCC3D\uC5D0 \uCC44\uC6B0\uAE30)"), /* @__PURE__ */ React.createElement("div", { className: "grid grid-cols-1 sm:grid-cols-3 gap-2" }, [
+      { title: "\uB300\uD654\uCCB4 \uC608\uC2DC", desc: "\uB9D0\uD558\uB4EF \uC790\uC5F0\uC2A4\uB7FD\uAC8C \uC785\uB825", text: SAMPLE_TEXT },
+      { title: "\uB77C\uBCA8\uD615\uC2DD \uC608\uC2DC", desc: '"\uACE0\uAC1D:" "\uCD94\uCC9C:" \uB77C\uBCA8 \uC0AC\uC6A9', text: SAMPLE_TEXT_LABELED },
+      { title: "\uC9C0\uC810\xB7FC \uB9C8\uCEE4 \uC608\uC2DC", desc: "\uB9E8 \uC544\uB798 **\uC9C0\uC810, ***FC \uB9C8\uCEE4", text: SAMPLE_TEXT_MARKER }
+    ].map((ex) => /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        key: ex.title,
+        onClick: () => setText(ex.text),
+        className: "text-left rounded-lg px-3 py-2.5",
+        style: { border: `1px solid ${C.border}`, background: C.surfaceAlt, wordBreak: "keep-all" }
+      },
+      /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-semibold", style: { color: C.ink } }, ex.title),
+      /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px] mt-0.5", style: { color: C.inkSoft } }, ex.desc)
+    ))), /* @__PURE__ */ React.createElement(
       "button",
       {
         onClick: analyze,
-        className: "flex items-center gap-1.5 px-4 py-2 rounded-md text-[12px] font-semibold text-white",
+        className: "w-full mt-3 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-md text-[12px] font-semibold text-white",
         style: { background: C.accent }
       },
       /* @__PURE__ */ React.createElement(Sparkles, { size: 14 }),
@@ -1196,36 +1289,71 @@ ${items.join(", ")}`;
       }
     ), /* @__PURE__ */ React.createElement("label", { className: "text-[12.5px] cursor-pointer", onClick: () => onChange(o.id) }, o.label)), /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-bold", style: { ...mono, color: o.value === 0 ? "#B7C0CB" : C.confirmed } }, o.value === 0 ? "\u2014" : `\u25B3${fmt(o.value)}`))));
   }
-  function FCManagement({ fcs, customers, onSelect }) {
-    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Header, { title: "FC\uAD00\uB9AC", subtitle: "FC\uBCC4 \uC18C\uAC1C \uC774\uB825\uACFC \uC5F0\uB77D \uC608\uC815\uC744 \uAD00\uB9AC\uD569\uB2C8\uB2E4. \uACE0\uAC1D \uD1B5\uD654\uC640 \uBD84\uB9AC\uD574\uC11C \uAD00\uB9AC\uD569\uB2C8\uB2E4. \uCE74\uB4DC\uB97C \uB204\uB974\uBA74 \uC0C1\uC138 \uB0B4\uC6A9\uC744 \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4." }), /* @__PURE__ */ React.createElement("div", { className: "grid sm:grid-cols-2 gap-4" }, fcs.map((f) => {
-      const related = customers.filter((c) => c.fc === f.name);
+  function FCManagement({ fcs, onSelect, filter, setFilter }) {
+    const { year: openYear, month: selectedMonth } = filter;
+    const setOpenYear = (y) => setFilter({ ...filter, year: y });
+    const setSelectedMonth = (m) => setFilter({ ...filter, month: m });
+    const countFor = (ym) => fcs.filter((f) => f.lastContact.slice(0, 7) === ym).length;
+    const countForYear = (y) => fcs.filter((f) => f.lastContact.slice(0, 4) === String(y)).length;
+    const list = fcs.filter((f) => selectedMonth === "\uC804\uCCB4" || f.lastContact.slice(0, 7) === selectedMonth).slice().sort((a, b) => new Date(b.lastContact) - new Date(a.lastContact));
+    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(Header, { title: "FC\uAD00\uB9AC", subtitle: "\uCD5C\uADFC \uC5F0\uB77D\uC77C \uAE30\uC900 \uC5F0\uB3C4\xB7\uC6D4\uBCC4\uB85C FC\uB97C \uCC3E\uACE0, \uC774\uB984\uC744 \uB204\uB974\uBA74 \uC0C1\uC138 \uD654\uBA74\uC774 \uC5F4\uB824\uC694." }), /* @__PURE__ */ React.createElement("div", { className: "rounded-lg mb-4", style: { background: C.surface, border: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap gap-2 p-3" }, /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        onClick: () => setSelectedMonth("\uC804\uCCB4"),
+        className: "px-3.5 py-2 rounded-md text-[12px] font-semibold",
+        style: { background: selectedMonth === "\uC804\uCCB4" ? C.brand : C.surfaceAlt, color: selectedMonth === "\uC804\uCCB4" ? "#FFFFFF" : C.ink }
+      },
+      "\uC804\uCCB4 \uAE30\uAC04"
+    ), YEARS.map((y) => {
+      const active = openYear === y;
       return /* @__PURE__ */ React.createElement(
         "button",
         {
-          key: f.id,
-          onClick: () => onSelect(f.id),
-          className: "text-left rounded-lg p-4 transition-colors",
-          style: { background: C.surface, border: `1px solid ${C.border}` },
-          onMouseEnter: (e) => e.currentTarget.style.background = C.surfaceAlt,
-          onMouseLeave: (e) => e.currentTarget.style.background = C.surface
+          key: y,
+          onClick: () => setOpenYear(active ? null : y),
+          className: "px-3.5 py-2 rounded-md text-[12px] font-semibold flex items-center gap-1.5",
+          style: { background: active ? C.brand : C.surfaceAlt, color: active ? "#FFFFFF" : C.ink }
         },
-        /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between mb-3" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "text-[15px] font-semibold" }, f.name, " ", /* @__PURE__ */ React.createElement("span", { className: "text-[12px] font-normal", style: { color: C.inkSoft } }, "FC")), /* @__PURE__ */ React.createElement("div", { className: "text-[12.5px]", style: { color: C.inkSoft } }, f.branch)), /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2" }, /* @__PURE__ */ React.createElement(
-          CallLink,
-          {
-            phone: f.phone,
-            className: "flex items-center gap-1 text-[11px] px-2 py-1 rounded-full",
-            style: { background: C.noteBg, color: C.note }
-          },
-          /* @__PURE__ */ React.createElement(Phone, { size: 11 }),
-          " \uC804\uD654"
-        ), /* @__PURE__ */ React.createElement(ChevronRight, { size: 15, color: C.inkFaint }))),
-        /* @__PURE__ */ React.createElement(Field, { label: "\uCD5C\uADFC \uC18C\uAC1C \uACE0\uAC1D", value: f.recentIntro, kind: "confirmed" }),
-        /* @__PURE__ */ React.createElement(Field, { label: "\uD604\uC7AC \uC9C4\uD589 \uACE0\uAC1D", value: `${f.activeCustomers}\uBA85`, kind: "confirmed", numeric: true }),
-        /* @__PURE__ */ React.createElement(Field, { label: "\uC9C0\uAE09 \uC644\uB8CC \uACE0\uAC1D", value: `${f.paidCustomers}\uBA85`, kind: "confirmed", numeric: true }),
-        /* @__PURE__ */ React.createElement(Field, { label: "\uB2E4\uC74C \uC5F0\uB77D \uC608\uC815\uC77C", value: f.nextContact, kind: "verify", numeric: true }),
-        related.length > 0 && /* @__PURE__ */ React.createElement("div", { className: "mt-2 pt-2", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mb-1.5", style: { color: C.inkFaint } }, "\uC5F0\uACB0\uB41C \uACE0\uAC1D"), /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap gap-1.5" }, related.map((r) => /* @__PURE__ */ React.createElement(StatusPill, { key: r.id, status: r.name }))))
+        y,
+        "\uB144",
+        /* @__PURE__ */ React.createElement("span", { className: "text-[10.5px]", style: { color: active ? "#C9A876" : C.inkFaint } }, countForYear(y), "\uBA85"),
+        /* @__PURE__ */ React.createElement(ChevronRight, { size: 13, style: { transform: active ? "rotate(90deg)" : "none", transition: "transform 0.15s" } })
       );
-    })));
+    })), openYear && /* @__PURE__ */ React.createElement("div", { className: "px-3 pb-3 pt-1 grid grid-cols-4 sm:grid-cols-6 gap-2", style: { borderTop: `1px solid ${C.border}` } }, MONTHS.map((m) => {
+      const ym = `${openYear}-${String(m).padStart(2, "0")}`;
+      const n = countFor(ym);
+      const active = selectedMonth === ym;
+      return /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          key: m,
+          onClick: () => setSelectedMonth(active ? "\uC804\uCCB4" : ym),
+          disabled: n === 0,
+          className: "rounded-md py-2.5 text-center mt-2",
+          style: {
+            background: active ? C.accent : n === 0 ? C.bg : C.confirmedBg,
+            color: active ? "#FFFFFF" : n === 0 ? C.inkFaint : C.confirmed,
+            cursor: n === 0 ? "default" : "pointer"
+          }
+        },
+        /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-semibold" }, m, "\uC6D4"),
+        /* @__PURE__ */ React.createElement("div", { className: "text-[10px] mt-0.5", style: { opacity: 0.85 } }, n, "\uBA85")
+      );
+    }))), /* @__PURE__ */ React.createElement("div", { className: "rounded-lg overflow-hidden", style: { border: `1px solid ${C.border}`, background: C.surface } }, list.map((f, i) => /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        key: f.id,
+        onClick: () => onSelect(f.id),
+        className: "w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors",
+        style: { borderTop: i > 0 ? `1px solid ${C.border}` : "none" },
+        onMouseEnter: (e) => e.currentTarget.style.background = C.surfaceAlt,
+        onMouseLeave: (e) => e.currentTarget.style.background = "transparent"
+      },
+      /* @__PURE__ */ React.createElement("span", { className: "text-[11px] shrink-0 w-[74px] truncate", style: { color: C.inkSoft } }, f.branch),
+      /* @__PURE__ */ React.createElement("span", { className: "text-[13.5px] font-semibold truncate flex-1 min-w-0" }, f.name),
+      /* @__PURE__ */ React.createElement("span", { className: "shrink-0 text-right leading-tight", style: { ...mono, fontSize: 10, color: C.inkSoft } }, /* @__PURE__ */ React.createElement("span", { style: { color: C.inkFaint } }, "\uCC98\uC74C "), f.firstContact, /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", { style: { color: C.inkFaint } }, "\uCD5C\uC885 "), f.lastContact),
+      /* @__PURE__ */ React.createElement(ChevronRight, { size: 16, color: C.inkFaint, className: "shrink-0" })
+    )), list.length === 0 && /* @__PURE__ */ React.createElement(Empty, { text: "\uD574\uB2F9 \uAE30\uAC04\uC5D0 \uC5F0\uB77D\uD55C FC\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4." })));
   }
   function FCDetail({ fc, customers, onBack, goCustomer }) {
     const related = customers.filter((c) => c.fc === fc.name);
@@ -1256,16 +1384,11 @@ ${items.join(", ")}`;
       );
     }))), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uB2E4\uC74C \uD589\uB3D9" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-start gap-2 py-1" }, /* @__PURE__ */ React.createElement(Clock, { size: 16, color: C.note, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement("span", { className: "text-[13.5px]" }, fc.nextContact, "\uC5D0 \uC5F0\uB77D \uC608\uC815"))), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] leading-relaxed px-1", style: { color: C.inkFaint } }, "FC \uD1B5\uD654\uB294 \uACE0\uAC1D \uD1B5\uD654\uC640 \uBD84\uB9AC\uD574\uC11C \uAD00\uB9AC\uD569\uB2C8\uB2E4. \uC5F0\uACB0\uB41C \uACE0\uAC1D \uBAA9\uB85D\uC740 \uD604\uC7AC \uC774 FC\uC758 \uCD94\uCC9C\uC73C\uB85C \uB4F1\uB85D\uB41C \uAE30\uB85D\uC744 \uAE30\uC900\uC73C\uB85C \uD569\uB2C8\uB2E4."))));
   }
-  var { useState, useMemo } = React;
-  var container = document.getElementById("root");
-  var root = ReactDOM.createRoot(container);
-  root.render(/* @__PURE__ */ React.createElement(App, null));
+  var { useState, useMemo, useEffect } = React;
+  ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(App, null));
 })();
 
 </script>
-
-<script>
-  clearTimeout(__bootTimeout);
-</script>
+<script>clearTimeout(__bootTimeout);</script>
 </body>
 </html>
