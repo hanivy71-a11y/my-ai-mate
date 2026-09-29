@@ -605,10 +605,9 @@
     const day = String(d.getDate()).padStart(2, "0");
     return `${y}-${m}-${day}`;
   }
-  function MemoCalendar({ customers, memoByDate, setMemoFor, todayISO, goCustomer }) {
+  function MemoCalendar({ customers, memoByDate, todayISO, selected, onSelectDate, goCustomer }) {
     const now = /* @__PURE__ */ new Date(todayISO + "T00:00:00");
     const [view, setView] = useState({ y: now.getFullYear(), m: now.getMonth() });
-    const [selected, setSelected] = useState(todayISO);
     const firstDow = new Date(view.y, view.m, 1).getDay();
     const daysInMonth = new Date(view.y, view.m + 1, 0).getDate();
     const cells = [];
@@ -629,7 +628,7 @@
       const dateISO = iso(d);
       const isToday = dateISO === todayISO;
       const isSel = dateISO === selected;
-      return /* @__PURE__ */ React.createElement("button", { key: idx, onClick: () => setSelected(dateISO), className: "flex flex-col items-center py-1" }, /* @__PURE__ */ React.createElement(
+      return /* @__PURE__ */ React.createElement("button", { key: idx, onClick: () => onSelectDate(dateISO), className: "flex flex-col items-center py-1" }, /* @__PURE__ */ React.createElement(
         "span",
         {
           className: "w-7 h-7 flex items-center justify-center rounded-full text-[12px]",
@@ -642,17 +641,7 @@
         },
         d
       ), /* @__PURE__ */ React.createElement("span", { className: "flex gap-0.5 h-1.5 mt-0.5" }, hasCustomer(d) && /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.note } }), hasMemo(d) && /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.accent } })));
-    })), /* @__PURE__ */ React.createElement("div", { className: "flex gap-3 mt-2 text-[10.5px]", style: { color: C.inkSoft } }, /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.note } }), "\uC5F0\uB77D\uC608\uC815 \uACE0\uAC1D"), /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.accent } }), "\uBA54\uBAA8 \uC788\uC74C")), /* @__PURE__ */ React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-semibold mb-1.5" }, selLabel), selCustomers.map((c) => /* @__PURE__ */ React.createElement("button", { key: c.id, onClick: () => goCustomer(c.id), className: "w-full flex items-center justify-between text-left py-1.5" }, /* @__PURE__ */ React.createElement("span", { className: "text-[12px]" }, /* @__PURE__ */ React.createElement("b", null, c.name), " ", /* @__PURE__ */ React.createElement("span", { style: { color: C.inkSoft } }, "\xB7 ", c.followUp)), /* @__PURE__ */ React.createElement(ChevronRight, { size: 13, color: C.inkFaint }))), /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mt-2 mb-1", style: { color: C.inkSoft } }, "\uC774 \uB0A0\uC758 \uBA54\uBAA8 (\uC218\uC815\uD558\uBA74 \uC790\uB3D9 \uC800\uC7A5)"), /* @__PURE__ */ React.createElement(
-      "textarea",
-      {
-        value: memoByDate[selected] || "",
-        onChange: (e) => setMemoFor(selected, e.target.value),
-        placeholder: "\uC774 \uB0A0\uC9DC\uC758 \uBA54\uBAA8\uB97C \uC801\uC5B4\uBCF4\uC138\uC694...",
-        rows: 4,
-        className: "w-full text-[13px] leading-relaxed p-2.5 rounded-md outline-none resize-none",
-        style: { color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }
-      }
-    )));
+    })), /* @__PURE__ */ React.createElement("div", { className: "flex gap-3 mt-2 text-[10.5px]", style: { color: C.inkSoft } }, /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.note } }), "\uC5F0\uB77D\uC608\uC815 \uACE0\uAC1D"), /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.accent } }), "\uBA54\uBAA8 \uC788\uC74C")), /* @__PURE__ */ React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-semibold mb-1.5" }, selLabel), selCustomers.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px]", style: { color: C.inkFaint } }, "\uC774 \uB0A0\uC9DC\uC5D0 \uC5F0\uB77D\uC608\uC815\uC778 \uACE0\uAC1D\uC774 \uC5C6\uC5B4\uC694."), selCustomers.map((c) => /* @__PURE__ */ React.createElement("button", { key: c.id, onClick: () => goCustomer(c.id), className: "w-full flex items-center justify-between text-left py-1.5" }, /* @__PURE__ */ React.createElement("span", { className: "text-[12px]" }, /* @__PURE__ */ React.createElement("b", null, c.name), " ", /* @__PURE__ */ React.createElement("span", { style: { color: C.inkSoft } }, "\xB7 ", c.followUp)), /* @__PURE__ */ React.createElement(ChevronRight, { size: 13, color: C.inkFaint }))), /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px] mt-1.5", style: { color: C.inkFaint } }, "\uC704 \uBA54\uBAA8\uB780\uC5D0\uC11C \uC774 \uB0A0\uC9DC\uC758 \uBA54\uBAA8\uB97C \uBC14\uB85C \uBCF4\uACE0 \uC218\uC815\uD560 \uC218 \uC788\uC5B4\uC694.")));
   }
   function TodayTasks({ customers, goCustomer, memoByDate, setMemoFor }) {
     const today = /* @__PURE__ */ new Date();
@@ -660,6 +649,19 @@
     const todayISO = toLocalISO(today);
     const todayList = customers.filter((c) => c.lastContact === todayISO);
     const [copied, setCopied] = useState(false);
+    const [activeDate, setActiveDate] = useState(todayISO);
+    const [draft, setDraft] = useState(memoByDate[todayISO] || "");
+    const [memoSaved, setMemoSaved] = useState(false);
+    useEffect(() => {
+      setDraft(memoByDate[activeDate] || "");
+    }, [activeDate]);
+    const isDirty = draft !== (memoByDate[activeDate] || "");
+    function saveMemo() {
+      setMemoFor(activeDate, draft);
+      setMemoSaved(true);
+      setTimeout(() => setMemoSaved(false), 1200);
+    }
+    const activeDateLabel = activeDate === todayISO ? "\uC624\uB298" : (/* @__PURE__ */ new Date(activeDate + "T00:00:00")).toLocaleDateString("ko-KR", { month: "long", day: "numeric", weekday: "short" });
     function copyCard() {
       var _a;
       (_a = navigator.clipboard) == null ? void 0 : _a.writeText(BIZ_CARD_TEXT).then(() => {
@@ -682,17 +684,28 @@
           onClick: () => goCustomer(c.id)
         }
       );
-    })), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uC624\uB298 \uBA54\uBAA8" }, /* @__PURE__ */ React.createElement(
+    })), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uBA54\uBAA8" }, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mb-1.5", style: { color: C.inkSoft } }, activeDateLabel, " \xB7 \uB2EC\uB825\uC5D0\uC11C \uB0A0\uC9DC\uB97C \uB204\uB974\uBA74 \uADF8\uB0A0 \uBA54\uBAA8\uB85C \uBC14\uB00C\uC5B4\uC694"), /* @__PURE__ */ React.createElement(
       "textarea",
       {
-        value: memoByDate[todayISO] || "",
-        onChange: (e) => setMemoFor(todayISO, e.target.value),
-        placeholder: "\uC624\uB298 \uBA54\uBAA8\uB97C \uC790\uC720\uB86D\uAC8C \uC801\uC5B4\uBCF4\uC138\uC694. \uACC4\uC18D \uC774\uC5B4\uC11C \uC4F8 \uC218 \uC788\uC5B4\uC694...",
+        value: draft,
+        onChange: (e) => setDraft(e.target.value),
+        placeholder: "\uBA54\uBAA8\uB97C \uC790\uC720\uB86D\uAC8C \uC801\uC5B4\uBCF4\uC138\uC694...",
         rows: 5,
         className: "w-full text-[13px] leading-relaxed p-2.5 rounded-md outline-none resize-none",
         style: { color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }
       }
-    ), /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px] mt-1.5", style: { color: C.inkFaint } }, "\uC4F0\uB294 \uC989\uC2DC \uC774 \uAE30\uAE30\uC5D0 \uC790\uB3D9 \uC800\uC7A5\uB3FC\uC694. \uC9C0\uB09C \uB0A0\uC9DC\uC758 \uBA54\uBAA8\uB294 \uC544\uB798 \uB2EC\uB825\uC5D0\uC11C \uB0A0\uC9DC\uB97C \uB20C\uB7EC \uBCF4\uACE0 \uC218\uC815\uD560 \uC218 \uC788\uC5B4\uC694."))), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(MemoCalendar, { customers, memoByDate, setMemoFor, todayISO, goCustomer })), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uBA85\uD568" }, /* @__PURE__ */ React.createElement(
+    ), /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2 mt-2.5" }, /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        onClick: saveMemo,
+        disabled: !isDirty,
+        className: "flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[12.5px] font-semibold text-white",
+        style: { background: memoSaved ? C.confirmed : C.accent, opacity: isDirty || memoSaved ? 1 : 0.45 }
+      },
+      /* @__PURE__ */ React.createElement(Save, { size: 13 }),
+      " ",
+      memoSaved ? "\uC800\uC7A5\uB428" : "\uC800\uC7A5"
+    ), isDirty && !memoSaved && /* @__PURE__ */ React.createElement("span", { className: "text-[10.5px]", style: { color: C.verify } }, "\uC800\uC7A5 \uC548 \uB41C \uBCC0\uACBD\uC0AC\uD56D\uC774 \uC788\uC5B4\uC694")))), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(MemoCalendar, { customers, memoByDate, todayISO, selected: activeDate, onSelectDate: setActiveDate, goCustomer })), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uBA85\uD568" }, /* @__PURE__ */ React.createElement(
       "pre",
       {
         className: "whitespace-pre-wrap text-[13px] leading-relaxed p-3 rounded-md",
