@@ -470,7 +470,7 @@
     { key: "rate", label: "\uAE08\uB9AC\uACC4\uC0B0\uAE30", icon: Calculator },
     { key: "fc", label: "FC\uAD00\uB9AC", icon: UserCog }
   ];
-  var STORE_KEYS = { customers: "myaimate:v1:customers", memo: "myaimate:v1:memo", memos: "myaimate:v1:memos", memoByDate: "myaimate:v2:memoByDate", bizCard: "myaimate:v1:bizCard" };
+  var STORE_KEYS = { customers: "myaimate:v1:customers", memo: "myaimate:v1:memo", memos: "myaimate:v1:memos", memoByDate: "myaimate:v2:memoByDate", bizCard: "myaimate:v1:bizCard", spreads: "myaimate:v1:spreads" };
   function loadSaved(key, fallback) {
     try {
       const raw = window.localStorage.getItem(key);
@@ -1170,8 +1170,12 @@ ${items.join(", ")}`;
     return /* @__PURE__ */ React.createElement("button", { onClick, className: "flex items-center gap-2.5 px-3 py-2 rounded-md text-left w-full", style: { background: checked ? C.confirmedBg : "transparent" } }, /* @__PURE__ */ React.createElement("span", { className: "w-3.5 h-3.5 rounded flex items-center justify-center shrink-0", style: { border: `1.5px solid ${checked ? C.confirmed : C.inkFaint}`, background: checked ? C.confirmed : "transparent" } }, checked && /* @__PURE__ */ React.createElement(CheckCircle2, { size: 11, color: "#FFFFFF", strokeWidth: 3 })), /* @__PURE__ */ React.createElement("span", { className: "text-[12px]", style: { color: checked ? C.confirmed : C.ink, fontWeight: checked ? 600 : 400 } }, label));
   }
   function RateCalculator() {
+    var _a;
+    const [savedSpreads, setSavedSpreads] = useState(() => loadSaved(STORE_KEYS.spreads, {}));
     const [productId, setProductId] = useState(PRODUCTS[0].id);
     const [baseRate, setBaseRate] = useState(PRODUCTS[0].base);
+    const [spreadRate, setSpreadRate] = useState((_a = savedSpreads[PRODUCTS[0].id]) != null ? _a : PRODUCTS[0].spread);
+    const [spreadSaved, setSpreadSaved] = useState(false);
     const [checks, setChecks] = useState({});
     const [checkVals, setCheckVals] = useState({});
     const [creditId, setCreditId] = useState("none");
@@ -1179,22 +1183,33 @@ ${items.join(", ")}`;
     const [jeongyeolBp, setJeongyeolBp] = useState(0);
     const product = PRODUCTS.find((p) => p.id === productId);
     function changeProduct(id) {
+      var _a2;
       const p = PRODUCTS.find((x) => x.id === id);
       setProductId(id);
       setBaseRate(p.base);
+      setSpreadRate((_a2 = savedSpreads[id]) != null ? _a2 : p.spread);
     }
-    const basicRate = product.spread + (parseFloat(baseRate) || 0);
+    function saveSpread() {
+      const next = { ...savedSpreads, [productId]: spread };
+      setSavedSpreads(next);
+      saveLocal(STORE_KEYS.spreads, next);
+      setSpreadSaved(true);
+      setTimeout(() => setSpreadSaved(false), 1200);
+    }
+    const spread = parseFloat(spreadRate) || 0;
+    const spreadIsSaved = savedSpreads[productId] !== void 0 && savedSpreads[productId] === spread;
+    const basicRate = spread + (parseFloat(baseRate) || 0);
     const generalTotal = CHECK_ITEMS.reduce((sum, item) => {
-      var _a;
+      var _a2;
       if (!checks[item.id]) return sum;
-      const v = item.variable ? (_a = checkVals[item.id]) != null ? _a : item.value : item.value;
+      const v = item.variable ? (_a2 = checkVals[item.id]) != null ? _a2 : item.value : item.value;
       return sum + v;
     }, 0);
     const creditVal = CREDIT_OPTIONS.find((o) => o.id === creditId).value;
     const insuranceVal = INSURANCE_OPTIONS.find((o) => o.id === insuranceId).value;
     const jeongyeolVal = jeongyeolBp / 100;
     const rawTotal = generalTotal + creditVal + insuranceVal + jeongyeolVal;
-    const maxAllowed = Math.min(MAX_DISCOUNT_CAP, product.spread, basicRate - MIN_RATE);
+    const maxAllowed = Math.min(MAX_DISCOUNT_CAP, spread, basicRate - MIN_RATE);
     const appliedTotal = Math.min(rawTotal, Math.max(maxAllowed, 0));
     const finalRate = Math.max(basicRate - appliedTotal, MIN_RATE);
     const capped = rawTotal > maxAllowed + 1e-4;
@@ -1231,14 +1246,34 @@ ${items.join(", ")}`;
       RateBuildRow,
       {
         label: "\uAC00\uC0B0\uAE08\uB9AC",
-        tag: "\uD45C \uACE0\uC815",
-        tagKind: "muted",
-        right: /* @__PURE__ */ React.createElement("span", { className: "text-[14.5px] font-bold", style: { color: C.inkSoft } }, fmt(product.spread), "%")
+        tag: "\uC9C1\uC811\uC785\uB825",
+        tagKind: "accent",
+        right: /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-1.5" }, /* @__PURE__ */ React.createElement(
+          "input",
+          {
+            type: "number",
+            step: "0.01",
+            min: "0",
+            max: "20",
+            value: spreadRate,
+            onChange: (e) => setSpreadRate(e.target.value === "" ? "" : parseFloat(e.target.value)),
+            className: "w-[92px] text-right px-2 py-1.5 rounded-md outline-none text-[14.5px] font-bold",
+            style: { ...mono, border: `1.5px solid ${C.border}`, color: C.brand, background: C.surface }
+          }
+        ), /* @__PURE__ */ React.createElement("span", { className: "text-[12.5px]", style: { ...mono, color: C.inkSoft } }, "%"), /* @__PURE__ */ React.createElement(
+          "button",
+          {
+            onClick: saveSpread,
+            className: "px-2.5 py-1.5 rounded-md text-[11px] font-semibold text-white shrink-0",
+            style: { background: spreadSaved ? C.confirmed : C.accent }
+          },
+          spreadSaved ? "\uC800\uC7A5\uB428" : "\uC800\uC7A5"
+        ))
       }
-    ), /* @__PURE__ */ React.createElement("div", { className: "text-center text-[12px] py-1", style: { color: "#B7C0CB", ...mono } }, "="), /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between pt-2.5 mt-1", style: { borderTop: `1.5px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("span", { className: "text-[12.5px]" }, "\uAE30\uBCF8\uAE08\uB9AC"), /* @__PURE__ */ React.createElement("span", { className: "text-[20px] font-extrabold", style: { ...mono, color: C.brand } }, fmt(basicRate), "%")), /* @__PURE__ */ React.createElement("div", { className: "text-right text-[11px] mt-2.5", style: { ...mono, color: C.urgent } }, "\uCC38\uACE0 \xB7 \uD45C \uAE30\uC900 \uAE08\uB9ACBand ", fmt(product.bandLow), "~", fmt(product.bandHigh), "%")), /* @__PURE__ */ React.createElement(StepTitle, { n: 2, title: "\uC77C\uBC18\uD560\uC778 \xB7 \uC6B0\uB300\uD56D\uBAA9" }), /* @__PURE__ */ React.createElement(Panel, { noPad: true }, /* @__PURE__ */ React.createElement("div", { className: "px-4 pt-3 pb-1 text-[10.5px] uppercase", style: { ...mono, color: C.inkSoft, letterSpacing: "0.08em" } }, "\uCCB4\uD06C\uD558\uC5EC \uC801\uC6A9"), CHECK_ITEMS.map((item) => {
-      var _a;
+    ), /* @__PURE__ */ React.createElement("div", { className: "text-right text-[10.5px] mt-1", style: { color: spreadIsSaved ? C.confirmed : C.verify } }, spreadIsSaved ? `\uC774 \uC0C1\uD488\uC5D0 \uC800\uC7A5\uB41C \uAC00\uC0B0\uAE08\uB9AC\uB97C \uC0AC\uC6A9 \uC911\uC774\uC5D0\uC694` : savedSpreads[productId] !== void 0 ? `\uC800\uC7A5\uB41C \uAC12(${fmt(savedSpreads[productId])}%)\uACFC \uB2EC\uB77C\uC694 \xB7 \uC800\uC7A5\uC744 \uB204\uB974\uBA74 \uBC18\uC601\uB3FC\uC694` : `\uC800\uC7A5\uD558\uBA74 \uB2E4\uC74C\uC5D0 \uC774 \uC0C1\uD488\uC744 \uC120\uD0DD\uD560 \uB54C \uC790\uB3D9\uC73C\uB85C \uBD88\uB7EC\uC640\uC694`), /* @__PURE__ */ React.createElement("div", { className: "text-center text-[12px] py-1", style: { color: "#B7C0CB", ...mono } }, "="), /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between pt-2.5 mt-1", style: { borderTop: `1.5px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("span", { className: "text-[12.5px]" }, "\uAE30\uBCF8\uAE08\uB9AC"), /* @__PURE__ */ React.createElement("span", { className: "text-[20px] font-extrabold", style: { ...mono, color: C.brand } }, fmt(basicRate), "%")), /* @__PURE__ */ React.createElement("div", { className: "text-right text-[11px] mt-2.5", style: { ...mono, color: C.urgent } }, "\uCC38\uACE0 \xB7 \uD45C \uAE30\uC900 \uAE08\uB9ACBand ", fmt(product.bandLow), "~", fmt(product.bandHigh), "% \xB7 \uD45C \uAC00\uC0B0\uAE08\uB9AC ", fmt(product.spread), "%")), /* @__PURE__ */ React.createElement(StepTitle, { n: 2, title: "\uC77C\uBC18\uD560\uC778 \xB7 \uC6B0\uB300\uD56D\uBAA9" }), /* @__PURE__ */ React.createElement(Panel, { noPad: true }, /* @__PURE__ */ React.createElement("div", { className: "px-4 pt-3 pb-1 text-[10.5px] uppercase", style: { ...mono, color: C.inkSoft, letterSpacing: "0.08em" } }, "\uCCB4\uD06C\uD558\uC5EC \uC801\uC6A9"), CHECK_ITEMS.map((item) => {
+      var _a2;
       const checked = !!checks[item.id];
-      const val = (_a = checkVals[item.id]) != null ? _a : item.value;
+      const val = (_a2 = checkVals[item.id]) != null ? _a2 : item.value;
       return /* @__PURE__ */ React.createElement("div", { key: item.id, className: "flex items-center justify-between gap-2.5 px-4 py-2.5", style: { borderBottom: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2.5 flex-1 min-w-0" }, /* @__PURE__ */ React.createElement(
         "input",
         {
