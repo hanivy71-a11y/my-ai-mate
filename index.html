@@ -459,7 +459,7 @@
     }
     return out;
   }
-  var SAMPLE_TEXT = "\uAE40\uBBFC\uC900 \uACE0\uAC1D\uD558\uACE0 \uD1B5\uD654\uD588\uC5B4. 880521 \uC8FC\uBBFC\uBC88\uD638 \uC55E\uC790\uB9AC \uD655\uC778\uD588\uACE0, \uC804\uD654 \uB05D\uBC88\uD638 1401\uC774\uACE0 \uBD80\uC0B0 \uB3D9\uAD6C \uC88C\uCC9C\uB3D9 \uB3D9\uC6D0\uC544\uD30C\uD2B8 34\uD3C9\uD615\uC774\uC57C. \uB098\uC601\uD76C FC\uAC00 \uC18C\uAC1C\uD588\uACE0 \uB300\uCD9C 80 \uC815\uB3C4 \uD76C\uB9DD\uD558\uACE0 8\uC6D4 \uAD6C\uC785\uC790\uAE08 \uAE08\uB9AC\uB9CC \uC0C1\uB2F4\uD588\uC5B4. \uC11C\uB958\uB294 \uC544\uC9C1 \uC548\uB0B4 \uC548 \uD588\uACE0 \uC77C\uC8FC\uC77C \uB4A4 \uB2E4\uC2DC \uC758\uC0AC \uD655\uC778\uD558\uAE30\uB85C \uD588\uC5B4.";
+  var SAMPLE_TEXT = "\uAE40\uBBFC\uC900 \uACE0\uAC1D\uD558\uACE0 \uD1B5\uD654\uD588\uC5B4. \uC804\uD654 \uB05D\uBC88\uD638 1401\uC774\uACE0 \uBD80\uC0B0 34\uD3C9\uD615 \uC544\uD30C\uD2B8\uC57C. \uB098\uC601\uD76C FC\uAC00 \uC18C\uAC1C\uD588\uACE0 \uB300\uCD9C 80 \uC815\uB3C4 \uD76C\uB9DD\uD558\uACE0 8\uC6D4 \uAD6C\uC785\uC790\uAE08 \uAE08\uB9AC\uB9CC \uC0C1\uB2F4\uD588\uC5B4. \uC11C\uB958\uB294 \uC544\uC9C1 \uC548\uB0B4 \uC548 \uD588\uACE0 \uC77C\uC8FC\uC77C \uB4A4 \uB2E4\uC2DC \uC758\uC0AC \uD655\uC778\uD558\uAE30\uB85C \uD588\uC5B4.";
   var SAMPLE_TEXT_LABELED = "\uACE0\uAC1D: \uC774\uC11C\uC900 / \uCD94\uCC9C: \uBC15\uC120\uBBF8 / \uC804\uD654 \uB05D\uBC88\uD638 7742 / \uB300\uC804 \uC720\uC131\uAD6C \uBD09\uBA85\uB3D9 \uD55C\uBE5B\uC544\uD30C\uD2B8 25\uD3C9 / \uB300\uCD9C 65 \uC815\uB3C4 \uD544\uC694\uD558\uB2E4\uACE0 \uD568 / \uAE08\uB9AC 4.6% \uC548\uB0B4 / \uC11C\uB958\uB294 \uC544\uC9C1\uC774\uACE0 \uC5F4\uD758 \uB4A4 \uB2E4\uC2DC \uC5F0\uB77D\uD558\uAE30\uB85C \uD568.";
   var SAMPLE_TEXT_MARKER = "\uCD5C\uC724\uC544 \uACE0\uAC1D\uD558\uACE0 \uC804\uD654 \uB05D\uBC88\uD638 3320\uC73C\uB85C \uD1B5\uD654\uD568. \uC11C\uC6B8 \uAC15\uB0A8\uAD6C \uB300\uCE58\uB3D9 \uC740\uB9C8\uC544\uD30C\uD2B8 \uAD6C\uC785\uC790\uAE08 \uC0C1\uB2F4. \uB300\uCD9C 120 \uC815\uB3C4 \uD76C\uB9DD\uD558\uACE0 \uAE08\uB9AC\uB294 4.2% \uC548\uB0B4\uD588\uC74C. \uC11C\uB958\uB294 \uB2E4\uC74C\uC8FC\uC5D0 \uC900\uBE44\uD558\uAE30\uB85C \uD568.\n\n**\uAC15\uB0A8\uC911\uC559\uC9C0\uC810, ***\uC774\uD558\uB298";
   var NAV = [
@@ -470,7 +470,7 @@
     { key: "rate", label: "\uAE08\uB9AC\uACC4\uC0B0\uAE30", icon: Calculator },
     { key: "fc", label: "FC\uAD00\uB9AC", icon: UserCog }
   ];
-  var STORE_KEYS = { customers: "myaimate:v1:customers", memo: "myaimate:v1:memo", memos: "myaimate:v1:memos", memoByDate: "myaimate:v2:memoByDate" };
+  var STORE_KEYS = { customers: "myaimate:v1:customers", memo: "myaimate:v1:memo", memos: "myaimate:v1:memos", memoByDate: "myaimate:v2:memoByDate", bizCard: "myaimate:v1:bizCard" };
   function loadSaved(key, fallback) {
     try {
       const raw = window.localStorage.getItem(key);
@@ -491,6 +491,10 @@
     const [tab, setTab] = useState("todos");
     const [customers, setCustomers] = useState(() => loadSaved(STORE_KEYS.customers, initialCustomers));
     const [fcFilter, setFcFilter] = useState({ year: 2026, month: "\uC804\uCCB4" });
+    const [bizCard, setBizCard] = useState(() => loadSaved(STORE_KEYS.bizCard, ""));
+    useEffect(() => {
+      saveLocal(STORE_KEYS.bizCard, bizCard);
+    }, [bizCard]);
     const [memoByDate, setMemoByDate] = useState(() => {
       const saved = loadSaved(STORE_KEYS.memoByDate, null);
       if (saved && typeof saved === "object") return saved;
@@ -533,7 +537,7 @@
     })), /* @__PURE__ */ React.createElement("main", { className: "flex-1 min-w-0 p-5 sm:p-8 pb-20" }, tab === "todos" && /* @__PURE__ */ React.createElement(TodayTasks, { customers, goCustomer: (id) => {
       setTab("customers");
       setSelectedId(id);
-    }, memoByDate, setMemoFor }), tab === "customers" && (selected ? /* @__PURE__ */ React.createElement(CustomerDetail, { key: selected.id, customer: selected, onBack: () => setSelectedId(null), onUpdate: (id, updates) => setCustomers(customers.map((cu) => cu.id === id ? { ...cu, ...updates } : cu)) }) : /* @__PURE__ */ React.createElement(CustomerList, { customers, onSelect: setSelectedId })), tab === "callai" && /* @__PURE__ */ React.createElement(CallSummaryAI, { customers, setCustomers }), tab === "docs" && /* @__PURE__ */ React.createElement(DocumentAssistant, null), tab === "rate" && /* @__PURE__ */ React.createElement(RateCalculator, null), tab === "fc" && (selectedFc ? /* @__PURE__ */ React.createElement(FCDetail, { fc: selectedFc, customers, onBack: () => setSelectedFcId(null), goCustomer: (id) => {
+    }, memoByDate, setMemoFor, bizCard, setBizCard }), tab === "customers" && (selected ? /* @__PURE__ */ React.createElement(CustomerDetail, { key: selected.id, customer: selected, onBack: () => setSelectedId(null), onUpdate: (id, updates) => setCustomers(customers.map((cu) => cu.id === id ? { ...cu, ...updates } : cu)) }) : /* @__PURE__ */ React.createElement(CustomerList, { customers, onSelect: setSelectedId })), tab === "callai" && /* @__PURE__ */ React.createElement(CallSummaryAI, { customers, setCustomers }), tab === "docs" && /* @__PURE__ */ React.createElement(DocumentAssistant, null), tab === "rate" && /* @__PURE__ */ React.createElement(RateCalculator, null), tab === "fc" && (selectedFc ? /* @__PURE__ */ React.createElement(FCDetail, { fc: selectedFc, customers, onBack: () => setSelectedFcId(null), goCustomer: (id) => {
       setTab("customers");
       setSelectedId(id);
       setSelectedFcId(null);
@@ -593,12 +597,6 @@
   }
   var YEARS = [2026, 2027, 2028];
   var MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
-  var BIZ_CARD_TEXT = `\u{1F4C7} \uC0BC\uC131\uC0DD\uBA85 \uC11C\uBD80\uC735\uC790\uBD80
-\uD55C\uADDC\uD638 \uD504\uB85C
-
-\u{1F4DE} 010-8525-1501
-\u{1F4CD} \uB300\uC804\uAD11\uC5ED\uC2DC \uC11C\uAD6C \uD55C\uBC2D\uB300\uB85C 755
-    (\uB454\uC0B0\uB3D9, \uC0BC\uC131\uC0DD\uBA85) 3\uCE35 \uC11C\uBD80\uC735\uC790\uBD80`;
   function toLocalISO(d) {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -643,7 +641,7 @@
       ), /* @__PURE__ */ React.createElement("span", { className: "flex gap-0.5 h-1.5 mt-0.5" }, hasCustomer(d) && /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.note } }), hasMemo(d) && /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.accent } })));
     })), /* @__PURE__ */ React.createElement("div", { className: "flex gap-3 mt-2 text-[10.5px]", style: { color: C.inkSoft } }, /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.note } }), "\uC5F0\uB77D\uC608\uC815 \uACE0\uAC1D"), /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.accent } }), "\uBA54\uBAA8 \uC788\uC74C")), /* @__PURE__ */ React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-semibold mb-1.5" }, selLabel), selCustomers.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px]", style: { color: C.inkFaint } }, "\uC774 \uB0A0\uC9DC\uC5D0 \uC5F0\uB77D\uC608\uC815\uC778 \uACE0\uAC1D\uC774 \uC5C6\uC5B4\uC694."), selCustomers.map((c) => /* @__PURE__ */ React.createElement("button", { key: c.id, onClick: () => goCustomer(c.id), className: "w-full flex items-center justify-between text-left py-1.5" }, /* @__PURE__ */ React.createElement("span", { className: "text-[12px]" }, /* @__PURE__ */ React.createElement("b", null, c.name), " ", /* @__PURE__ */ React.createElement("span", { style: { color: C.inkSoft } }, "\xB7 ", c.followUp)), /* @__PURE__ */ React.createElement(ChevronRight, { size: 13, color: C.inkFaint }))), /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px] mt-1.5", style: { color: C.inkFaint } }, "\uC704 \uBA54\uBAA8\uB780\uC5D0\uC11C \uC774 \uB0A0\uC9DC\uC758 \uBA54\uBAA8\uB97C \uBC14\uB85C \uBCF4\uACE0 \uC218\uC815\uD560 \uC218 \uC788\uC5B4\uC694.")));
   }
-  function TodayTasks({ customers, goCustomer, memoByDate, setMemoFor }) {
+  function TodayTasks({ customers, goCustomer, memoByDate, setMemoFor, bizCard, setBizCard }) {
     const today = /* @__PURE__ */ new Date();
     const todayLabel = today.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" });
     const todayISO = toLocalISO(today);
@@ -664,7 +662,8 @@
     const activeDateLabel = activeDate === todayISO ? "\uC624\uB298" : (/* @__PURE__ */ new Date(activeDate + "T00:00:00")).toLocaleDateString("ko-KR", { month: "long", day: "numeric", weekday: "short" });
     function copyCard() {
       var _a;
-      (_a = navigator.clipboard) == null ? void 0 : _a.writeText(BIZ_CARD_TEXT).then(() => {
+      if (!bizCard.trim()) return;
+      (_a = navigator.clipboard) == null ? void 0 : _a.writeText(bizCard).then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
       }).catch(() => {
@@ -706,18 +705,22 @@
       " ",
       memoSaved ? "\uC800\uC7A5\uB428" : "\uC800\uC7A5"
     ), isDirty && !memoSaved && /* @__PURE__ */ React.createElement("span", { className: "text-[10.5px]", style: { color: C.verify } }, "\uC800\uC7A5 \uC548 \uB41C \uBCC0\uACBD\uC0AC\uD56D\uC774 \uC788\uC5B4\uC694")))), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(MemoCalendar, { customers, memoByDate, todayISO, selected: activeDate, onSelectDate: setActiveDate, goCustomer })), /* @__PURE__ */ React.createElement("div", { className: "mt-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uBA85\uD568" }, /* @__PURE__ */ React.createElement(
-      "pre",
+      "textarea",
       {
-        className: "whitespace-pre-wrap text-[13px] leading-relaxed p-3 rounded-md",
+        value: bizCard,
+        onChange: (e) => setBizCard(e.target.value),
+        placeholder: "\uBA85\uD568\uC5D0 \uB123\uC744 \uB0B4\uC6A9\uC744 \uC785\uB825\uD574\uC8FC\uC138\uC694. \uC608:\n\uC0BC\uC131\uC0DD\uBA85 \uC11C\uBD80\uC735\uC790\uBD80\n\uD64D\uAE38\uB3D9 \uD504\uB85C\n\nHP. 010-0000-0000\n\uC8FC\uC18C",
+        rows: 6,
+        className: "w-full text-[13px] leading-relaxed p-3 rounded-md outline-none resize-none",
         style: { fontFamily: "inherit", background: C.surfaceAlt, border: `1px solid ${C.border}`, color: C.ink }
-      },
-      BIZ_CARD_TEXT
-    ), /* @__PURE__ */ React.createElement(
+      }
+    ), /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px] mt-1.5", style: { color: C.inkFaint } }, "\uC785\uB825\uD55C \uB0B4\uC6A9\uC740 \uC774 \uAE30\uAE30\uC5D0 \uC790\uB3D9 \uC800\uC7A5\uB3FC\uC694."), /* @__PURE__ */ React.createElement(
       "button",
       {
         onClick: copyCard,
+        disabled: !bizCard.trim(),
         className: "mt-2.5 flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[12.5px] font-semibold text-white",
-        style: { background: copied ? C.confirmed : C.accent }
+        style: { background: copied ? C.confirmed : C.accent, opacity: bizCard.trim() ? 1 : 0.45 }
       },
       /* @__PURE__ */ React.createElement(FileCheck2, { size: 13 }),
       " ",
