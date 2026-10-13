@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#20242E" />
 <title>My AI Mate</title>
+<!-- build 2026-10-13b -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A4%9D%3C/text%3E%3C/svg%3E" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin></script>
@@ -28,6 +29,7 @@
 <script>
 (() => {
   // combined.jsx
+  var { useState, useMemo, useEffect } = React;
   function IconBase({ children, size = 16, color = "currentColor", strokeWidth = 2, className, fill = "none", stroke, ...rest }) {
     return /* @__PURE__ */ React.createElement("svg", { width: size, height: size, viewBox: "0 0 24 24", fill, stroke: stroke != null ? stroke : color, strokeWidth, strokeLinecap: "round", strokeLinejoin: "round", className, ...rest }, children);
   }
@@ -171,6 +173,7 @@
     { id: "fc6", firstContact: "2026-01-30", name: "\uC2E0\uC18C\uC601", phone: "010-9928-6034", branch: "\uC2E0\uAD00\uC9C0\uC810", lastContact: "2026-08-09", recentIntro: "(\uACE0\uAC1D\uBA85 \uBBF8\uD655\uC778)", activeCustomers: 1, paidCustomers: 6, nextContact: "2026-08-14" }
   ];
   function CallLink({ phone, children, className, style }) {
+    if (!phone) return null;
     return /* @__PURE__ */ React.createElement(
       "a",
       {
@@ -470,7 +473,7 @@
     { key: "rate", label: "\uAE08\uB9AC\uACC4\uC0B0\uAE30", icon: Calculator },
     { key: "fc", label: "FC\uAD00\uB9AC", icon: UserCog }
   ];
-  var STORE_KEYS = { customers: "myaimate:v1:customers", memo: "myaimate:v1:memo", memos: "myaimate:v1:memos", memoByDate: "myaimate:v2:memoByDate", bizCard: "myaimate:v1:bizCard", spreads: "myaimate:v1:spreads" };
+  var STORE_KEYS = { fcs: "myaimate:v1:fcs", customers: "myaimate:v1:customers", memo: "myaimate:v1:memo", memos: "myaimate:v1:memos", memoByDate: "myaimate:v2:memoByDate", bizCard: "myaimate:v1:bizCard", spreads: "myaimate:v1:spreads" };
   function loadSaved(key, fallback) {
     try {
       const raw = window.localStorage.getItem(key);
@@ -521,7 +524,16 @@
       else delete next[date];
       return next;
     });
-    const [fcs] = useState(initialFCs);
+    useEffect(() => {
+      saveLocal(STORE_KEYS.customers, customers);
+    }, [customers]);
+    const [fcs, setFcs] = useState(() => {
+      const v = loadSaved(STORE_KEYS.fcs, initialFCs);
+      return Array.isArray(v) ? v : initialFCs;
+    });
+    useEffect(() => {
+      saveLocal(STORE_KEYS.fcs, fcs);
+    }, [fcs]);
     const [selectedId, setSelectedId] = useState(null);
     const [selectedFcId, setSelectedFcId] = useState(null);
     const selected = customers.find((c) => c.id === selectedId) || null;
@@ -537,7 +549,7 @@
     })), /* @__PURE__ */ React.createElement("main", { className: "flex-1 min-w-0 p-5 sm:p-8 pb-20" }, tab === "todos" && /* @__PURE__ */ React.createElement(TodayTasks, { customers, goCustomer: (id) => {
       setTab("customers");
       setSelectedId(id);
-    }, memoByDate, setMemoFor, bizCard, setBizCard }), tab === "customers" && (selected ? /* @__PURE__ */ React.createElement(CustomerDetail, { key: selected.id, customer: selected, onBack: () => setSelectedId(null), onUpdate: (id, updates) => setCustomers(customers.map((cu) => cu.id === id ? { ...cu, ...updates } : cu)) }) : /* @__PURE__ */ React.createElement(CustomerList, { customers, onSelect: setSelectedId })), tab === "callai" && /* @__PURE__ */ React.createElement(CallSummaryAI, { customers, setCustomers }), tab === "docs" && /* @__PURE__ */ React.createElement(DocumentAssistant, null), tab === "rate" && /* @__PURE__ */ React.createElement(RateCalculator, null), tab === "fc" && (selectedFc ? /* @__PURE__ */ React.createElement(FCDetail, { fc: selectedFc, customers, onBack: () => setSelectedFcId(null), goCustomer: (id) => {
+    }, memoByDate, setMemoFor, bizCard, setBizCard }), tab === "customers" && (selected ? /* @__PURE__ */ React.createElement(CustomerDetail, { key: selected.id, customer: selected, onBack: () => setSelectedId(null), onUpdate: (id, updates) => setCustomers(customers.map((cu) => cu.id === id ? { ...cu, ...updates } : cu)) }) : /* @__PURE__ */ React.createElement(CustomerList, { customers, onSelect: setSelectedId })), tab === "callai" && /* @__PURE__ */ React.createElement(CallSummaryAI, { customers, setCustomers, fcs, setFcs }), tab === "docs" && /* @__PURE__ */ React.createElement(DocumentAssistant, null), tab === "rate" && /* @__PURE__ */ React.createElement(RateCalculator, null), tab === "fc" && (selectedFc ? /* @__PURE__ */ React.createElement(FCDetail, { fc: selectedFc, customers, onBack: () => setSelectedFcId(null), goCustomer: (id) => {
       setTab("customers");
       setSelectedId(id);
       setSelectedFcId(null);
@@ -639,7 +651,7 @@
         },
         d
       ), /* @__PURE__ */ React.createElement("span", { className: "flex gap-0.5 h-1.5 mt-0.5" }, hasCustomer(d) && /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.note } }), hasMemo(d) && /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.accent } })));
-    })), /* @__PURE__ */ React.createElement("div", { className: "flex gap-3 mt-2 text-[10.5px]", style: { color: C.inkSoft } }, /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.note } }), "\uC5F0\uB77D\uC608\uC815 \uACE0\uAC1D"), /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.accent } }), "\uBA54\uBAA8 \uC788\uC74C")), /* @__PURE__ */ React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-semibold mb-1.5" }, selLabel), selCustomers.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px]", style: { color: C.inkFaint } }, "\uC774 \uB0A0\uC9DC\uC5D0 \uC5F0\uB77D\uC608\uC815\uC778 \uACE0\uAC1D\uC774 \uC5C6\uC5B4\uC694."), selCustomers.map((c) => /* @__PURE__ */ React.createElement("button", { key: c.id, onClick: () => goCustomer(c.id), className: "w-full flex items-center justify-between text-left py-1.5" }, /* @__PURE__ */ React.createElement("span", { className: "text-[12px]" }, /* @__PURE__ */ React.createElement("b", null, c.name), " ", /* @__PURE__ */ React.createElement("span", { style: { color: C.inkSoft } }, "\xB7 ", c.followUp)), /* @__PURE__ */ React.createElement(ChevronRight, { size: 13, color: C.inkFaint }))), /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px] mt-1.5", style: { color: C.inkFaint } }, "\uC704 \uBA54\uBAA8\uB780\uC5D0\uC11C \uC774 \uB0A0\uC9DC\uC758 \uBA54\uBAA8\uB97C \uBC14\uB85C \uBCF4\uACE0 \uC218\uC815\uD560 \uC218 \uC788\uC5B4\uC694.")));
+    })), /* @__PURE__ */ React.createElement("div", { className: "flex gap-3 mt-2 text-[10.5px]", style: { color: C.inkSoft } }, /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.note } }), "\uC5F0\uB77D\uC608\uC815 \uACE0\uAC1D"), /* @__PURE__ */ React.createElement("span", { className: "flex items-center gap-1" }, /* @__PURE__ */ React.createElement("span", { className: "w-1.5 h-1.5 rounded-full", style: { background: C.accent } }), "\uBA54\uBAA8 \uC788\uC74C")), /* @__PURE__ */ React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "text-[12px] font-semibold mb-1.5" }, selLabel), selCustomers.length === 0 && /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px]", style: { color: C.inkFaint } }, "\uC774 \uB0A0\uC9DC\uC5D0 \uC5F0\uB77D\uC608\uC815\uC778 \uACE0\uAC1D\uC774 \uC5C6\uC5B4\uC694."), selCustomers.map((c) => /* @__PURE__ */ React.createElement("button", { key: c.id, onClick: () => goCustomer(c.id), className: "w-full flex items-center justify-between text-left py-1.5" }, /* @__PURE__ */ React.createElement("span", { className: "text-[12px]" }, /* @__PURE__ */ React.createElement("b", null, c.name), " ", /* @__PURE__ */ React.createElement("span", { style: { color: C.inkSoft } }, "\xB7 ", c.nextAction)), /* @__PURE__ */ React.createElement(ChevronRight, { size: 13, color: C.inkFaint }))), /* @__PURE__ */ React.createElement("div", { className: "text-[10.5px] mt-1.5", style: { color: C.inkFaint } }, "\uC704 \uBA54\uBAA8\uB780\uC5D0\uC11C \uC774 \uB0A0\uC9DC\uC758 \uBA54\uBAA8\uB97C \uBC14\uB85C \uBCF4\uACE0 \uC218\uC815\uD560 \uC218 \uC788\uC5B4\uC694.")));
   }
   function TodayTasks({ customers, goCustomer, memoByDate, setMemoFor, bizCard, setBizCard }) {
     const today = /* @__PURE__ */ new Date();
@@ -676,7 +688,7 @@
         {
           key: c.id,
           title: c.name,
-          sub: c.followUp,
+          sub: c.nextAction,
           tag: c.status,
           tagColor: (_a = STATUS_STYLE[c.status]) == null ? void 0 : _a.fg,
           tagBg: (_b = STATUS_STYLE[c.status]) == null ? void 0 : _b.bg,
@@ -833,29 +845,24 @@
   function CustomerDetail({ customer: c, onBack, onUpdate }) {
     const [status, setStatus] = useState(c.status);
     const [consultType, setConsultType] = useState(c.consultType);
-    const [collateral, setCollateral] = useState(c.collateral);
     const [consultDate, setConsultDate] = useState(c.consultDate);
     const [lastContact, setLastContact] = useState(c.lastContact);
-    const [docStatus, setDocStatus] = useState(c.docStatus);
     const [badges, setBadges] = useState(c.consultBadges || {
       consultType: "confirmed",
-      collateral: "confirmed",
       consultDate: "confirmed",
-      lastContact: "confirmed",
-      docStatus: "verify"
+      lastContact: "confirmed"
     });
     const [notes, setNotes] = useState(c.notes);
     const [nextAction, setNextAction] = useState(c.nextAction);
-    const [followUp, setFollowUp] = useState(c.followUp);
     const [saved, setSaved] = useState(false);
     const toggleBadge = (key) => setBadges((b) => ({ ...b, [key]: b[key] === "confirmed" ? "verify" : "confirmed" }));
-    const dirty = status !== c.status || consultType !== c.consultType || collateral !== c.collateral || consultDate !== c.consultDate || lastContact !== c.lastContact || docStatus !== c.docStatus || notes !== c.notes || nextAction !== c.nextAction || followUp !== c.followUp || JSON.stringify(badges) !== JSON.stringify(c.consultBadges || { consultType: "confirmed", collateral: "confirmed", consultDate: "confirmed", lastContact: "confirmed", docStatus: "verify" });
+    const dirty = status !== c.status || consultType !== c.consultType || consultDate !== c.consultDate || lastContact !== c.lastContact || notes !== c.notes || nextAction !== c.nextAction || JSON.stringify(badges) !== JSON.stringify(c.consultBadges || { consultType: "confirmed", consultDate: "confirmed", lastContact: "confirmed" });
     function save() {
-      onUpdate(c.id, { status, consultType, collateral, consultDate, lastContact, docStatus, consultBadges: badges, notes, nextAction, followUp });
+      onUpdate(c.id, { status, consultType, consultDate, lastContact, consultBadges: badges, notes, nextAction });
       setSaved(true);
       setTimeout(() => setSaved(false), 1600);
     }
-    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between mb-5 flex-wrap gap-2" }, /* @__PURE__ */ React.createElement("button", { onClick: onBack, className: "flex items-center gap-1.5 text-[12px]", style: { color: C.inkSoft } }, /* @__PURE__ */ React.createElement(ArrowLeft, { size: 15 }), " \uACE0\uAC1D\uBAA9\uB85D\uC73C\uB85C"), dirty && /* @__PURE__ */ React.createElement("button", { onClick: save, className: "flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[12px] font-semibold text-white", style: { background: saved ? C.confirmed : C.accent } }, /* @__PURE__ */ React.createElement(Save, { size: 13 }), " ", saved ? "\uC800\uC7A5\uB428" : "\uBCC0\uACBD\uC0AC\uD56D \uC800\uC7A5")), /* @__PURE__ */ React.createElement("div", { className: "flex items-start justify-between mb-6 flex-wrap gap-3" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2.5" }, /* @__PURE__ */ React.createElement("h1", { className: "text-[19px] font-bold" }, c.name), /* @__PURE__ */ React.createElement("span", { className: "text-[12px]", style: { ...mono, color: C.inkFaint } }, "****-", c.phone4)), /* @__PURE__ */ React.createElement("div", { className: "text-[12px] mt-1", style: { color: C.inkSoft } }, c.fc !== "-" ? `\uCD94\uCC9C FC: ${c.fc} \xB7 ${c.branch}` : "\uC9C1\uC811 \uC2E0\uCCAD (\uCD94\uCC9C FC \uC5C6\uC74C)")), /* @__PURE__ */ React.createElement(StatusSelector, { value: status, onChange: setStatus })), /* @__PURE__ */ React.createElement("div", { className: "grid lg:grid-cols-3 gap-5" }, /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-2 flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uC0C1\uB2F4 \uC815\uBCF4" }, /* @__PURE__ */ React.createElement(EditableRow, { label: "\uC0C1\uB2F4\uC720\uD615", value: consultType, onChange: setConsultType, kind: badges.consultType, onToggleKind: () => toggleBadge("consultType") }), /* @__PURE__ */ React.createElement(EditableRow, { label: "\uB2F4\uBCF4", value: collateral, onChange: setCollateral, kind: badges.collateral, onToggleKind: () => toggleBadge("collateral") }), /* @__PURE__ */ React.createElement(EditableRow, { label: "\uC0C1\uB2F4\uC77C", value: consultDate, onChange: setConsultDate, kind: badges.consultDate, onToggleKind: () => toggleBadge("consultDate"), numeric: true, type: "date" }), /* @__PURE__ */ React.createElement(EditableRow, { label: "\uC5F0\uB77D\uC608\uC815\uC77C", value: lastContact, onChange: setLastContact, kind: badges.lastContact, onToggleKind: () => toggleBadge("lastContact"), numeric: true, type: "date" }), /* @__PURE__ */ React.createElement(EditableRow, { label: "\uC11C\uB958\uC0C1\uD0DC", value: docStatus, onChange: setDocStatus, kind: badges.docStatus, onToggleKind: () => toggleBadge("docStatus") }), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mt-2.5", style: { color: C.inkFaint } }, "\uBC30\uC9C0\uB97C \uB20C\uB7EC \uD655\uC778\uB428 \xB7 \uD655\uC778 \uD544\uC694 \uC0C1\uD0DC\uB97C \uC804\uD658\uD560 \uC218 \uC788\uC5B4\uC694.")), Object.keys(c.fields).length > 0 && /* @__PURE__ */ React.createElement(Panel, { title: "\uB300\uCD9C \uC870\uAC74" }, Object.entries(c.fields).map(([k, v]) => /* @__PURE__ */ React.createElement(Field, { key: k, label: k, value: v, kind: c.badges[k] || "note", numeric: true })), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mt-2 flex items-start gap-1.5", style: { color: C.inkFaint } }, /* @__PURE__ */ React.createElement("span", null, "\xB7 ", /* @__PURE__ */ React.createElement(Badge, { kind: "note", label: "\uD1B5\uD654 \uC548\uB0B4" }), "\uB294 \uD1B5\uD654 \uC911 \uC548\uB0B4\uB41C \uB0B4\uC6A9\uC73C\uB85C, \uD655\uC815 \uC0C1\uD488\uC870\uAC74\uACFC \uAD6C\uBD84\uD574 \uAD00\uB9AC\uD569\uB2C8\uB2E4."))), /* @__PURE__ */ React.createElement(Panel, { title: "\uBA54\uBAA8" }, /* @__PURE__ */ React.createElement(
+    return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between mb-5 flex-wrap gap-2" }, /* @__PURE__ */ React.createElement("button", { onClick: onBack, className: "flex items-center gap-1.5 text-[12px]", style: { color: C.inkSoft } }, /* @__PURE__ */ React.createElement(ArrowLeft, { size: 15 }), " \uACE0\uAC1D\uBAA9\uB85D\uC73C\uB85C"), /* @__PURE__ */ React.createElement("button", { onClick: save, className: "flex items-center gap-1.5 px-3.5 py-2 rounded-md text-[12px] font-semibold text-white", style: { background: saved ? C.confirmed : C.accent } }, /* @__PURE__ */ React.createElement(Save, { size: 13 }), " ", saved ? "\uC800\uC7A5\uB428" : dirty ? "\uC800\uC7A5 (\uBCC0\uACBD\uC0AC\uD56D \uC788\uC74C)" : "\uC800\uC7A5")), /* @__PURE__ */ React.createElement("div", { className: "flex items-start justify-between mb-6 flex-wrap gap-3" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "flex items-center gap-2.5" }, /* @__PURE__ */ React.createElement("h1", { className: "text-[19px] font-bold" }, c.name), /* @__PURE__ */ React.createElement("span", { className: "text-[12px]", style: { ...mono, color: C.inkFaint } }, "****-", c.phone4)), /* @__PURE__ */ React.createElement("div", { className: "text-[12px] mt-1", style: { color: C.inkSoft } }, c.fc !== "-" ? `\uCD94\uCC9C FC: ${c.fc} \xB7 ${c.branch}` : "\uC9C1\uC811 \uC2E0\uCCAD (\uCD94\uCC9C FC \uC5C6\uC74C)")), /* @__PURE__ */ React.createElement(StatusSelector, { value: status, onChange: setStatus })), /* @__PURE__ */ React.createElement("div", { className: "grid lg:grid-cols-3 gap-5" }, /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-2 flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uC0C1\uB2F4 \uC815\uBCF4" }, /* @__PURE__ */ React.createElement(EditableRow, { label: "\uC0C1\uB2F4\uC720\uD615", value: consultType, onChange: setConsultType, kind: badges.consultType, onToggleKind: () => toggleBadge("consultType") }), /* @__PURE__ */ React.createElement(EditableRow, { label: "\uC0C1\uB2F4\uC77C", value: consultDate, onChange: setConsultDate, kind: badges.consultDate, onToggleKind: () => toggleBadge("consultDate"), numeric: true, type: "date" }), /* @__PURE__ */ React.createElement(EditableRow, { label: "\uC5F0\uB77D\uC608\uC815\uC77C", value: lastContact, onChange: setLastContact, kind: badges.lastContact, onToggleKind: () => toggleBadge("lastContact"), numeric: true, type: "date" }), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mt-2.5", style: { color: C.inkFaint } }, "\uBC30\uC9C0\uB97C \uB20C\uB7EC \uD655\uC778\uB428 \xB7 \uD655\uC778 \uD544\uC694 \uC0C1\uD0DC\uB97C \uC804\uD658\uD560 \uC218 \uC788\uC5B4\uC694.")), Object.keys(c.fields).length > 0 && /* @__PURE__ */ React.createElement(Panel, { title: "\uB300\uCD9C \uC870\uAC74" }, Object.entries(c.fields).map(([k, v]) => /* @__PURE__ */ React.createElement(Field, { key: k, label: k, value: v, kind: c.badges[k] || "note", numeric: true })), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] mt-2 flex items-start gap-1.5", style: { color: C.inkFaint } }, /* @__PURE__ */ React.createElement("span", null, "\xB7 ", /* @__PURE__ */ React.createElement(Badge, { kind: "note", label: "\uD1B5\uD654 \uC548\uB0B4" }), "\uB294 \uD1B5\uD654 \uC911 \uC548\uB0B4\uB41C \uB0B4\uC6A9\uC73C\uB85C, \uD655\uC815 \uC0C1\uD488\uC870\uAC74\uACFC \uAD6C\uBD84\uD574 \uAD00\uB9AC\uD569\uB2C8\uB2E4."))), /* @__PURE__ */ React.createElement(Panel, { title: "\uBA54\uBAA8" }, /* @__PURE__ */ React.createElement(
       "textarea",
       {
         value: notes,
@@ -864,7 +871,7 @@
         className: "w-full text-[12.5px] leading-relaxed p-2.5 rounded-md outline-none resize-none",
         style: { color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }
       }
-    ))), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uB2E4\uC74C \uD589\uB3D9" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-start gap-2 py-1" }, /* @__PURE__ */ React.createElement(CheckCircle2, { size: 16, color: C.brandSoft, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement(
+    )), /* @__PURE__ */ React.createElement("button", { onClick: save, className: "flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-md text-[12.5px] font-semibold text-white", style: { background: saved ? C.confirmed : C.accent } }, /* @__PURE__ */ React.createElement(Save, { size: 14 }), " ", saved ? "\uC800\uC7A5\uB428" : "\uC800\uC7A5")), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uB2E4\uC74C \uD589\uB3D9" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-start gap-2 py-1" }, /* @__PURE__ */ React.createElement(CheckCircle2, { size: 16, color: C.brandSoft, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement(
       "input",
       {
         value: nextAction,
@@ -872,17 +879,9 @@
         className: "w-full text-[12.5px] px-2 py-1.5 rounded-md outline-none",
         style: { color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }
       }
-    ))), /* @__PURE__ */ React.createElement(Panel, { title: "Follow-up" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-start gap-2 py-1" }, /* @__PURE__ */ React.createElement(Clock, { size: 16, color: C.note, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement(
-      "input",
-      {
-        value: followUp,
-        onChange: (e) => setFollowUp(e.target.value),
-        className: "w-full text-[12.5px] px-2 py-1.5 rounded-md outline-none",
-        style: { color: C.ink, border: `1px solid ${C.border}`, background: C.surfaceAlt }
-      }
     ))))));
   }
-  function CallSummaryAI({ customers, setCustomers }) {
+  function CallSummaryAI({ customers, setCustomers, fcs, setFcs }) {
     const [text, setText] = useState("");
     const [result, setResult] = useState(null);
     const [saved, setSaved] = useState(false);
@@ -905,19 +904,27 @@
         phone4: result.phone4 || "----",
         fc: result.fc || "-",
         branch: result.branch || "-",
-        collateral: result.fields["\uB2F4\uBCF4"] || "\uD655\uC778 \uD544\uC694",
         consultDate: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
         lastContact: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
         consultType: "\uC790\uC5F0\uC5B4 \uC785\uB825 (\uD1B5\uD654\uC694\uC57D AI)",
         status: "\uB2E8\uC21C\uC0C1\uB2F4",
-        docStatus: "\uBBF8\uC548\uB0B4",
         nextAction: "\uAD6C\uC870\uD654\uB41C \uC815\uBCF4 \uAC80\uD1A0 \uBC0F \uBCF4\uC644",
-        followUp: result.fields["Follow-up"] || "\uD655\uC778 \uD544\uC694",
         notes: text,
         fields: result.fields,
         badges: result.badges
       };
       setCustomers([newC, ...customers]);
+      const fcName = (result.fc || "").trim();
+      if (fcName && fcName !== "-") {
+        const today = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+        const branchName = (result.branch || "").trim();
+        const hasBranch = branchName && branchName !== "-";
+        if (fcs.some((f) => f.name === fcName)) {
+          setFcs(fcs.map((f) => f.name === fcName ? { ...f, branch: hasBranch ? branchName : f.branch, lastContact: today, recentIntro: newC.name } : f));
+        } else {
+          setFcs([{ id: `fc${Date.now()}`, firstContact: today, name: fcName, phone: "", branch: hasBranch ? branchName : "-", lastContact: today, recentIntro: newC.name, activeCustomers: 1, paidCustomers: 0, nextContact: "" }, ...fcs]);
+        }
+      }
       setSaved(true);
     }
     const REQUIRED = ["name", "phone4", "fc"];
@@ -1061,8 +1068,7 @@
     }
     return docs;
   }
-  var SEND_INCOME_OPTIONS = ["\uADFC\uB85C\uC18C\uB4DD\uC790", "\uC0AC\uC5C5\uC18C\uB4DD\uC790", "\uC5F0\uAE08\uC18C\uB4DD\uC790", "\uAE30\uD0C0"];
-  function buildSendChecklist(isPurchase, incomeCategory) {
+  function buildSendChecklist(isPurchase) {
     const items = [
       isPurchase ? "\uB9E4\uB9E4\uACC4\uC57D\uC11C" : "\uB4F1\uAE30\uD544\uC99D",
       "\uC8FC\uBBFC\uB4F1\uB85D\uB4F1\uBCF8 1\uD1B5",
@@ -1074,17 +1080,12 @@
       "\uC2E0\uBD84\uC99D",
       "\uAC00\uC871\uAD00\uACC4\uD655\uC778\uC11C"
     ];
-    if (incomeCategory !== "\uAE30\uD0C0") {
-      items.push(`\uC7AC\uC9C1\uC99D\uBA85\uC11C (${incomeCategory})`);
-      items.push(`\uC18C\uB4DD\uC99D\uBA85\uC11C (${incomeCategory})`);
-    }
     return items;
   }
   function SendChecklist() {
     const [isPurchase, setIsPurchase] = useState(false);
-    const [incomeCategory, setIncomeCategory] = useState("\uADFC\uB85C\uC18C\uB4DD\uC790");
     const [copied, setCopied] = useState(false);
-    const items = buildSendChecklist(isPurchase, incomeCategory);
+    const items = buildSendChecklist(isPurchase);
     const plainText = `\uB2E4\uC74C\uC11C\uB958 \uC900\uBE44 \uBD80\uD0C1\uB4DC\uB9BD\uB2C8\uB2E4.
 ${items.join(", ")}`;
     function copy() {
@@ -1095,11 +1096,10 @@ ${items.join(", ")}`;
       }).catch(() => {
       });
     }
-    return /* @__PURE__ */ React.createElement(Panel, { title: "\uACE0\uAC1D \uBC1C\uC1A1\uC6A9 \uC11C\uB958 \uCCB4\uD06C\uB9AC\uC2A4\uD2B8" }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-col sm:flex-row gap-4 py-1 mb-1" }, /* @__PURE__ */ React.createElement("div", { className: "flex-1" }, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mb-2", style: { color: C.inkSoft } }, "\uB300\uCD9C\uC6A9\uB3C4"), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-1.5" }, /* @__PURE__ */ React.createElement(RadioRow, { label: "\uAD6C\uC785", checked: isPurchase, onClick: () => setIsPurchase(true) }), /* @__PURE__ */ React.createElement(RadioRow, { label: "\uADF8 \uC678 (\uB300\uD658\xB7\uC0DD\uD65C\uC790\uAE08 \uB4F1)", checked: !isPurchase, onClick: () => setIsPurchase(false) }))), /* @__PURE__ */ React.createElement("div", { className: "flex-1" }, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mb-2", style: { color: C.inkSoft } }, "\uC18C\uB4DD\uC720\uD615"), /* @__PURE__ */ React.createElement("div", { className: "flex flex-wrap gap-1.5" }, SEND_INCOME_OPTIONS.map((t) => /* @__PURE__ */ React.createElement(RadioRow, { key: t, label: t, checked: incomeCategory === t, onClick: () => setIncomeCategory(t) }))))), /* @__PURE__ */ React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-1.5 mb-3" }, items.map((item, i) => {
+    return /* @__PURE__ */ React.createElement(Panel, { title: "\uACE0\uAC1D \uBC1C\uC1A1\uC6A9 \uC11C\uB958 \uCCB4\uD06C\uB9AC\uC2A4\uD2B8" }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-col sm:flex-row gap-4 py-1 mb-1" }, /* @__PURE__ */ React.createElement("div", { className: "flex-1" }, /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mb-2", style: { color: C.inkSoft } }, "\uB300\uCD9C\uC6A9\uB3C4"), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-1.5" }, /* @__PURE__ */ React.createElement(RadioRow, { label: "\uAD6C\uC785", checked: isPurchase, onClick: () => setIsPurchase(true) }), /* @__PURE__ */ React.createElement(RadioRow, { label: "\uADF8 \uC678 (\uB300\uD658\xB7\uC0DD\uD65C\uC790\uAE08 \uB4F1)", checked: !isPurchase, onClick: () => setIsPurchase(false) })))), /* @__PURE__ */ React.createElement("div", { className: "mt-3 pt-3", style: { borderTop: `1px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-1.5 mb-3" }, items.map((item, i) => {
       const changed = i === 0 && isPurchase;
-      const isIncomeDoc = item.includes("\uC7AC\uC9C1\uC99D\uBA85\uC11C") || item.includes("\uC18C\uB4DD\uC99D\uBA85\uC11C");
-      return /* @__PURE__ */ React.createElement("div", { key: i, className: "flex items-center gap-2 text-[12.5px]" }, /* @__PURE__ */ React.createElement("span", { className: "w-5 shrink-0", style: { ...mono, color: C.inkFaint } }, i + 1, "."), /* @__PURE__ */ React.createElement("span", { style: { color: C.ink } }, item), changed && /* @__PURE__ */ React.createElement(Badge, { kind: "note", label: "\uAD6C\uC785 \uC870\uAC74 \uBC18\uC601" }), isIncomeDoc && /* @__PURE__ */ React.createElement(Badge, { kind: "note", label: "\uC18C\uB4DD\uC720\uD615 \uBC18\uC601" }));
-    }), incomeCategory === "\uAE30\uD0C0" && /* @__PURE__ */ React.createElement("div", { className: "text-[11px] mt-1 flex items-start gap-1.5", style: { color: C.inkFaint } }, /* @__PURE__ */ React.createElement(Info, { size: 13, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement("span", null, '\uC18C\uB4DD\uC720\uD615\uC744 "\uAE30\uD0C0"\uB85C \uC120\uD0DD\uD558\uC5EC \uC7AC\uC9C1\uC99D\uBA85\uC11C \xB7 \uC18C\uB4DD\uC99D\uBA85\uC11C \uD56D\uBAA9\uC774 \uC81C\uC678\uB418\uC5C8\uC2B5\uB2C8\uB2E4.'))), /* @__PURE__ */ React.createElement(
+      return /* @__PURE__ */ React.createElement("div", { key: i, className: "flex items-center gap-2 text-[12.5px]" }, /* @__PURE__ */ React.createElement("span", { className: "w-5 shrink-0", style: { ...mono, color: C.inkFaint } }, i + 1, "."), /* @__PURE__ */ React.createElement("span", { style: { color: C.ink } }, item), changed && /* @__PURE__ */ React.createElement(Badge, { kind: "note", label: "\uAD6C\uC785 \uC870\uAC74 \uBC18\uC601" }));
+    })), /* @__PURE__ */ React.createElement(
       "textarea",
       {
         readOnly: true,
@@ -1169,12 +1169,15 @@ ${items.join(", ")}`;
   function CheckRow({ label, checked, onClick }) {
     return /* @__PURE__ */ React.createElement("button", { onClick, className: "flex items-center gap-2.5 px-3 py-2 rounded-md text-left w-full", style: { background: checked ? C.confirmedBg : "transparent" } }, /* @__PURE__ */ React.createElement("span", { className: "w-3.5 h-3.5 rounded flex items-center justify-center shrink-0", style: { border: `1.5px solid ${checked ? C.confirmed : C.inkFaint}`, background: checked ? C.confirmed : "transparent" } }, checked && /* @__PURE__ */ React.createElement(CheckCircle2, { size: 11, color: "#FFFFFF", strokeWidth: 3 })), /* @__PURE__ */ React.createElement("span", { className: "text-[12px]", style: { color: checked ? C.confirmed : C.ink, fontWeight: checked ? 600 : 400 } }, label));
   }
+  var spreadValue = (v) => v && typeof v === "object" ? v.spread : v;
+  var spreadDateOf = (v) => v && typeof v === "object" && v.date ? v.date : "";
   function RateCalculator() {
     var _a;
     const [savedSpreads, setSavedSpreads] = useState(() => loadSaved(STORE_KEYS.spreads, {}));
     const [productId, setProductId] = useState(PRODUCTS[0].id);
     const [baseRate, setBaseRate] = useState(PRODUCTS[0].base);
-    const [spreadRate, setSpreadRate] = useState((_a = savedSpreads[PRODUCTS[0].id]) != null ? _a : PRODUCTS[0].spread);
+    const [spreadRate, setSpreadRate] = useState((_a = spreadValue(savedSpreads[PRODUCTS[0].id])) != null ? _a : PRODUCTS[0].spread);
+    const [spreadDate, setSpreadDate] = useState(spreadDateOf(savedSpreads[PRODUCTS[0].id]));
     const [spreadSaved, setSpreadSaved] = useState(false);
     const [checks, setChecks] = useState({});
     const [checkVals, setCheckVals] = useState({});
@@ -1187,17 +1190,20 @@ ${items.join(", ")}`;
       const p = PRODUCTS.find((x) => x.id === id);
       setProductId(id);
       setBaseRate(p.base);
-      setSpreadRate((_a2 = savedSpreads[id]) != null ? _a2 : p.spread);
+      setSpreadRate((_a2 = spreadValue(savedSpreads[id])) != null ? _a2 : p.spread);
+      setSpreadDate(spreadDateOf(savedSpreads[id]));
     }
     function saveSpread() {
-      const next = { ...savedSpreads, [productId]: spread };
+      const next = { ...savedSpreads, [productId]: { spread, date: spreadDate || (/* @__PURE__ */ new Date()).toISOString().slice(0, 10) } };
+      if (!spreadDate) setSpreadDate(next[productId].date);
       setSavedSpreads(next);
       saveLocal(STORE_KEYS.spreads, next);
       setSpreadSaved(true);
       setTimeout(() => setSpreadSaved(false), 1200);
     }
     const spread = parseFloat(spreadRate) || 0;
-    const spreadIsSaved = savedSpreads[productId] !== void 0 && savedSpreads[productId] === spread;
+    const savedVal = spreadValue(savedSpreads[productId]);
+    const spreadIsSaved = savedVal !== void 0 && savedVal === spread && spreadDateOf(savedSpreads[productId]) === spreadDate;
     const basicRate = spread + (parseFloat(baseRate) || 0);
     const generalTotal = CHECK_ITEMS.reduce((sum, item) => {
       var _a2;
@@ -1270,7 +1276,16 @@ ${items.join(", ")}`;
           spreadSaved ? "\uC800\uC7A5\uB428" : "\uC800\uC7A5"
         ))
       }
-    ), /* @__PURE__ */ React.createElement("div", { className: "text-right text-[10.5px] mt-1", style: { color: spreadIsSaved ? C.confirmed : C.verify } }, spreadIsSaved ? `\uC774 \uC0C1\uD488\uC5D0 \uC800\uC7A5\uB41C \uAC00\uC0B0\uAE08\uB9AC\uB97C \uC0AC\uC6A9 \uC911\uC774\uC5D0\uC694` : savedSpreads[productId] !== void 0 ? `\uC800\uC7A5\uB41C \uAC12(${fmt(savedSpreads[productId])}%)\uACFC \uB2EC\uB77C\uC694 \xB7 \uC800\uC7A5\uC744 \uB204\uB974\uBA74 \uBC18\uC601\uB3FC\uC694` : `\uC800\uC7A5\uD558\uBA74 \uB2E4\uC74C\uC5D0 \uC774 \uC0C1\uD488\uC744 \uC120\uD0DD\uD560 \uB54C \uC790\uB3D9\uC73C\uB85C \uBD88\uB7EC\uC640\uC694`), /* @__PURE__ */ React.createElement("div", { className: "text-center text-[12px] py-1", style: { color: "#B7C0CB", ...mono } }, "="), /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between pt-2.5 mt-1", style: { borderTop: `1.5px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("span", { className: "text-[12.5px]" }, "\uAE30\uBCF8\uAE08\uB9AC"), /* @__PURE__ */ React.createElement("span", { className: "text-[20px] font-extrabold", style: { ...mono, color: C.brand } }, fmt(basicRate), "%")), /* @__PURE__ */ React.createElement("div", { className: "text-right text-[11px] mt-2.5", style: { ...mono, color: C.urgent } }, "\uCC38\uACE0 \xB7 \uD45C \uAE30\uC900 \uAE08\uB9ACBand ", fmt(product.bandLow), "~", fmt(product.bandHigh), "% \xB7 \uD45C \uAC00\uC0B0\uAE08\uB9AC ", fmt(product.spread), "%")), /* @__PURE__ */ React.createElement(StepTitle, { n: 2, title: "\uC77C\uBC18\uD560\uC778 \xB7 \uC6B0\uB300\uD56D\uBAA9" }), /* @__PURE__ */ React.createElement(Panel, { noPad: true }, /* @__PURE__ */ React.createElement("div", { className: "px-4 pt-3 pb-1 text-[10.5px] uppercase", style: { ...mono, color: C.inkSoft, letterSpacing: "0.08em" } }, "\uCCB4\uD06C\uD558\uC5EC \uC801\uC6A9"), CHECK_ITEMS.map((item) => {
+    ), /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between mt-2 gap-2" }, /* @__PURE__ */ React.createElement("span", { className: "text-[12px]", style: { color: C.inkSoft } }, "\uAC00\uC0B0\uAE08\uB9AC \uBC18\uC601\uC77C\uC790"), /* @__PURE__ */ React.createElement(
+      "input",
+      {
+        type: "date",
+        value: spreadDate,
+        onChange: (e) => setSpreadDate(e.target.value),
+        className: "px-2 py-1.5 rounded-md outline-none text-[12.5px]",
+        style: { ...mono, border: `1.5px solid ${C.border}`, color: C.brand, background: C.surface }
+      }
+    )), /* @__PURE__ */ React.createElement("div", { className: "text-right text-[10.5px] mt-1", style: { color: spreadIsSaved ? C.confirmed : C.verify } }, spreadIsSaved ? `\uC774 \uC0C1\uD488\uC5D0 \uC800\uC7A5\uB41C \uAC00\uC0B0\uAE08\uB9AC\uB97C \uC0AC\uC6A9 \uC911\uC774\uC5D0\uC694` : savedVal !== void 0 ? `\uC800\uC7A5\uB41C \uAC12(${fmt(savedVal)}%, ${spreadDateOf(savedSpreads[productId]) || "\uBC18\uC601\uC77C \uC5C6\uC74C"})\uACFC \uB2EC\uB77C\uC694 \xB7 \uC800\uC7A5\uC744 \uB204\uB974\uBA74 \uBC18\uC601\uB3FC\uC694` : `\uC800\uC7A5\uD558\uBA74 \uB2E4\uC74C\uC5D0 \uC774 \uC0C1\uD488\uC744 \uC120\uD0DD\uD560 \uB54C \uC790\uB3D9\uC73C\uB85C \uBD88\uB7EC\uC640\uC694`), /* @__PURE__ */ React.createElement("div", { className: "text-center text-[12px] py-1", style: { color: "#B7C0CB", ...mono } }, "="), /* @__PURE__ */ React.createElement("div", { className: "flex items-center justify-between pt-2.5 mt-1", style: { borderTop: `1.5px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("span", { className: "text-[12.5px]" }, "\uAE30\uBCF8\uAE08\uB9AC"), /* @__PURE__ */ React.createElement("span", { className: "text-[20px] font-extrabold", style: { ...mono, color: C.brand } }, fmt(basicRate), "%")), /* @__PURE__ */ React.createElement("div", { className: "text-right text-[11px] mt-2.5", style: { ...mono, color: C.urgent } }, "\uCC38\uACE0 \xB7 \uD45C \uAE30\uC900 \uAE08\uB9ACBand ", fmt(product.bandLow), "~", fmt(product.bandHigh), "% \xB7 \uD45C \uAC00\uC0B0\uAE08\uB9AC ", fmt(product.spread), "%")), /* @__PURE__ */ React.createElement(StepTitle, { n: 2, title: "\uC77C\uBC18\uD560\uC778 \xB7 \uC6B0\uB300\uD56D\uBAA9" }), /* @__PURE__ */ React.createElement(Panel, { noPad: true }, /* @__PURE__ */ React.createElement("div", { className: "px-4 pt-3 pb-1 text-[10.5px] uppercase", style: { ...mono, color: C.inkSoft, letterSpacing: "0.08em" } }, "\uCCB4\uD06C\uD558\uC5EC \uC801\uC6A9"), CHECK_ITEMS.map((item) => {
       var _a2;
       const checked = !!checks[item.id];
       const val = (_a2 = checkVals[item.id]) != null ? _a2 : item.value;
@@ -1412,7 +1427,7 @@ ${items.join(", ")}`;
       " ",
       fc.name,
       " FC\uC5D0\uAC8C \uC804\uD654"
-    )), /* @__PURE__ */ React.createElement("div", { className: "grid lg:grid-cols-3 gap-5" }, /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-2 flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uC18C\uAC1C \uD604\uD669" }, /* @__PURE__ */ React.createElement(Field, { label: "\uCD5C\uADFC \uC18C\uAC1C \uACE0\uAC1D", value: fc.recentIntro, kind: "confirmed" }), /* @__PURE__ */ React.createElement(Field, { label: "\uD604\uC7AC \uC9C4\uD589 \uACE0\uAC1D", value: `${fc.activeCustomers}\uBA85`, kind: "confirmed", numeric: true }), /* @__PURE__ */ React.createElement(Field, { label: "\uC9C0\uAE09 \uC644\uB8CC \uACE0\uAC1D", value: `${fc.paidCustomers}\uBA85`, kind: "confirmed", numeric: true }), /* @__PURE__ */ React.createElement(Field, { label: "\uCD5C\uADFC \uC5F0\uB77D\uC77C", value: fc.lastContact, kind: "confirmed", numeric: true }), /* @__PURE__ */ React.createElement(Field, { label: "\uB2E4\uC74C \uC5F0\uB77D \uC608\uC815\uC77C", value: fc.nextContact, kind: "verify", numeric: true })), /* @__PURE__ */ React.createElement(Panel, { title: `\uC5F0\uACB0\uB41C \uACE0\uAC1D (${related.length}\uBA85)` }, related.length === 0 && /* @__PURE__ */ React.createElement(Empty, { text: "\uC774 FC\uB97C \uD1B5\uD574 \uC5F0\uACB0\uB41C \uACE0\uAC1D\uC774 \uC544\uC9C1 \uC5C6\uC2B5\uB2C8\uB2E4." }), related.map((c) => {
+    )), /* @__PURE__ */ React.createElement("div", { className: "grid lg:grid-cols-3 gap-5" }, /* @__PURE__ */ React.createElement("div", { className: "lg:col-span-2 flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uC18C\uAC1C \uD604\uD669" }, /* @__PURE__ */ React.createElement(Field, { label: "\uCD5C\uADFC \uC18C\uAC1C \uACE0\uAC1D", value: fc.recentIntro, kind: "confirmed" }), /* @__PURE__ */ React.createElement(Field, { label: "\uD604\uC7AC \uC9C4\uD589 \uACE0\uAC1D", value: `${fc.activeCustomers}\uBA85`, kind: "confirmed", numeric: true }), /* @__PURE__ */ React.createElement(Field, { label: "\uC9C0\uAE09 \uC644\uB8CC \uACE0\uAC1D", value: `${fc.paidCustomers}\uBA85`, kind: "confirmed", numeric: true }), /* @__PURE__ */ React.createElement(Field, { label: "\uCD5C\uADFC \uC5F0\uB77D\uC77C", value: fc.lastContact, kind: "confirmed", numeric: true }), /* @__PURE__ */ React.createElement(Field, { label: "\uB2E4\uC74C \uC5F0\uB77D \uC608\uC815\uC77C", value: fc.nextContact || "\uBBF8\uC815", kind: "verify", numeric: true })), /* @__PURE__ */ React.createElement(Panel, { title: `\uC5F0\uACB0\uB41C \uACE0\uAC1D (${related.length}\uBA85)` }, related.length === 0 && /* @__PURE__ */ React.createElement(Empty, { text: "\uC774 FC\uB97C \uD1B5\uD574 \uC5F0\uACB0\uB41C \uACE0\uAC1D\uC774 \uC544\uC9C1 \uC5C6\uC2B5\uB2C8\uB2E4." }), related.map((c) => {
       var _a, _b;
       return /* @__PURE__ */ React.createElement(
         TaskRow,
@@ -1426,9 +1441,8 @@ ${items.join(", ")}`;
           onClick: () => goCustomer(c.id)
         }
       );
-    }))), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uB2E4\uC74C \uD589\uB3D9" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-start gap-2 py-1" }, /* @__PURE__ */ React.createElement(Clock, { size: 16, color: C.note, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement("span", { className: "text-[13.5px]" }, fc.nextContact, "\uC5D0 \uC5F0\uB77D \uC608\uC815"))), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] leading-relaxed px-1", style: { color: C.inkFaint } }, "FC \uD1B5\uD654\uB294 \uACE0\uAC1D \uD1B5\uD654\uC640 \uBD84\uB9AC\uD574\uC11C \uAD00\uB9AC\uD569\uB2C8\uB2E4. \uC5F0\uACB0\uB41C \uACE0\uAC1D \uBAA9\uB85D\uC740 \uD604\uC7AC \uC774 FC\uC758 \uCD94\uCC9C\uC73C\uB85C \uB4F1\uB85D\uB41C \uAE30\uB85D\uC744 \uAE30\uC900\uC73C\uB85C \uD569\uB2C8\uB2E4."))));
+    }))), /* @__PURE__ */ React.createElement("div", { className: "flex flex-col gap-5" }, /* @__PURE__ */ React.createElement(Panel, { title: "\uB2E4\uC74C \uD589\uB3D9" }, /* @__PURE__ */ React.createElement("div", { className: "flex items-start gap-2 py-1" }, /* @__PURE__ */ React.createElement(Clock, { size: 16, color: C.note, className: "mt-0.5 shrink-0" }), /* @__PURE__ */ React.createElement("span", { className: "text-[13.5px]" }, fc.nextContact ? `${fc.nextContact}\uC5D0 \uC5F0\uB77D \uC608\uC815` : "\uB2E4\uC74C \uC5F0\uB77D \uC77C\uC815 \uBBF8\uC815"))), /* @__PURE__ */ React.createElement("div", { className: "text-[11.5px] leading-relaxed px-1", style: { color: C.inkFaint } }, "FC \uD1B5\uD654\uB294 \uACE0\uAC1D \uD1B5\uD654\uC640 \uBD84\uB9AC\uD574\uC11C \uAD00\uB9AC\uD569\uB2C8\uB2E4. \uC5F0\uACB0\uB41C \uACE0\uAC1D \uBAA9\uB85D\uC740 \uD604\uC7AC \uC774 FC\uC758 \uCD94\uCC9C\uC73C\uB85C \uB4F1\uB85D\uB41C \uAE30\uB85D\uC744 \uAE30\uC900\uC73C\uB85C \uD569\uB2C8\uB2E4."))));
   }
-  var { useState, useMemo, useEffect } = React;
   ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(App, null));
 })();
 
